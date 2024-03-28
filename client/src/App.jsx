@@ -1,13 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './Login';
-import Register from './Register';
-import Customer from './Customer';
-import About from './About';
-import Contact from './Contact';
+import Login from './Pages/Login';
+import Register from './Pages/Register'; 
+import Customer from './Pages/Customer'; 
+import About from './Pages/About'; 
+import Contact from './Pages/Contact'; 
 import BaseLayout from './Components/BaseLayout'; 
 import CustomerLayout from './Components/CustomerLayout'; 
-import Supplier from './Supplier';
+import Supplier from './Pages/Supplier';
 
 const App = () => {
   return (
