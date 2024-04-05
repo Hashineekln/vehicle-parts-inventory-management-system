@@ -6,7 +6,18 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      // Include the gridTemplateRows configuration
+      gridTemplateRows: {
+        '[auto,auto,1fr]': 'auto auto 1fr',
+      },
+      fontSize: {
+        '9px': '9px',
+      },
+    },
   },
-  plugins: [],
+  plugins: [
+    // Include the @tailwindcss/aspect-ratio plugin
+    require('@tailwindcss/aspect-ratio'),
+  ],
 }

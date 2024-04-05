@@ -1,7 +1,37 @@
 import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import Validation from './Registervalidation';
+
 
 
 const Register = () => {
+  const [values, setValues] = useState({
+    usertype: "",
+    firstname: "",
+    lastname: "",
+    nic: "",
+    email: "",
+    contact: "",
+    password: "",
+    cpassword: "",
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const handleInput = (event) => {
+    const { name, value } = event.target;
+    setValues(prev => ({
+      ...prev,
+      [name]: value, // Correctly spread previous state and update the field
+    }));
+  };
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setErrors(Validation(values)); // Assuming Validation correctly returns an object of errors
+  };
+
   return (
     <div className="container min-h-full flex flex-row justify-center px-6 py-12 lg:px-8">
 
@@ -15,7 +45,8 @@ const Register = () => {
       <div className="content-section sm:mx-auto sm:max-w-md">
 
 
-<form className="space-y-6" action="#" method="POST">
+<form onSubmit={handleSubmit}
+className="space-y-6" action="#" method="POST">
         <div className="mt-60 sm:mx-auto sm:w-full sm:max-w-sm">
           
         <img className="mx-auto h-20 w-auto" src="src/assets/Logo.jpg" alt="LHI Company" />
@@ -35,14 +66,18 @@ const Register = () => {
         
 
           <div>
-            <label htmlFor="usertype" className="block text-sm font-medium leading-6 text-gray-900">
+            <label htmlFor="usertype"
+             className="block text-sm font-medium leading-6 text-gray-900">
               Usertype
             </label>
             <div className="mt-2">
               <select
+              
+              palceholder=""
+               onChange={handleInput}
                 id="usertype"
                 name="usertype"
-                autoComplete="usertype"
+                
                 required
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 placeholder:text-gray-400"
               >
@@ -58,72 +93,72 @@ const Register = () => {
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-3">
-              <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
+              <label htmlFor="firstname" className="block text-sm font-medium leading-6 text-gray-900">
                 First name
               </label>
               <div className="mt-2">
                 <input
+                
                   type="text"
-                  name="first-name"
-                  id="first-name"
-                  autoComplete="given-name"
+                  name="firstname"
+                  id= "firstname"
+                  palceholder=""
+          onChange={handleInput}
+                  
+                  required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
+                {errors.firstname && <span className='text-danger'> {errors.firstname} </span>} 
+                
               </div>
             </div>
 
             <div className="sm:col-span-3">
-              <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-gray-900">
+              <label htmlFor="lastname" className="block text-sm font-medium leading-6 text-gray-900">
                 Last name
               </label>
               <div className="mt-2">
                 <input
+                palceholder=""
+                onChange={handleInput}
                   type="text"
-                  name="last-name"
-                  id="last-name"
-                  autoComplete="family-name"
+                  name= "lastname"
+                  id="lastname"
+                  required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
+{errors.lastname && <span className='text-danger'> {errors.lastname} </span>} 
               </div>
             </div>
           </div>
           <div>
 
             <div className="flex items-center justify-between">
-              <label htmlFor="NIC" className="block text-sm font-medium leading-6 text-gray-900">
+              <label htmlFor="nic" className="block text-sm font-medium leading-6 text-gray-900">
                 NIC
               </label>
             </div>
             <div className="mt-2">
               <input
-                id="NIC"
-                name="NIC"
-                type="NIC"
+                
+                palceholder=""
+          onChange={handleInput}
+                id="nic"
+                name="nic"
+                type="text"
                 required
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
+              {errors.nic && <span className='text-danger'> {errors.nic} </span>} 
+
+
             </div>
           </div>
           
 
  
-              <div className="flex items-center justify-between">
-                <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">
-                  Username
-                </label>
+
     
-              </div>
-              <div className="mt-2">
-                <input
-                  id="username"
-                  name="username"
-                  type="username"
-                  autoComplete="username"
-                  required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-            
 
             <div>
               <div className="flex items-center justify-between">
@@ -134,32 +169,42 @@ const Register = () => {
               </div>
               <div className="mt-2">
                 <input
-                  id="email"
+                  palceholder=""
+                  onChange={handleInput}
+                  id= "email"
                   name="email"
                   type="email"
-                  autoComplete=""
+                  
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
+                {errors.email && <span className='text-danger'> {errors.email} </span>} 
+
+
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between">
-                <label htmlFor="phone" className="block text-sm font-medium leading-6 text-gray-900">
+                <label htmlFor="contact" className="block text-sm font-medium leading-6 text-gray-900">
                 Contact No
                 </label>
     
               </div>
               <div className="mt-2">
                 <input
-                  id="phone"
-                  name="phone"
-                  type="phone"
+                palceholder=""
+                onChange={handleInput}
+                  id="contact"
+                  name="contact"
+                  type="tel"
                   autoComplete=""
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
+                {errors.contact && <span className='text-danger'> {errors.contact} </span>} 
+
+
               </div>
             </div>
 
@@ -172,33 +217,44 @@ const Register = () => {
               </div>
               <div className="mt-2">
                 <input
+                  palceholder=""
+                  onChange={handleInput}
                   id="password"
                   name="password"
                   type="password"
-                  autoComplete="current-password"
+                  
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
+                {errors.password && <span className='text-danger'> {errors.password} </span>} 
+
+
               </div>
             </div>
 
 
             <div>
               <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                <label htmlFor="cpassword" className="block text-sm font-medium leading-6 text-gray-900">
                   Confirm Password
                 </label>
     
               </div>
               <div className="mt-2">
                 <input
-                  id="password"
-                  name="password"
+                  palceholder=""
+                  onChange={handleInput}
+                  id= "cpassword"
+                  name= "cpassword"
                   type="password"
                   autoComplete="current-password"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
+               
+                {errors.cpassword && <span className="text-red-600 font-bold" style={{fontSize: '12px'}}> {errors.cpassword} </span>}
+               
+
               </div>
             </div>
   
@@ -206,8 +262,8 @@ const Register = () => {
 <br/>
     
             <div>
-              <button
-                type="submit"
+              <button type="submit"
+                
                 className="flex w-full justify-center rounded-md bg-sky-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                Register
