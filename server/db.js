@@ -1,8 +1,9 @@
 // Import the mysql module using require
-const mysql = require('mysql');
+import mysql from 'mysql';
+
 
 // Create a database connection
-const db = mysql.createConnection({
+export const db = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "Hashinee@123", // Replace with your actual password
@@ -16,6 +17,9 @@ db.connect(function(err) {
         return;
     }
     console.log('Connected to database as id ' + db.threadId);
+
 });
+
+export default db;
 
 // Remember to replace "your_password" with your actual database password

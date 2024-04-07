@@ -2,7 +2,8 @@ function Validation(values) {
     let errors = {}; // Renamed error to errors for clarity
 
     const firstname_pattern= /^[A-Za-z]+$/;
-    const lastname_pattern= /^[A-Za-z]+$/;  
+    const lastname_pattern= /^[A-Za-z]+$/;
+    const username_pattern = /^[A-Za-z0-9_-]{3,30}$/;
     const email_pattern= /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Corrected regex pattern
     const password_pattern= /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
   const nic_pattern= /^[0-9]{12}$|^[0-9]{9}V$/;
@@ -21,6 +22,15 @@ function Validation(values) {
       } else if (!lastname_pattern.test(values.lastname)) {
         errors.lastname = "lastname is invalid";
       }
+
+      if (!values.username) {
+        errors.username = "username required";
+      // Correctly use values.email for pattern test and assign to errors.email
+      } else if (!username_pattern.test(values.username)) {
+        errors.username = "paces, special symbols (other than underscore and dash), or those shorter than 3 characters or longer than 16 characters";
+      }
+
+
 
       if (!values.nic) {
         errors.nic = "nic required";

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import Validation from './Registervalidation';
+import axios from 'axios';
 
 
 
@@ -18,17 +19,22 @@ const Register = () => {
 
   const [errors, setErrors] = useState({});
 
-  const handleInput = (event) => {
-    const { name, value } = event.target;
-    setValues(prev => ({
-      ...prev,
-      [name]: value, // Correctly spread previous state and update the field
-    }));
+  const handleInput = e => {
+    setValues(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
+    try{
+      const res= await axios.post("/auth/register", values);
+      console.log(res);
+
+    }catch(err){
+      console.log(err);
+    }
+
+    
     setErrors(Validation(values)); // Assuming Validation correctly returns an object of errors
   };
 
@@ -98,6 +104,7 @@ className="space-y-6" action="#" method="POST">
               </label>
               <div className="mt-2">
                 <input
+             
                 
                   type="text"
                   name="firstname"
@@ -119,6 +126,7 @@ className="space-y-6" action="#" method="POST">
               </label>
               <div className="mt-2">
                 <input
+               
                 palceholder=""
                 onChange={handleInput}
                   type="text"
@@ -131,8 +139,33 @@ className="space-y-6" action="#" method="POST">
               </div>
             </div>
           </div>
+          
           <div>
+            <div className="flex items-center justify-between">
+              <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">
+              username
+              </label>
+            </div>
+            <div className="mt-2">
+              <input
+              
+                
+                palceholder=""
+          onChange={handleInput}
+                id="username"
+                name="username"
+                type="text"
+                required
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+             {errors.username && <span className='text-danger'> {errors.username} </span>} 
 
+
+            </div>
+          </div>
+
+
+          <div>
             <div className="flex items-center justify-between">
               <label htmlFor="nic" className="block text-sm font-medium leading-6 text-gray-900">
                 NIC
@@ -169,6 +202,7 @@ className="space-y-6" action="#" method="POST">
               </div>
               <div className="mt-2">
                 <input
+                
                   palceholder=""
                   onChange={handleInput}
                   id= "email"
@@ -193,6 +227,7 @@ className="space-y-6" action="#" method="POST">
               </div>
               <div className="mt-2">
                 <input
+               
                 palceholder=""
                 onChange={handleInput}
                   id="contact"
@@ -217,6 +252,7 @@ className="space-y-6" action="#" method="POST">
               </div>
               <div className="mt-2">
                 <input
+                
                   palceholder=""
                   onChange={handleInput}
                   id="password"
@@ -242,6 +278,7 @@ className="space-y-6" action="#" method="POST">
               </div>
               <div className="mt-2">
                 <input
+                
                   palceholder=""
                   onChange={handleInput}
                   id= "cpassword"
@@ -262,7 +299,7 @@ className="space-y-6" action="#" method="POST">
 <br/>
     
             <div>
-              <button type="submit"
+              <button onClick ={handleSubmit} 
                 
                 className="flex w-full justify-center rounded-md bg-sky-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
