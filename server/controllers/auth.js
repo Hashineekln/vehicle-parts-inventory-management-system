@@ -7,13 +7,13 @@ export const register = (req, res) => {
     console.log(req.body);
 
     // Query to check if user already exists based on various criteria
-    const checkUserQuery = "SELECT * FROM user WHERE usertype = ? OR first_name = ? OR last_name = ? OR username = ? OR NIC = ? OR email = ? OR contact = ?";
+    const checkUserQuery = "SELECT * FROM user WHERE  username = ? OR NIC = ? OR email = ? OR contact = ?";
 
-    // Values from the request body to check if the user already exists
+    // Values from the request body to check if the user already exists with same email,conatct and username
     const checkValues = [
-        req.body.usertype,
-        req.body.first_name,
-        req.body.last_name,
+        //req.body.usertype,
+        //req.body.first_name,
+        //req.body.last_name,
         req.body.username,
         req.body.NIC,
         req.body.email,

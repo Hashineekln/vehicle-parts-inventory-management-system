@@ -16,6 +16,7 @@ const Register = () => {
     password: "",
     cpassword: "",
   });
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [errors, setErrors] = useState({});
 
@@ -24,16 +25,25 @@ const Register = () => {
   };
 
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    try{
-      const res= await axios.post("/auth/register", values);
+    setErrors(Validation(values)); // Assuming Validation correctly returns an object of errors
+  
+    try {
+      const res = await axios.post("/auth/register", values);
       console.log(res);
-
-    }catch(err){
-      console.log(err);
+      // Maybe redirect the user to the login page or clear the form here
+    } catch (err) {
+      if (err.response && err.response.status === 409) {
+        // Set the error message state to the backend's response message
+        setErrorMessage(err.response.data); // Assuming the backend sends back a plain text message
+      } else {
+        // Generic error message for other errors
+        setErrorMessage("An unexpected error occurred. Please try again later.");
+      }
     }
-
+  
+  
     
     setErrors(Validation(values)); // Assuming Validation correctly returns an object of errors
   };
@@ -305,6 +315,9 @@ className="space-y-6" action="#" method="POST">
               >
                Register
               </button>
+
+              {errorMessage && <div className="text-red-500 text-center mt-2">{errorMessage}</div>}
+
             </div>
             </div>
 
