@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import Validation from './Registervalidation';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 
 
 
@@ -17,7 +19,7 @@ const Register = () => {
     cpassword: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
-
+const navigate = useNavigate();
   const [errors, setErrors] = useState({});
 
   const handleInput = e => {
@@ -30,8 +32,9 @@ const Register = () => {
     setErrors(Validation(values)); // Assuming Validation correctly returns an object of errors
   
     try {
-      const res = await axios.post("/auth/register", values);
-      console.log(res);
+     await axios.post("/auth/register", values);
+     navigate ("/login");
+     //console.log(res);
       // Maybe redirect the user to the login page or clear the form here
     } catch (err) {
       if (err.response && err.response.status === 409) {

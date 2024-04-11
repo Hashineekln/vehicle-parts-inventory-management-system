@@ -1,3 +1,5 @@
+import { Link, useNavigate } from 'react-router-dom';
+
 export default function Example() {
   return (
     <div className="relative overflow-hidden bg-white">
@@ -83,10 +85,11 @@ export default function Example() {
               </div>
 
               <a
-                href="#"
-                className=" w-full justify-center rounded-md bg-sky-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                
+                className=" w-auto justify-center rounded-md bg-sky-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Shop Collection
+               
+                <Link className="font-semibold text-slate-50 p-3  hover:text-blue-400" to="/Homefilter"> Shop Collection</Link> {/* Visible label */}
               </a>
             </div>
           </div>

@@ -5,6 +5,7 @@ import reportRoutes from '../routes/report.js';
 import authRoutes from '../routes/auth.js';
 import userRoutes from '../routes/user.js';
 import roleRoutes from '../routes/role.js';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
@@ -15,6 +16,7 @@ const app = express();
 
 // Routes
 app.use(express.json());
+app.use(cookieParser());
 app.use("/server/report", reportRoutes);
 app.use("/auth", authRoutes);
 app.use("/server/user", userRoutes);

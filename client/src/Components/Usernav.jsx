@@ -1,8 +1,10 @@
-import { Fragment } from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { BellIcon } from '@heroicons/react/24/outline'
-import { UserIcon } from '@heroicons/react/24/outline'
+//logout context
 
+//import { Fragment } from 'react'
+import { Disclosure, Menu, Transition } from '@headlessui/react'
+import { PowerIcon } from '@heroicons/react/24/outline'
+//import { UserIcon } from '@heroicons/react/24/outline'
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Example() {
   return (
@@ -14,17 +16,17 @@ export default function Example() {
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
 
               </div>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                <button
-                  type="button"
-                  className="relative rounded-full bg-slate-50 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+              <div className="absolute inset-y-0 right-0 flex items-center p-5 sm:static sm:inset-auto sm:ml-6 sm:pr-0 ">
+                <span
+                  className="realative rounded-full bg-slate-50 p-1 text-slate-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 focus:ring-offset"
                 >
-                  <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
+                  <PowerIcon className="h-4 w-4 m-1 "  />
+                </span>
+                
+                  <Link className="font-semibold text-slate-50 p-3  hover:text-blue-400" to="/Login">Sign Out</Link> {/* Visible label */}
 
                 {/* user dropdown Hell user inclde again*/}
-                <Menu as="div" className="relative ml-3">
+               {/* <Menu as="div" className="relative ml-3">
                   <div>
                     <Menu.Button className="relative flex rounded-full bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                       <span className="sr-only">Open user menu</span>
@@ -34,7 +36,10 @@ export default function Example() {
                       </div>
                       
                     </Menu.Button>
-                  </div>
+                  </div> 
+
+
+                  //user dropdown 
                   <Transition
                     as={Fragment}
                     enter="transition ease-out duration-100"
@@ -76,8 +81,8 @@ export default function Example() {
                         )}
                       </Menu.Item>
                     </Menu.Items>
-                  </Transition>
-                </Menu>
+                  </Transition> 
+                </Menu> */}
               </div>
             </div>
           </div>

@@ -1,4 +1,4 @@
-
+//cashier dashboard
 import React, { useState } from 'react';
 // Importing icons from react-icons
 import { FaWarehouse, FaUsers, FaFileInvoiceDollar, FaCog, FaArrowCircleRight } from 'react-icons/fa';

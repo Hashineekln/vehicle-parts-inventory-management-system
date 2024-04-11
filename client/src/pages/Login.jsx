@@ -1,30 +1,51 @@
-import { Link } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Validation from './Loginvalidation';
+// Ensure that AuthContext is correctly imported from its new location
+import { AuthContext } from '../context/authContext'; // Adjust the path as necessary
 
-  
+ 
 
 const Login = () => {
   const [values, setValues] = useState({
-   username: "",
+    username: "",
     password: "",
+    
   });
+  const [err, setError] = useState("null");
+const navigate = useNavigate();
 
+//here need to add logout anf login context with nav bar
+
+const {currentUser} = useContext(AuthContext );
+console.log(currentUser);
   const [errors, setErrors] = useState({});
 
-  const handleInput = (event) => {
-    const { name, value } = event.target;
-    setValues(prev => ({
-      ...prev,
-      [name]: value, // Correctly spread previous state and update the field
-    }));
+  const handleInput = e => {
+    setValues(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
 
-
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors(Validation(values)); // Assuming Validation correctly returns an object of errors
+  
+    try {
+     
+     navigate ("/about");
+     //console.log(res);
+      // Maybe redirect the user to the login page or clear the form here
+    
+    
+    } catch (err) {
+
+      
+      setError(err.response.data);
+    }
+  
+  
+    
     setErrors(Validation(values)); // Assuming Validation correctly returns an object of errors
   };
 
@@ -100,11 +121,12 @@ const Login = () => {
 
         <div>
           <button
-            type="submit"
+            onClick={handleSubmit}
             className="flex w-full justify-center rounded-md bg-sky-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
            LogIn
           </button>
+          {err && <div className="text-red-500 text-center mt-2">{err}</div>}
         </div>
       </form>
 

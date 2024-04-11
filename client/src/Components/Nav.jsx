@@ -1,89 +1,51 @@
-import { useState } from "react";
-import {Link} from "react-scroll";
-import{FaTimes} from "react-icons/fa";
-import {CiMenuFries} from "react-icons/ci";
+//baselayout nav
 
-const Nav = () => {
-    const [click,setClick] = useState(false);
-    const handleClick = () => setClick(!click);
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-    
-    const content= <>
+export default function Example() {
+  // State to manage the visibility of conditional content
+  const [click, setClick] = useState(false);
 
-    <div className="lg:hidden block absolute top-16 w-full left-0 ">
+  // Example content that you might want to conditionally display
+  const content = <div></div>;
 
-        <ul className="text-center text-xl p-20">
+  // Array to hold the navigation link details to reduce repetition
+  const navLinks = [
+    { to: "/Home", label: "Home" },
+    { to: "/About", label: "About" },
+    { to: "/Contact", label: "Contact" },
+    { to: "/Login", label: "Login" },
+    { to: "/Register", label: "Register" },
+    // Add more navigation links as needed
+  ];
 
-            <Link spy= {true} smooth={true} to="Home">
-                <li className="my-4 py-4 border-slate-800 hover:bg-slate-800 hover:rounded">Home</li>
-            </Link >
-
-            <Link spy = {true} smooth={true} to="About">
-                <li className="my-4 py-4 border-slate-800 hover:bg-slate-800 hover:rounded">About</li>
-            </Link>
-
-            <Link spy = {true} smooth={true} to="Contact">
-                <li className="my-4 py-4 border-slate-800 hover:bg-slate-800 hover:rounded">Contact</li>
-            </Link>
-
-            <Link spy = {true} smooth={true} to='/Login'>
-                <li className="my-4 py-4 border-slate-800 hover:bg-slate-800 hover:rounded">Login</li>
-            </Link>
-
-            <Link spy = {true} smooth={true}  to='/Register'>
-                <li className="my-4 py-4 border-slate-800 hover:bg-slate-800 hover:rounded">Register</li>
-            </Link>
-
-
-
-        </ul>
+  return (
+    <nav>
+      <div className="h-10vh flex justify-between z-50 text-white lg:py-5 px-20 py-4 ">
+        <div className="flex items-center flex-1">
+          <span className="text-3xl font-bold">LHI Logistic</span>
+        </div>
+        
+        <div className="lg:flex md:flex lg:flex-1 items-center justify-end font-normal hidden">
+          <div className="flex-10">
+            <ul className="flex gap-8 mr-16 text-[18px]">
+              {navLinks.map((link, index) => (
+                <a key={index}
+                  className="w-auto justify-center rounded-md px-3 py-1.5 text-l  font-semibold leading-6 text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  <Link className="font-semibold text-slate-50 p-3" to={link.to}>
+                    {link.label}
+                  </Link>
+                </a>
+              ))}
+            </ul>
+          </div>
         </div>
 
-        </>
-    return (
-        <nav>
-            <div className="h-10vh flex justify-between z-50 text-white lg:py-5 px-20 py-4 ">
-                <div className="flex items-center flex-1">
-                    <span className="text-3xl font-bold">LHI Logistic</span>
-                </div>
-                
-                    <div className="lg:flex md:flex lg:flex-1 items-center justify-end font-normal hidden">
-                    <div className="flex-10">
-                    <ul className="flex gap-8 mr-16 text-[18px]">
-
-
-
-                    <Link spy = {true} smooth={true} to="Home">
-                <li className="hover:text-gray-700 transition  cursor-pointer">Home</li>
-            </Link>
-
-            <Link spy = {true} smooth={true} to="About">
-                <li className="hover:text-gray-700 transition  cursor-pointer">About</li>
-            </Link>
-
-            <Link spy = {true} smooth={true}  to="Contact">
-                <li className="hover:text-gray-700 transition  cursor-pointer">Contact</li>
-            </Link>
-
-            <Link spy = {true} smooth={true}  to='/Login'>
-                <li className="hover:text-gray-700 transition  cursor-pointer">Login</li>
-            </Link>
-
-            <Link spy = {true} smooth={true}  to='/Register'>
-                <li className="hover:text-gray-700 transition  cursor-pointer">Register</li>
-            </Link>
-
-                        
-                    </ul>
-                    </div>
-                </div>
-                <div> {click && content}</div>
-            </div>
-    <button className="block sm:hidden transition" onClick={handleClick}>
-        {click ? <FaTimes/> : <CiMenuFries/>}
-
-    </button>
-        </nav>
-    );
-    };
-    export default Nav;
+        
+        
+      </div>
+    </nav>
+  );
+};

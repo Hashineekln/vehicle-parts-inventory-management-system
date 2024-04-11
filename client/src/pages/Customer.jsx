@@ -1,10 +1,28 @@
+//add form
+
+
+import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
+import Validation from './Registervalidation';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 
 const Customer = () => {
-  const [customers, setCustomers] = useState([
-    { id: 1, customer_id: 123, first_name: 'janath', last_name: 'silva', phone: '1234567890', edit: 'edit' },
-    { id: 2, customer_id: 123, first_name: 'gayan', last_name: 'perera', phone: '0987654321', edit: 'edit' },
-  ]);
+  const [customers, setCustomers] = useState({
+    id: 1,
+    first_name: '',
+    last_name: '',
+    phone: '',
+    
+    
+
+  });
+    
+
+
+
+
   const [showForm, setShowForm] = useState(false);
   const [newCustomer, setNewCustomer] = useState({
     first_name: '',
