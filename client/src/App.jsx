@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 //BASIC pages
 import Login from './Pages/Login';
 import Register from './Pages/Register'; 
-
 import About from './Pages/About'; 
 import Contact from './Pages/Contact'; 
 import Home from './Pages/Home';
@@ -22,24 +21,15 @@ import Vehicletype from './Pages/Vehicletype';
 
 
 
-Customerview
+
 //CASHIER
-import Customer from './Pages/Customer'; 
-import Customerview from './Pages/Customerview'; 
-
-
-
-
-
+import Client from '/src/Pages/Client.jsx';
+import Clientadd from '/src/Pages/Clientadd.jsx';
 
 //components and layouts
 import BaseLayout from './Components/BaseLayout'; 
 import CashierLayout from './Components/CashierLayout'; 
 import AdminLayout from './Components/AdminLayout'; 
-
-
-
-
 
 
 
@@ -56,13 +46,12 @@ const App = () => {
       <Route path="/Product" element={<BaseLayout><Product /></BaseLayout>} />
       <Route path="/Homefilter" element={<BaseLayout><Homefilter /></BaseLayout>} />
       <Route path="/Dropdown" element={<BaseLayout><Dropdown /></BaseLayout>} />
-
+      
 
 
       {/* Customer part both include pard nav and dashboard */}
-      <Route path="/Customer" element={<CashierLayout><Customer /></CashierLayout>} /> 
-      <Route path="/Customerview" element={<CashierLayout><Customerview /></CashierLayout>} />
-
+      <Route path="/Client" element={<CashierLayout><Client /></CashierLayout>} />
+      <Route path="/Clientadd" element={<CashierLayout><Clientadd /></CashierLayout>} />
       
       
       {/* admin part both include pard nav and dashboard */}
@@ -73,9 +62,6 @@ const App = () => {
       <Route path="/Vehicletype" element={<AdminLayout><Vehicletype /></AdminLayout>} />
 
       
-      
-      
-
 
       
       {/* Redirect to /about as the home page change again after */}
