@@ -25,6 +25,8 @@ import Vehicletype from './Pages/Vehicletype';
 //CASHIER
 import Client from '/src/Pages/Client.jsx';
 import Clientadd from '/src/Pages/Clientadd.jsx';
+import Clientupdate from '/src/Pages/Clientupdate.jsx';
+
 
 //components and layouts
 import BaseLayout from './Components/BaseLayout'; 
@@ -52,7 +54,7 @@ const App = () => {
       {/* Customer part both include pard nav and dashboard */}
       <Route path="/Client" element={<CashierLayout><Client /></CashierLayout>} />
       <Route path="/Clientadd" element={<CashierLayout><Clientadd /></CashierLayout>} />
-      
+      <Route path="/Clientupdate/:id" element={<Clientupdate />} />  // Parameterized route
       
       {/* admin part both include pard nav and dashboard */}
       <Route path="/Supplier" element={<AdminLayout><Supplier /></AdminLayout>} />

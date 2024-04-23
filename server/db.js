@@ -1,6 +1,5 @@
-// Import the mysql module using require
+// Import the mysql module using ES Modules syntax
 import mysql from 'mysql';
-
 
 // Create a database connection
 export const db = mysql.createConnection({
@@ -17,8 +16,11 @@ db.connect(function(err) {
         return;
     }
     console.log('Connected to database as id ' + db.threadId);
-
 });
+
+// Example function to handle a route - This should ideally be in a different file if using an Express server
+
+
 
 export default db;
 

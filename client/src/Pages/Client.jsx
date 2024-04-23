@@ -1,133 +1,72 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Validation from './Registervalidation'; // Ensure this path is correct
+import { Link } from 'react-router-dom';
 
-const Client = () => {
-  const [values, setValues] = useState({
-    usertype: "",
-    firstname: "",
-    lastname: "",
-    username: "",
-    nic: "",
-    email: "",
-    contact: "",
-    password: "",
-    cpassword: ""
-  });
+function Client() {
+    const [clients, setClients] = useState([]);
+    const [error, setError] = useState(null);
 
-  const [errors, setErrors] = useState({});
-  const [errorMessage, setErrorMessage] = useState("");
+    useEffect(() => {
+        axios.get('http://localhost:5000/client')
+            .then(res => {
+                setClients(res.data); // Assuming the response is an array of client objects
+                setError(null); // Reset error state if successful
+            })
+            .catch(err => {
+                console.error('Error fetching clients:', err);
+                setError('Error fetching clients. Please try again.'); // Set error message
+            });
+    }, []);
 
-  const navigate = useNavigate();
+    const handleDelete = (id) => {
+        axios.delete(`http://localhost:5000/client/${id}`)
+            .then(() => {
+                // Remove the deleted client from the client list
+                setClients(clients.filter(client => client.customer_id !== id));
+                // Display success message
+                alert('Client details deleted successfully');
+            })
+            .catch(err => {
+                console.error('Error deleting client:', err);
+                setError('Error deleting client. Please try again.');
+            });
+    };
 
-  const handleInput = (e) => {
-    const { name, value } = e.target;
-    setValues(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const validationErrors = Validation(values);
-    setErrors(validationErrors);
-
-    if (Object.keys(validationErrors).length === 0) {
-      try {
-        await axios.post("/auth/register", values);
-        navigate("/login");
-      } catch (err) {
-        if (err.response && err.response.status === 409) {
-          setErrorMessage(err.response.data);
-        } else {
-          setErrorMessage("An unexpected error occurred. Please try again later.");
-        }
-      }
-    }
-  };
-
-  return (
-    <div className="container min-h-full flex flex-row justify-center px-6 py-12 lg:px-8">
-      <form onSubmit={handleSubmit} className="space-y-6 sm:mx-auto sm:max-w-md">
-        <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          User Registration
-        </h2>
-        <p className="text-center text-gray-600">
-          Please enter your details here
-        </p>
-
-        <label htmlFor="usertype" className="block text-sm font-medium leading-6 text-gray-900">
-          Usertype
-        </label>
-        <select
-          id="usertype"
-          name="usertype"
-          required
-          onChange={handleInput}
-          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-        >
-          <option value="">Select a type</option>
-          <option value="cashier">Cashier</option>
-          <option value="admin">Admin</option>
-          <option value="employee">Employee</option>
-        </select>
-
-        {["firstname", "lastname", "username", "nic", "email", "contact"].map(field => (
-          <div key={field}>
-            <label htmlFor={field} className="block text-sm font-medium leading-6 text-gray-900">
-              {field.charAt(0).toUpperCase() + field.slice(1)}
-            </label>
-            <input
-              id={field}
-              name={field}
-              type={field === "email" ? "email" : "text"}
-              required
-              onChange={handleInput}
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-            {errors[field] && <span className="text-red-600">{errors[field]}</span>}
-          </div>
-        ))}
-
-        <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-          Password
-        </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          required
-          onChange={handleInput}
-          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-        />
-        {errors.password && <span className="text-red-600">{errors.password}</span>}
-
-        <label htmlFor="cpassword" className="block text-sm font-medium leading-6 text-gray-900">
-          Confirm Password
-        </label>
-        <input
-          id="cpassword"
-          name="cpassword"
-          type="password"
-          required
-          onChange={handleInput}
-          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-        />
-        {errors.cpassword && <span className="text-red-600">{errors.cpassword}</span>}
-
-        <button
-          type="submit"
-          className="flex w-full justify-center rounded-md bg-sky-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          Register
-        </button>
-        {errorMessage && <div className="text-red-500 text-center mt-2">{errorMessage}</div>}
-
-        <p className="text-center text-sm text-gray-500">
-          Already have an Account?<Link className="font-semibold text-sky-500 hover:text-blue-400" to="/login"> Login</Link>
-        </p>
-      </form>
-    </div>
-  );
-};
+    return (
+        <div className='overflow-x-auto relative flex-1 p-4'>
+            <div className='w-full bg-white rounded p-3'>
+                <div className='flex justify-between mb-3'>
+                    <h1 className='text-2xl font-semibold text-gray-200 dark:text-gray-950'>Customer View</h1>
+                    <Link to='/Clientadd' className='rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>Add Customer</Link>
+                </div>
+                {error && <div className="alert alert-danger">{error}</div>} {/* Display error message if there's an error */}
+                <table className='w-full text-sm text-left text-gray-50 dark:text-gray-950'>
+                    <thead className='text-xs text-gray-950 uppercase bg-gray-50 dark:bg-slate-80 dark:text-gray-950'>
+                        <tr>
+                            <th className='py-3 px-6'>Customer ID</th>
+                            <th className='py-3 px-6'>First Name</th>
+                            <th className='py-3 px-6'>Last Name</th>
+                            <th className='py-3 px-6'>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {clients.map(client => (
+                            <tr key={client.customer_id} className='bg-white border-b dark:bg-gray-100 dark:border-gray-200'>
+                                <td className='py-4 px-6'>{client.customer_id}</td>
+                                <td className='py-4 px-6'>{client.first_name}</td>
+                                <td className='py-4 px-6'>{client.last_name}</td>
+                                <td className='py-4 px-6'>
+                                    <Link to={`/Clientupdate/${client.customer_id}`} className='rounded-md bg-blue-500  px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>Edit</Link>
+                                    
+                                    <button className='rounded-md bg-red-500  px-2 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ml-3' onClick={() => handleDelete(client.customer_id)}>Delete</button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+}
 
 export default Client;
