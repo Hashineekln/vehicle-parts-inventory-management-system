@@ -5,6 +5,8 @@ import cors from 'cors';
 import reportRoutes from '../routes/report.js';
 import authRoutes from '../routes/auth.js';
 import clientRoutes from '../routes/client.js';
+
+import categoryRoutes from '../routes/category.js';
 import userRoutes from '../routes/user.js';
 import roleRoutes from '../routes/role.js';
 import cookieParser from 'cookie-parser';
@@ -25,7 +27,7 @@ app.use("/auth", authRoutes);
 app.use("/server/user", userRoutes);
 app.use("/server/role", roleRoutes);
 app.use("/client", clientRoutes);
-
+app.use("/category", categoryRoutes);
 
 
 // Port

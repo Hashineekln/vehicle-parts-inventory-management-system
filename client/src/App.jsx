@@ -15,7 +15,11 @@ import Dropdown from './Pages/Dropdown';
 //ADMIN
 import Supplier from './Pages/Supplier';
 import Inventory from './Pages/Inventory'; 
+
 import Category from './Pages/Category';
+import Categoryupdate from './Pages/Categoryupdate';
+import Categoryadd from './Pages/Categoryadd';
+
 import Vehiclepart from './Pages/Vehiclepart';
 import Vehicletype from './Pages/Vehicletype';
 
@@ -60,7 +64,15 @@ const App = () => {
       <Route path="/Supplier" element={<AdminLayout><Supplier /></AdminLayout>} />
       <Route path="/Inventory" element={<AdminLayout><Inventory /></AdminLayout>} />
       <Route path="/Category" element={<AdminLayout><Category /></AdminLayout>} />
+      <Route path="/Categoryadd" element={<AdminLayout><Categoryadd /></AdminLayout>} />
+     
+      <Route path="/Categoryupdate/:id" element={<Categoryupdate />} /> 
+
+
       <Route path="/Vehiclepart" element={<AdminLayout><Vehiclepart /></AdminLayout>} />
+
+
+
       <Route path="/Vehicletype" element={<AdminLayout><Vehicletype /></AdminLayout>} />
 
       
