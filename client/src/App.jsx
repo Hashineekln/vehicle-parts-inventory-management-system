@@ -21,9 +21,17 @@ import Categoryupdate from './Pages/Categoryupdate';
 import Categoryadd from './Pages/Categoryadd';
 
 import Vehiclepart from './Pages/Vehiclepart';
+import Vehiclepartadd from './Pages/Vehiclepartadd';
+import Vehiclepartupdate from './Pages/Vehiclepartupdate';
+
 import Vehicletype from './Pages/Vehicletype';
+import Vehicletypeadd from './Pages/Vehicletypeadd';
+import Vehicletypeupdate from './Pages/Vehicletypeupdate';
 
 
+import Shelf from './Pages/Shelf';
+import Shelfadd from './Pages/Shelfadd';
+import Shelfupdate from './Pages/Shelfupdate';
 
 
 //CASHIER
@@ -65,19 +73,25 @@ const App = () => {
       <Route path="/Inventory" element={<AdminLayout><Inventory /></AdminLayout>} />
       <Route path="/Category" element={<AdminLayout><Category /></AdminLayout>} />
       <Route path="/Categoryadd" element={<AdminLayout><Categoryadd /></AdminLayout>} />
-     
       <Route path="/Categoryupdate/:id" element={<Categoryupdate />} /> 
 
 
       <Route path="/Vehiclepart" element={<AdminLayout><Vehiclepart /></AdminLayout>} />
-
+      <Route path="/Vehiclepartadd" element={<AdminLayout><Vehiclepartadd /></AdminLayout>} />
+      <Route path="/Vehiclepartupdate" element={<AdminLayout><Vehiclepartupdate /></AdminLayout>} />
 
 
       <Route path="/Vehicletype" element={<AdminLayout><Vehicletype /></AdminLayout>} />
+      <Route path="/Vehicletypeadd" element={<AdminLayout><Vehicletypeadd /></AdminLayout>} />
+      <Route path="/Vehicletypeupdate/:id" element={<Vehicletypeupdate />} /> 
+
 
       
-
+      <Route path="/Shelf" element={<AdminLayout><Shelf /></AdminLayout>} />
+      <Route path="/Shelfadd" element={<AdminLayout><Shelfadd /></AdminLayout>} />
+      <Route path="/Shelfupdate/:id" element={<Shelfupdate />} /> 
       
+
       {/* Redirect to /about as the home page change again after */}
       <Route path="/" element={<BaseLayout><Home /></BaseLayout>} />
     </Routes>
