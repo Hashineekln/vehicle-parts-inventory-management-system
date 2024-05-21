@@ -1,5 +1,3 @@
-//baselayout nav
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -31,21 +29,16 @@ export default function Example() {
           <div className="flex-10">
             <ul className="flex gap-8 mr-16 text-[18px]">
               {navLinks.map((link, index) => (
-                <a key={index}
-                  className="w-auto justify-center rounded-md px-3 py-1.5 text-l  font-semibold leading-6 text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
+                <li key={index} className="w-auto justify-center rounded-md px-3 py-1.5 text-l font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                   <Link className="font-semibold text-slate-50 p-3" to={link.to}>
                     {link.label}
                   </Link>
-                </a>
+                </li>
               ))}
             </ul>
           </div>
         </div>
-
-        
-        
       </div>
     </nav>
   );
-};
+}

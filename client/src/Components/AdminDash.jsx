@@ -16,7 +16,7 @@ const AdminDash = () => {
     { name: 'User Registrations', icon: <FaWarehouse />, path: '/userregistrations' },
     { name: 'Inventory', icon: <FaUsers />, path: '/Inventory' },
     { name: 'Supplier', icon: <FaFileInvoiceDollar />, path: '/Supplier' },
-    { name: 'Transactions', icon: <FaArrowCircleRight />, path: '/Transactions' },
+    { name: 'Transactions', icon: <FaArrowCircleRight />, path: '/Transaction' },
     { name: 'Notification', icon: <FaCog />, path: '/notification' },
     { name: 'Report', icon: <FaArrowCircleRight />, path: '/Report' },
   ];

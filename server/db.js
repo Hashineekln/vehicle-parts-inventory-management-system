@@ -1,5 +1,8 @@
 // Import the mysql module using ES Modules syntax
 import mysql from 'mysql';
+import mysql2 from 'mysql2/promise';
+
+//import mysql from 'mysql2';
 
 // Create a database connection
 export const db = mysql.createConnection({

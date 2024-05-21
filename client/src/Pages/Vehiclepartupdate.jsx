@@ -1,87 +1,95 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
 
-function VehicletypeUpdate() {
-    const { id } = useParams(); // Extract the id parameter from the URL
-
-    const [brand, setBrand] = useState('');
-    const [model, setModel] = useState('');
-    const [year, setYear] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
+const VehiclepartUpdate = () => {
+    const [values, setValues] = useState({
+        category_id: "", // Initialize to empty string
+        name: "" // Initialize to empty string
+    });
+    const [errorMessage, setErrorMessage] = useState("");
+    const navigate = useNavigate();
+    const { id } = useParams();
 
     useEffect(() => {
-        // Fetch vehicle type details when the component mounts
-        fetchVehicleType();
-    }, []);
-
-    const fetchVehicleType = () => {
-        // Fetch vehicle type details based on the id parameter from the URL
-        axios.get(`http://localhost:5000/vehicletype/${id}`)
+        // Fetch the existing data for the client
+        axios.get(`http://localhost:5000/category/${id}`)
             .then(response => {
-                const { brand, model, year } = response.data;
-                setBrand(brand);
-                setModel(model);
-                setYear(year);
+                setValues({
+                    category_id: response.data.category_id || "", // Keep existing value or set to empty string
+                    name: response.data.name || "" // Keep existing value or set to empty string
+                });
             })
             .catch(error => {
-                console.error('Error fetching vehicle type:', error);
-                setErrorMessage('Failed to fetch vehicle type details. Please try again.');
+                console.error('Error fetching client data', error);
+                setErrorMessage('Error fetching data. Please refresh the page and try again.');
             });
+    }, [id]);
+
+    const handleInput = (e) => {
+        const { name, value } = e.target;
+        setValues(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // Validate if brand, model, and year are not empty
-        if (!brand.trim() || !model.trim() || !year.trim()) {
-            setErrorMessage('Please enter brand, model, and year.');
-            return;
+        try {
+            await axios.put(`http://localhost:5000/category/${id}`, values); // Updated endpoint
+            alert('Category details updated successfully'); // Display success message
+            
+            // Fetch the updated category data from the server
+            axios.get(`http://localhost:5000/category/${id}`)
+                .then(response => {
+                    setValues({
+                        category_id: response.data.category_id || "", // Keep existing value or set to empty string
+                        name: response.data.name || "" // Keep existing value or set to empty string
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching updated category data', error);
+                    setErrorMessage('Error fetching updated data. Please refresh the page.');
+                });
+    
+            navigate("/Category");
+        } catch (err) {
+            setErrorMessage("Failed to update category. Please try again.");
         }
-
-        // If all fields are valid, proceed with updating vehicle type
-        axios.put(`http://localhost:5000/vehicletype/${id}`, {
-            brand: brand,
-            model: model,
-            year: year
-        })
-        .then(response => {
-            console.log('Vehicle Type Updated', response);
-            setSuccessMessage('Vehicle type updated successfully');
-            setErrorMessage(''); // Clear any previous error messages
-        })
-        .catch(error => {
-            console.error('Error updating vehicle type', error);
-            setErrorMessage('Failed to update vehicle type. Please try again.');
-            setSuccessMessage('');
-        });
     };
+    
 
     return (
-        <div className="flex justify-center items-center h-screen">
-            <div className="border p-10 rounded max-w-md">
-                <form onSubmit={handleSubmit} className="mb-4">
-                    <label className="block mb-2">
-                        Brand:
-                        <input type="text" value={brand} onChange={e => setBrand(e.target.value)} className="block w-full py-2 px-3 border rounded mt-1" />
-                    </label>
-                    <label className="block mb-2">
-                        Model:
-                        <input type="text" value={model} onChange={e => setModel(e.target.value)} className="block w-full py-2 px-3 border rounded mt-1" />
-                    </label>
-                    <label className="block mb-2">
-                        Year:
-                        <input type="text" value={year} onChange={e => setYear(e.target.value)} className="block w-full py-2 px-3 border rounded mt-1" />
-                    </label>
-                  
-                    <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded mt-2 hover:bg-blue-700">Update Vehicle Type</button>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '20px', width: '300px' }}>
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <h2 style={{ fontWeight: 'bold', marginBottom: '20px' }}>Update Category</h2>
+                    <label htmlFor="first_name" style={{ marginBottom: '8px' }}>Category ID</label>
+                    <input
+                        id="category_id"
+                        name="category_id"
+                        type="text"
+                        value={values.category_id}
+                        onChange={handleInput}
+                        required
+                        style={{ padding: '8px', marginBottom: '16px', width: '100%', border: '1px solid #ccc', borderRadius: '4px' }}
+                    />
+
+                    <label htmlFor="last_name" style={{ marginBottom: '8px' }}>Category Name</label>
+                    <input
+                        id="name"
+                        name="name"
+                        type="text"
+                        value={values.name}
+                        onChange={handleInput}
+                        required
+                        style={{ padding: '8px', marginBottom: '16px', width: '100%', border: '1px solid #ccc', borderRadius: '4px' }}
+                    />
+
+                    <button type="submit" style={{ padding: '10px 20px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Update</button>
+                    {errorMessage && <p style={{ color: 'red', marginTop: '10px' }}>{errorMessage}</p>}
                 </form>
-                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
             </div>
         </div>
     );
-}
+};
 
-export default VehicletypeUpdate;
+export default VehiclepartUpdate;

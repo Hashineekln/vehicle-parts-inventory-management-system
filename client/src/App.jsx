@@ -9,11 +9,19 @@ import Contact from './Pages/Contact';
 import Home from './Pages/Home';
 import Product from './Pages/Product'; 
 import Homefilter from './Pages/Homefilter';
-import Dropdown from './Pages/Dropdown';
+
+
 
 
 //ADMIN
 import Supplier from './Pages/Supplier';
+import Supplieradd from './Pages/Supplieradd';
+import Supplierupdate from './Pages/Supplierupdate';
+
+import Transaction from './Pages/Transaction';
+import Transactionadd from './Pages/Transactionadd';
+import Transactionupdate from './Pages/Transactionupdate';
+
 import Inventory from './Pages/Inventory'; 
 
 import Category from './Pages/Category';
@@ -40,6 +48,8 @@ import Clientadd from '/src/Pages/Clientadd.jsx';
 import Clientupdate from '/src/Pages/Clientupdate.jsx';
 
 
+
+
 //components and layouts
 import BaseLayout from './Components/BaseLayout'; 
 import CashierLayout from './Components/CashierLayout'; 
@@ -59,7 +69,7 @@ const App = () => {
       <Route path="/Home" element={<BaseLayout><Home /></BaseLayout>} />
       <Route path="/Product" element={<BaseLayout><Product /></BaseLayout>} />
       <Route path="/Homefilter" element={<BaseLayout><Homefilter /></BaseLayout>} />
-      <Route path="/Dropdown" element={<BaseLayout><Dropdown /></BaseLayout>} />
+      
       
 
 
@@ -70,6 +80,15 @@ const App = () => {
       
       {/* admin part both include pard nav and dashboard */}
       <Route path="/Supplier" element={<AdminLayout><Supplier /></AdminLayout>} />
+      <Route path="/Supplieradd" element={<AdminLayout><Supplieradd /></AdminLayout>} />
+      <Route path="/Supplierupdate/:id" element={<Supplierupdate />} />
+
+      <Route path="/Transaction" element={<AdminLayout><Transaction /></AdminLayout>} />
+      <Route path="/Transactionadd" element={<AdminLayout><Transactionadd /></AdminLayout>} />
+      <Route path="/Transactionupdate/:id" element={<Transactionupdate />} />
+
+
+
       <Route path="/Inventory" element={<AdminLayout><Inventory /></AdminLayout>} />
       <Route path="/Category" element={<AdminLayout><Category /></AdminLayout>} />
       <Route path="/Categoryadd" element={<AdminLayout><Categoryadd /></AdminLayout>} />
@@ -78,7 +97,7 @@ const App = () => {
 
       <Route path="/Vehiclepart" element={<AdminLayout><Vehiclepart /></AdminLayout>} />
       <Route path="/Vehiclepartadd" element={<AdminLayout><Vehiclepartadd /></AdminLayout>} />
-      <Route path="/Vehiclepartupdate" element={<AdminLayout><Vehiclepartupdate /></AdminLayout>} />
+      <Route path="/Vehiclepartupdate/:id" element={<Vehiclepartupdate />}/>
 
 
       <Route path="/Vehicletype" element={<AdminLayout><Vehicletype /></AdminLayout>} />
