@@ -97,12 +97,15 @@ const App = () => {
 
       <Route path="/Vehiclepart" element={<AdminLayout><Vehiclepart /></AdminLayout>} />
       <Route path="/Vehiclepartadd" element={<AdminLayout><Vehiclepartadd /></AdminLayout>} />
-      <Route path="/Vehiclepartupdate/:id" element={<Vehiclepartupdate />}/>
+      <Route path="/Vehiclepartupdate/:part_no" element={<Vehiclepartupdate />}/>
+
+
 
 
       <Route path="/Vehicletype" element={<AdminLayout><Vehicletype /></AdminLayout>} />
       <Route path="/Vehicletypeadd" element={<AdminLayout><Vehicletypeadd /></AdminLayout>} />
-      <Route path="/Vehicletypeupdate/:id" element={<Vehicletypeupdate />} /> 
+      <Route path="/Vehicletypeupdate/:id" element={<Vehicletypeupdate />} />
+
 
 
       

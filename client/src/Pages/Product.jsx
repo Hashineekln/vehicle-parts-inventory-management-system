@@ -66,6 +66,7 @@ const Product = () => {
         </select>
       </div>
       <button onClick={fetchVehicleParts} className="bg-blue-500 text-white p-2 mt-4">Fetch Parts</button>
+      
       <div className="grid grid-cols-4 gap-4 mt-4">
       {vehicleParts.map((part, index) => (
   <div key={index} className="border p-4 rounded shadow">

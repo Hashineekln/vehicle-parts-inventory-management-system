@@ -11,8 +11,6 @@ export const getVehicleTypes = async (req, res) => {
   }
 };
 
-
-
 export const getVehicleParts = async (req, res) => {
   const { brand, model, year } = req.body;
   try {
