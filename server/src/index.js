@@ -1,7 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
 import path from 'path';
+import router from '../routes/product.js';
 
 // Import routes
 import productRoutes from '../routes/product.js';
@@ -25,10 +27,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/api', router);
 
-// Serve static files from the React app build directory
-//const __dirname = path.resolve();
-//app.use(express.static(path.join(__dirname, 'client/dist')));
+
 
 // API Routes
 app.use('/product', productRoutes);
@@ -44,10 +47,7 @@ app.use('/vehiclepart', vehiclepartRoutes);
 app.use('/supplier', supplierRoutes);
 app.use('/transaction', transactionRoutes);
 
-// All remaining requests return the React app, so it can handle routing
-//app.get('*', (req, res) => {
-  //res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
-//});
+
 
 // Port
 const PORT = process.env.PORT || 5000;

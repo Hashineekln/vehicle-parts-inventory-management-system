@@ -13,7 +13,7 @@ const AdminDash = () => {
 
   // Mapping your routes to specific icons and paths
   const menuItems = [
-    { name: 'User Registrations', icon: <FaWarehouse />, path: '/userregistrations' },
+    { name: 'User Registrations', icon: <FaWarehouse />, path: '/user' },
     { name: 'Inventory', icon: <FaUsers />, path: '/Inventory' },
     { name: 'Supplier', icon: <FaFileInvoiceDollar />, path: '/Supplier' },
     { name: 'Transactions', icon: <FaArrowCircleRight />, path: '/Transaction' },

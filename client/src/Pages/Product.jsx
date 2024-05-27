@@ -13,6 +13,7 @@ const Product = () => {
   });
 
   useEffect(() => {
+    // Fetch vehicle types when the component mounts
     axios.get('http://localhost:5000/vehicletype')
       .then(response => {
         const data = response.data;
@@ -29,22 +30,32 @@ const Product = () => {
   };
 
   const fetchVehicleParts = () => {
-    axios.post('http://localhost:5000/vehiclepart', filters)
+    if (!filters.brand || !filters.model || !filters.year) {
+      alert('Please select brand, model, and year before fetching vehicle parts.');
+      return;
+    }
+  
+    console.log("Filters being sent:", filters); // Log the filters before making the request
+  
+    axios.post('http://localhost:5000/api/vehiclepart', filters, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
       .then(response => setVehicleParts(response.data))
       .catch(error => {
         if (error.response) {
           console.error(error.response.data);
-          // Handle error response from the server
         } else {
           console.error(error.message);
-          // Handle other errors
         }
       });
   };
+  
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Vehicle Parts Finder</h1>
+      <h1 className="text-2xl font-bold mb-4">Select Your Vehicle Part</h1>
       <div className="grid grid-cols-3 gap-4">
         <select name="brand" onChange={handleFilterChange} className="border p-2">
           <option value="">Select Brand</option>
@@ -68,16 +79,15 @@ const Product = () => {
       <button onClick={fetchVehicleParts} className="bg-blue-500 text-white p-2 mt-4">Fetch Parts</button>
       
       <div className="grid grid-cols-4 gap-4 mt-4">
-      {vehicleParts.map((part, index) => (
-  <div key={index} className="border p-4 rounded shadow">
-    <img src={part.image_url} alt={part.part_name} className="mb-2" />
-    <h2 className="text-lg font-bold">{part.part_name}</h2>
-    <p>Part No: {part.part_no}</p>
-    <p>Price: ${part.price}</p>
-    <p>Quantity: {part.quantity}</p>
-  </div>
-))}
-
+        {vehicleParts.map((part, index) => (
+          <div key={index} className="border p-4 rounded shadow">
+            <img src={part.image_url} alt={part.part_name} className="mb-2" />
+            <h2 className="text-lg font-bold">{part.part_name}</h2>
+            <p>Part No: {part.part_no}</p>
+            <p>Price: Rs.{part.price}</p>
+            <p>Quantity: {part.quantity}</p>
+          </div>
+        ))}
       </div>
     </div>
   );

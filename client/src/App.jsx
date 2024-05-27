@@ -48,14 +48,13 @@ import Clientadd from '/src/Pages/Clientadd.jsx';
 import Clientupdate from '/src/Pages/Clientupdate.jsx';
 
 
+import Bill from '/src/Pages/Bill.jsx';
 
 
 //components and layouts
 import BaseLayout from './Components/BaseLayout'; 
 import CashierLayout from './Components/CashierLayout'; 
-import AdminLayout from './Components/AdminLayout'; 
-
-
+import AdminLayout from './Components/AdminLayout';
 
 
 const App = () => {
@@ -76,7 +75,9 @@ const App = () => {
       {/* Customer part both include pard nav and dashboard */}
       <Route path="/Client" element={<CashierLayout><Client /></CashierLayout>} />
       <Route path="/Clientadd" element={<CashierLayout><Clientadd /></CashierLayout>} />
-      <Route path="/Clientupdate/:id" element={<Clientupdate />} />  // Parameterized route
+      <Route path="/Clientupdate/:id" element={<Clientupdate />} />  
+
+      <Route path="/Bill" element={<CashierLayout><Bill /></CashierLayout>} />
       
       {/* admin part both include pard nav and dashboard */}
       <Route path="/Supplier" element={<AdminLayout><Supplier /></AdminLayout>} />
@@ -93,6 +94,9 @@ const App = () => {
       <Route path="/Category" element={<AdminLayout><Category /></AdminLayout>} />
       <Route path="/Categoryadd" element={<AdminLayout><Categoryadd /></AdminLayout>} />
       <Route path="/Categoryupdate/:id" element={<Categoryupdate />} /> 
+
+      
+
 
 
       <Route path="/Vehiclepart" element={<AdminLayout><Vehiclepart /></AdminLayout>} />

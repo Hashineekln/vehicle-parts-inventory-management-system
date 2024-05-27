@@ -1,7 +1,7 @@
 //cashier dashboard
 import React, { useState } from 'react';
 // Importing icons from react-icons
-import { FaWarehouse, FaUsers, FaFileInvoiceDollar, FaCog, FaArrowCircleRight } from 'react-icons/fa';
+import { FaUsers, FaFileInvoiceDollar, FaCog, FaArrowCircleRight } from 'react-icons/fa';
 
 const Dashboard = () => {
   const [Dashboard, setSidenav] = useState(true);
@@ -9,17 +9,17 @@ const Dashboard = () => {
   const handleNavigation = (e, route) => {
     e.preventDefault();
     console.log(`Navigating to ${route}`);
-    // Here you can add your logic to connect to the backend
-    // For example, you might make an API call to your backend
+    
   };
 
   // Mapping your routes to specific icons
   const menuItems = [
-    { name: 'Inventory', icon: <FaWarehouse /> },
-    { name: 'Customer', icon: <FaUsers /> },
-    { name: 'Billing', icon: <FaFileInvoiceDollar /> },
-    { name: 'Proceed Billing', icon: <FaArrowCircleRight /> },
+    { name: 'Inventory', icon: <FaUsers />, path: '/Inventory' },
+    { name: 'Customer', icon: <FaUsers /> , path: '/Client' },
+    { name: 'Billing', icon: <FaFileInvoiceDollar /> , path: '/Bill' },
+    { name: 'Proceed Billing', icon: <FaArrowCircleRight /> , path: '/Bill' },
     { name: 'Setting', icon: <FaCog /> },
+
   ];
 
   return (
