@@ -1,156 +1,72 @@
-// stateContext.jsx
-import React, { createContext, useEffect, useRef, useState } from "react";
+import React, { createContext, useState, useRef } from "react";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
-import collect from "collect.js";
 
 export const State = createContext();
 
 export const StateContextProvider = ({ children }) => {
-  const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [bankName, setBankName] = useState("");
-  const [bankAccount, setBankAccount] = useState("");
-  const [website, setWebsite] = useState("");
-  const [clientName, setClientName] = useState("");
-  const [clientAddress, setClientAddress] = useState("");
-  const [invoiceNumber, setInvoiceNumber] = useState("");
-  const [invoiceDate, setInvoiceDate] = useState("");
-  const [dueDate, setDueDate] = useState("");
-  const [notes, setNotes] = useState("");
-  const [description, setDescription] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [price, setPrice] = useState("");
-  const [amount, setAmount] = useState("");
-  const [list, setList] = useState([]);
-  const [total, setTotal] = useState(0);
-  const [width] = useState(641);
-  const [invoices, setInvoices] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
-
+  const [cart, setCart] = useState([]);
+  const [id, setId] = useState(uuidv4());
+  const [cashierId, setCashierId] = useState('');
+  const [clientId, setClientId] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [invoiceNumber, setInvoiceNumber] = useState(uuidv4().slice(0, 8));  // Auto-generate invoice number
+  const [invoiceDate, setInvoiceDate] = useState('');
+  const [warrantyDate, setWarrantyDate] = useState('');
+  const [notes, setNotes] = useState('');
   const componentRef = useRef();
 
-  const handlePrint = () => {
-    window.print();
+  const addToCart = (part) => {
+    setCart(prevCart => {
+      const partInCart = prevCart.find(item => item.part_no === part.part_no);
+      if (partInCart) {
+        return prevCart.map(item =>
+          item.part_no === part.part_no
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      } else {
+        return [...prevCart, { ...part, quantity: 1 }];
+      }
+    });
   };
 
-  useEffect(() => {
-    if (window.innerWidth < width) {
-      alert("Place your phone in landscape mode for the best experience");
-    }
-  }, [width]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (!description || !quantity || !price) {
-      toast.error("Please fill in all inputs");
-    } else {
-      const newItems = {
-        id: uuidv4(),
-        description,
-        quantity,
-        price,
-        amount,
-      };
-      setDescription("");
-      setQuantity("");
-      setPrice("");
-      setAmount("");
-      setList([...list, newItems]);
-      setIsEditing(false);
-      console.log(list);
-    }
+  const updateQuantity = (part_no, quantity) => {
+    setCart(prevCart =>
+      prevCart.map(item =>
+        item.part_no === part_no ? { ...item, quantity } : item
+      )
+    );
   };
 
-  useEffect(() => {
-    const calculateAmount = (amount) => {
-      setAmount(quantity * price);
-    };
-
-    calculateAmount(amount);
-  }, [amount, price, quantity, setAmount]);
-
-  const calculateTotal = () => {
-    const allItems = list.map((item) => item.price);
-
-    setTotal(collect(allItems).sum());
+  const removeFromCart = (part_no) => {
+    setCart(prevCart => prevCart.filter(item => item.part_no !== part_no));
   };
 
-  useEffect(() => {
-    calculateTotal();
-  });
-
-  const editRow = (id) => {
-    const editingRow = list.find((row) => row.id === id);
-    setList(list.filter((row) => row.id !== id));
-    setIsEditing(true);
-    setDescription(editingRow.description);
-    setQuantity(editingRow.quantity);
-    setPrice(editingRow.price);
-  };
-
-  const deleteRow = (id) => {
-    setList(list.filter((row) => row.id !== id));
-    setShowModal(false);
-  };
-
-  const context = {
-    name,
-    setName,
-    address,
-    setAddress,
-    email,
-    setEmail,
-    phone,
-    setPhone,
-    bankName,
-    setBankName,
-    bankAccount,
-    setBankAccount,
-    website,
-    setWebsite,
-    clientName,
-    setClientName,
-    clientAddress,
-    setClientAddress,
-    invoiceNumber,
-    setInvoiceNumber,
-    invoiceDate,
-    setInvoiceDate,
-    dueDate,
-    setDueDate,
-    notes,
-    setNotes,
-    description,
-    setDescription,
-    quantity,
-    setQuantity,
-    price,
-    setPrice,
-    amount,
-    setAmount,
-    list,
-    setList,
-    total,
-    setTotal,
-    width,
-    componentRef,
-    handlePrint,
-    isEditing,
-    setIsEditing,
-    showModal,
-    setShowModal,
-    handleSubmit,
-    editRow,
-    deleteRow,
-    showLogoutModal,
-    setShowLogoutModal,
-  };
-
-  return <State.Provider value={context}>{children}</State.Provider>;
+  return (
+    <State.Provider value={{
+      cart,
+      setCart,
+      addToCart,
+      updateQuantity,
+      removeFromCart,
+      id, setId,
+      cashierId, setCashierId,
+      clientId, setClientId,
+      firstName, setFirstName,
+      lastName, setLastName,
+      phone, setPhone,
+      invoiceNumber, setInvoiceNumber,
+      invoiceDate, setInvoiceDate,
+      warrantyDate, setWarrantyDate,
+      notes, setNotes,
+      componentRef,
+    }}>
+      {children}
+    </State.Provider>
+  );
 };
+
+export default StateContextProvider;

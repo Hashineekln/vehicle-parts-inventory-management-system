@@ -1,24 +1,37 @@
-import { useContext } from "react";
-import { State } from "../context/stateContext";
+import React from 'react';
 
-export default function Dates() {
-  const { invoiceNumber, invoiceDate, dueDate } = useContext(State);
-
+const Dates = ({ invoiceNumber, setInvoiceNumber, invoiceDate, setInvoiceDate, warrantyDate, setWarrantyDate }) => {
   return (
-    <>
-      <article className="mt-10 mb-14 flex items-end justify-end">
-        <ul>
-          <li className="p-1 ">
-            <span className="font-bold">Invoicer number:</span> {invoiceNumber}
-          </li>
-          <li className="p-1 bg-gray-100">
-            <span className="font-bold">Invoice date:</span> {invoiceDate}
-          </li>
-          <li className="p-1 ">
-            <span className="font-bold">Warrenty date:</span> {dueDate}
-          </li>
-        </ul>
-      </article>
-    </>
+    <section className="my-5">
+      <div className="flex flex-col">
+        <label htmlFor="invoiceNumber" className="mb-2">Invoice Number</label>
+        <input 
+          type="text" 
+          id="invoiceNumber"
+          value={invoiceNumber}
+          onChange={(e) => setInvoiceNumber(e.target.value)}
+          className="border p-2 mb-4"
+          readOnly
+        />
+        <label htmlFor="invoiceDate" className="mb-2">Invoice Date</label>
+        <input 
+          type="date" 
+          id="invoiceDate"
+          value={invoiceDate}
+          onChange={(e) => setInvoiceDate(e.target.value)}
+          className="border p-2 mb-4"
+        />
+        <label htmlFor="warrantyDate" className="mb-2">Warranty Date</label>
+        <input 
+          type="date" 
+          id="warrantyDate"
+          value={warrantyDate}
+          onChange={(e) => setWarrantyDate(e.target.value)}
+          className="border p-2 mb-4"
+        />
+      </div>
+    </section>
   );
-}
+};
+
+export default Dates;

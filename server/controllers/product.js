@@ -15,12 +15,27 @@ export const getVehicleTypes = async (req, res) => {
   }
 };
 
-// Function to get vehicle parts based on brand, model, and year
+// Function to get categories
+export const getCategories = async (req, res) => {
+  try {
+    const sql = 'SELECT DISTINCT name FROM category';
+    db.query(sql, (err, data) => {
+      if (err) {
+        return res.status(500).json({ error: "Error fetching categories", details: err.message });
+      }
+      res.json(data);
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Function to get vehicle parts based on brand, model, year, and category
 export const getVehicleParts = async (req, res) => {
   console.log("Request body received:", req.body);
-  const { brand, model, year } = req.body;
+  const { brand, model, year, category } = req.body;
 
-  if (!brand || !model || !year) {
+  if (!brand || !model || !year || !category || category.length === 0) {
     return res.status(400).json({ error: 'Required fields are missing' });
   }
 
@@ -42,35 +57,53 @@ export const getVehicleParts = async (req, res) => {
 
       const vehicleId = vehicleTypeResults[0].vehicle_id;
 
-      // Step 2: Get part_no from vehicle_part_has_vehicle_type table
-      const getPartNosQuery = `
-        SELECT vehicle_part_part_no 
-        FROM vehicle_part_has_vehicle_type 
-        WHERE vehicle_type_vehicle_id = ?
+      // Step 2: Get category_ids from category table
+      const getCategoryIdsQuery = `
+        SELECT category_id 
+        FROM category 
+        WHERE name IN (?)
       `;
-      db.query(getPartNosQuery, [vehicleId], (err, vehiclePartHasVehicleTypeResults) => {
+      db.query(getCategoryIdsQuery, [category], (err, categoryResults) => {
         if (err) {
-          return res.status(500).json({ error: "Error fetching vehicle part data", details: err.message });
+          return res.status(500).json({ error: "Error fetching category data", details: err.message });
         }
 
-        const partNos = vehiclePartHasVehicleTypeResults.map(row => row.vehicle_part_part_no);
-
-        if (partNos.length === 0) {
-          return res.status(404).json({ error: 'No parts found for this vehicle type' });
+        if (categoryResults.length === 0) {
+          return res.status(404).json({ error: 'No matching categories found' });
         }
 
-        // Step 3: Get vehicle part details from vehicle_part table
-        const getVehiclePartsQuery = `
-          SELECT part_no, part_name, price, quantity, image_url 
-          FROM vehicle_part 
-          WHERE part_no IN (?)
+        const categoryIds = categoryResults.map(row => row.category_id);
+
+        // Step 3: Get part_no from vehicle_part_has_vehicle_type table
+        const getPartNosQuery = `
+          SELECT vehicle_part_part_no 
+          FROM vehicle_part_has_vehicle_type 
+          WHERE vehicle_type_vehicle_id = ?
         `;
-        db.query(getVehiclePartsQuery, [partNos], (err, vehiclePartsResults) => {
+        db.query(getPartNosQuery, [vehicleId], (err, vehiclePartHasVehicleTypeResults) => {
           if (err) {
-            return res.status(500).json({ error: "Error fetching vehicle parts data", details: err.message });
+            return res.status(500).json({ error: "Error fetching vehicle part data", details: err.message });
           }
 
-          res.json(vehiclePartsResults);
+          const partNos = vehiclePartHasVehicleTypeResults.map(row => row.vehicle_part_part_no);
+
+          if (partNos.length === 0) {
+            return res.status(404).json({ error: 'No parts found for this vehicle type' });
+          }
+
+          // Step 4: Get vehicle part details from vehicle_part table with category filter
+          const getVehiclePartsQuery = `
+            SELECT part_no, part_name, price, quantity, image_url 
+            FROM vehicle_part 
+            WHERE part_no IN (?) AND category_category_id IN (?)
+          `;
+          db.query(getVehiclePartsQuery, [partNos, categoryIds], (err, vehiclePartsResults) => {
+            if (err) {
+              return res.status(500).json({ error: "Error fetching vehicle parts data", details: err.message });
+            }
+
+            res.json(vehiclePartsResults);
+          });
         });
       });
     });

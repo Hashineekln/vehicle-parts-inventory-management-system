@@ -20,10 +20,11 @@ export const getClient = async (req, res) => {
 
 
     export const addClient = async (req, res) => {
-        const sql = 'INSERT INTO customer (first_name, last_name) VALUES (?, ?)';
+        const sql = 'INSERT INTO customer (first_name, last_name,phone) VALUES (?, ?,?)';
         const values = [
             req.body.first_name, 
-            req.body.last_name
+            req.body.last_name,
+            req.body.phone
         ];
         db.query(sql, values, (err, data) => {
             if (err) return res.json({ error: "Error adding data" });
