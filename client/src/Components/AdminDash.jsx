@@ -13,10 +13,10 @@ const AdminDash = () => {
 
   // Mapping your routes to specific icons and paths
   const menuItems = [
-    { name: 'User Registrations', icon: <FaWarehouse />, path: '/user' },
+    { name: 'User Details', icon: <FaWarehouse />, path: '/user' },
+    { name: 'Catalogue', icon: <FaFileInvoiceDollar /> , path: '/Product' },
     { name: 'Inventory', icon: <FaUsers />, path: '/Inventory' },
-    { name: 'Supplier', icon: <FaFileInvoiceDollar />, path: '/Supplier' },
-    { name: 'Transactions', icon: <FaArrowCircleRight />, path: '/Transaction' },
+    { name: 'Bill Logs', icon: <FaFileInvoiceDollar /> , path: '/Billdetails' },
     { name: 'Notification', icon: <FaCog />, path: '/notification' },
     { name: 'Report', icon: <FaArrowCircleRight />, path: '/Report' },
   ];
@@ -28,11 +28,11 @@ const AdminDash = () => {
         className="p-2 border-2 bg-black rounded-md border-gray-200 shadow-lg text-gray-900 focus:outline-none focus:text-black absolute top-50 left-0 sm:hidden"
       ></button>
       <div
-        id="Dashboard"
+        id="AdminDash"
         className={`bg-white h-screen md:block shadow-xl px-3 w-1/8 md:w-60 lg:w-60 overflow-x-hidden`}
         onClick={() => setSidenav(false)}
       >
-        <div className="space-y-6 md:space-y-10 mt-10">
+         <div className="space-y-6 md:space-y-10 mt-10">
           <div id="company" className="space-y-3">
             <img
               src="src/assets/Logo.jpg"
@@ -40,6 +40,7 @@ const AdminDash = () => {
               className="w-30 md:w-16 mx-auto"
             />
           </div>
+
           {menuItems.map(({ name, icon, path }) => (
             <a
               key={name}

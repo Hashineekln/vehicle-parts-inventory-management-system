@@ -2,23 +2,27 @@
 import React, { useState } from 'react';
 // Importing icons from react-icons
 import { FaUsers, FaFileInvoiceDollar, FaCog, FaArrowCircleRight } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const [Dashboard, setSidenav] = useState(true);
+  const navigate = useNavigate();
 
-  const handleNavigation = (e, route) => {
-    e.preventDefault();
-    console.log(`Navigating to ${route}`);
-    
+  const handleNavigation = (route) => {
+    navigate(route); // Use navigate function with the route
   };
+
 
   // Mapping your routes to specific icons
   const menuItems = [
+    { name: 'Catalogue', icon: <FaFileInvoiceDollar /> , path: '/Product' },
     { name: 'Inventory', icon: <FaUsers />, path: '/Inventory' },
-    { name: 'Customer', icon: <FaUsers /> , path: '/Client' },
-    { name: 'Billing', icon: <FaFileInvoiceDollar /> , path: '/Bill' },
-    { name: 'Proceed Billing', icon: <FaArrowCircleRight /> , path: '/Bill' },
-    { name: 'Setting', icon: <FaCog /> },
+    { name: 'Transactions', icon: <FaArrowCircleRight />, path: '/Transaction' },
+    { name: 'Supplier', icon: <FaFileInvoiceDollar />, path: '/Supplier' },
+    { name: 'Bill Logs', icon: <FaFileInvoiceDollar /> , path: '/Bill' },
+    { name: 'Clients', icon: <FaUsers /> , path: '/Client' },
+    { name: 'Shef Store', icon: <FaFileInvoiceDollar /> , path: '/Shelf' },
+    { name: 'Notification', icon: <FaCog />, path: '/notification' },
 
   ];
 
@@ -41,11 +45,14 @@ const Dashboard = () => {
               className="w-30 md:w-16 mx-auto"
             />
           </div>
-          {menuItems.map(({ name, icon }) => (
+          {menuItems.map(({ name, icon ,path}) => (
             <a
               key={name}
               href="#"
-              onClick={(e) => handleNavigation(e, `/${name.replace(' ', '')}`)}
+              onClick={(e) =>  {
+                e.preventDefault();
+                handleNavigation(path);
+              }}
               className="text-sm font-medium text-gray-700 py-2 px-2 hover:bg-teal-500 hover:text-white hover:scale-105 rounded-md transition duration-150 ease-in-out flex  gap-8"
             >
               {icon}<span>{name}</span>
@@ -56,5 +63,6 @@ const Dashboard = () => {
     </div>
   );
 };
+
 
 export default Dashboard;

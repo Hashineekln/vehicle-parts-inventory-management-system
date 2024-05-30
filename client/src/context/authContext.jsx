@@ -1,29 +1,30 @@
-import { createContext } from 'react';
+import { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
-
 
 export const AuthContext = createContext();
+
 export const AuthContextProvider = ({ children }) => {
-    const[currentUser,setCurrentUser] = useState(JSON.parse(localStorage.getItem("user") || null));
+  const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem("user")));
 
-    const login = async (values) => {
-    const res = await axios.post("http://localhost:5000/auth/login", values)  
+  const login = async (values) => {
+    const res = await axios.post("http://localhost:5000/auth/login", values);
     setCurrentUser(res.data);
+    localStorage.setItem("user", JSON.stringify(res.data));
+  };
 
-};
-const logout = async (values) => {
-    const res = await axios.post("http://localhost:5000/auth/logout", values)  
+  const logout = async () => {
+    await axios.post("http://localhost:5000/auth/logout");
     setCurrentUser(null);
-};
+    localStorage.removeItem("user");
+  };
 
-useEffect(() => {
+  useEffect(() => {
     localStorage.setItem("user", JSON.stringify(currentUser));
-}, [currentUser]);
+  }, [currentUser]);
 
-return (
+  return (
     <AuthContext.Provider value={{ currentUser, login, logout }}>
-        {children}
+      {children}
     </AuthContext.Provider>
-);
+  );
 };
