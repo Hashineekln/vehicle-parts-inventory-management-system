@@ -42,7 +42,7 @@ function TransactionUpdate() {
             });
 
             alert('Transaction updated successfully');
-            navigate('/transactions'); // Redirect to transactions page
+            navigate('/transaction'); // Redirect to transactions page
         } catch (err) {
             console.error('Error updating transaction:', err);
             setError('Error updating transaction. Please try again.');

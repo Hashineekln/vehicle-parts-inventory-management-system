@@ -93,7 +93,7 @@ export const getVehicleParts = async (req, res) => {
 
           // Step 4: Get vehicle part details from vehicle_part table with category filter
           const getVehiclePartsQuery = `
-            SELECT part_no, part_name, price, quantity, image_url 
+            SELECT part_no, part_name, price, quantity, image_url ,shelf_shelf_id,category_category_id
             FROM vehicle_part 
             WHERE part_no IN (?) AND category_category_id IN (?)
           `;

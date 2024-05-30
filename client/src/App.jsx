@@ -57,6 +57,8 @@ const App = () => {
       <Route path="/Product" element={<BaseLayout><Product /></BaseLayout>} />
       <Route path="/Homefilter" element={<CashierLayout><Homefilter /></CashierLayout>} />
       
+
+      
       {/* Cashier protected routes */}
       <Route element={<ProtectedRoute allowedRoles={['cashier']} />}>
         //make cashier deagault layout to load

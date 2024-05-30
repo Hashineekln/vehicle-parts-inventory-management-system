@@ -1,4 +1,3 @@
-// src/Components/ProtectedRoute.jsx
 import React, { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { AuthContext } from "../context/authContext"; // Adjusted import path
@@ -24,3 +23,4 @@ const ProtectedRoute = ({ allowedRoles }) => {
 };
 
 export default ProtectedRoute;
+

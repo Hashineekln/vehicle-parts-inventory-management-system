@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,8 +7,28 @@ function AddTransaction() {
     const [vehiclePartPartNo, setVehiclePartPartNo] = useState('');
     const [supplierSupplierId, setSupplierSupplierId] = useState('');
     const [shelfId, setShelfId] = useState('');
+    const [vehicleParts, setVehicleParts] = useState([]);
+    const [suppliers, setSuppliers] = useState([]);
+    const [shelves, setShelves] = useState([]);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        // Fetch vehicle parts
+        axios.get('http://localhost:5000/vehiclepart')
+            .then(response => setVehicleParts(response.data))
+            .catch(error => console.error('Error fetching vehicle parts:', error));
+
+        // Fetch suppliers
+        axios.get('http://localhost:5000/supplier')
+            .then(response => setSuppliers(response.data))
+            .catch(error => console.error('Error fetching suppliers:', error));
+
+        // Fetch shelves
+        axios.get('http://localhost:5000/shelf')
+            .then(response => setShelves(response.data))
+            .catch(error => console.error('Error fetching shelves:', error));
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -46,33 +66,51 @@ function AddTransaction() {
                 </div>
                 <div className='mb-4'>
                     <label className='block text-gray-700'>Vehicle Part No</label>
-                    <input
-                        type='text'
+                    <select
                         value={vehiclePartPartNo}
                         onChange={(e) => setVehiclePartPartNo(e.target.value)}
                         className='w-full px-3 py-2 border rounded-md'
                         required
-                    />
+                    >
+                        <option value=''>Select Vehicle Part</option>
+                        {vehicleParts.map(part => (
+                            <option key={part.part_no} value={part.part_no}>
+                                {part.part_no} - {part.part_name}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 <div className='mb-4'>
                     <label className='block text-gray-700'>Supplier ID</label>
-                    <input
-                        type='text'
+                    <select
                         value={supplierSupplierId}
                         onChange={(e) => setSupplierSupplierId(e.target.value)}
                         className='w-full px-3 py-2 border rounded-md'
                         required
-                    />
+                    >
+                        <option value=''>Select Supplier</option>
+                        {suppliers.map(supplier => (
+                            <option key={supplier.supplier_id} value={supplier.supplier_id}>
+                                {supplier.supplier_id} - {supplier.supplier_name}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 <div className='mb-4'>
                     <label className='block text-gray-700'>Shelf ID</label>
-                    <input
-                        type='text'
+                    <select
                         value={shelfId}
                         onChange={(e) => setShelfId(e.target.value)}
                         className='w-full px-3 py-2 border rounded-md'
                         required
-                    />
+                    >
+                        <option value=''>Select Shelf</option>
+                        {shelves.map(shelf => (
+                            <option key={shelf.shelf_id} value={shelf.shelf_id}>
+                                {shelf.shelf_id} - {shelf.shelf_location}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 <button type='submit' className='bg-blue-500 text-white px-4 py-2 rounded-md'>Add Transaction</button>
             </form>

@@ -23,13 +23,14 @@ const Login = () => {
 
     if (Object.keys(validationErrors).length === 0) {
       try {
-        await login(values); // Call the login function from AuthContext
+        const user = await login(values); // Wait for login to complete
         // Navigate based on usertype
-        if (currentUser.usertype === 'admin') {
+        if (user.usertype === 'admin') {
           navigate('/Inventory');
-        } else if (currentUser.usertype === 'cashier') {
-          navigate('/Bill');
-        } else if (currentUser.usertype === 'employee') {
+        } else if (user.usertype === 'cashier') {
+          navigate('/Client');
+
+        } else if (user.usertype === 'employee') {
           navigate('/Home');
         } else {
           navigate('/Home'); // Default to home if usertype is unrecognized
