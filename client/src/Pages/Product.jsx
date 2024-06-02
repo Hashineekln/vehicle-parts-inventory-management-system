@@ -132,21 +132,14 @@ const Product = () => {
             <p>Part No: {part.part_no}</p>
             <p>Price: Rs.{part.price}</p>
             <p>Quantity: {part.quantity}</p>
-           
-            {currentUser ? (
-              
-              (currentUser.usertype === 'admin' || currentUser.usertype === 'cashier') ? (
-                <>
-                  <Link to={`/vehiclepartupdate/${part.id}`} className="bg-blue-500 text-white px-4 py-2 rounded">
-                    Update
-                  </Link>
-                  <button onClick={() => addToCart(part)} className="bg-green-500 text-white p-2 mt-2">Add to Cart</button>
-                </>
-              ) : (
+            
+            {currentUser && (currentUser.usertype === 'admin' || currentUser.usertype === 'cashier') && (
+              <>
+                <Link to={`/vehiclepartupdate/${part.part_no}`} className="bg-blue-500 text-white px-4 py-2 rounded">
+                  Update
+                </Link>
                 <button onClick={() => addToCart(part)} className="bg-green-500 text-white p-2 mt-2">Add to Cart</button>
-              )
-            ) : (
-              <button onClick={() => addToCart(part)} className="bg-green-500 text-white p-2 mt-2">Add to Cart</button>
+              </>
             )}
           </div>
         ))}

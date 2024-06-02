@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import path from 'path';
 import router from '../routes/product.js';
+import apiRouter from '../routes/cartstate.js';
 
 // Import routes
 import productRoutes from '../routes/product.js';
@@ -16,6 +17,8 @@ import categoryRoutes from '../routes/category.js';
 import vehicletypeRoutes from '../routes/vehicletype.js';
 import userRoutes from '../routes/user.js';
 import roleRoutes from '../routes/role.js';
+import billRoutes from '../routes/bill.js';
+import cartstateRoutes from '../routes/cartstate.js';
 
 import supplierRoutes from '../routes/supplier.js';
 import transactionRoutes from '../routes/transaction.js';
@@ -30,6 +33,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api', router);
+app.use('/api', apiRouter);
 
 
 
@@ -46,6 +50,8 @@ app.use('/shelf', shelfRoutes);
 app.use('/vehiclepart', vehiclepartRoutes);
 app.use('/supplier', supplierRoutes);
 app.use('/transaction', transactionRoutes);
+app.use('/bill', billRoutes);
+app.use('/cartstate', cartstateRoutes);
 
 
 

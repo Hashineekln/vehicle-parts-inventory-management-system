@@ -83,7 +83,7 @@ const App = () => {
         <Route path="/Vehicletype" element={<CashierLayout><Vehicletype /></CashierLayout>} />
         <Route path="/Vehicletypeadd" element={<CashierLayout><Vehicletypeadd /></CashierLayout>} />
         <Route path="/Vehicletypeupdate/:id" element={<CashierLayout><Vehicletypeupdate /></CashierLayout>} />
-        <Route path="/Bill" element={<CashierLayout><Bill /></CashierLayout>} />
+        <Route path="/Bill" element={<BaseLayout><Bill /></BaseLayout>} />
       </Route>
 
       {/* Admin protected routes */}
