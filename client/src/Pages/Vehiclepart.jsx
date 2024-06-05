@@ -4,10 +4,6 @@ import { Link } from 'react-router-dom';
 
 function VehiclePart() {
     const [vehicleParts, setVehicleParts] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [shelves, setShelves] = useState([]);
-    const [vehicleTypes, setVehicleTypes] = useState([]);
-    const [partVehicleTypes, setPartVehicleTypes] = useState([]);
     const [error, setError] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -15,17 +11,7 @@ function VehiclePart() {
         const fetchData = async () => {
             try {
                 const partsRes = await axios.get('http://localhost:5000/vehiclepart');
-                const categoriesRes = await axios.get('http://localhost:5000/category');
-                const shelvesRes = await axios.get('http://localhost:5000/shelf');
-                const vehicleTypesRes = await axios.get('http://localhost:5000/vehicletype');
-                const partVehicleTypesRes = await axios.get('http://localhost:5000/vehiclepart/vehicleparthasvehicletype'); // Correct endpoint
-
                 setVehicleParts(partsRes.data);
-                setCategories(categoriesRes.data);
-                setShelves(shelvesRes.data);
-                setVehicleTypes(vehicleTypesRes.data);
-                setPartVehicleTypes(partVehicleTypesRes.data);
-                console.log(partVehicleTypesRes.data);
                 setError(null);
             } catch (err) {
                 console.error('Error fetching data:', err);
@@ -36,20 +22,12 @@ function VehiclePart() {
         fetchData();
     }, []);
 
-    const filteredParts = vehicleParts.filter(vp => {
-        return (
-            vp.part_no.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            vp.part_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            vp.price.toString().includes(searchQuery)
-        );
-    });
-
-    const getVehicleTypeNames = (part_no) => {
-        return partVehicleTypes
-            .filter(pvt => pvt.vehicle_part_part_no === part_no)
-            .map(pvt => vehicleTypes.find(vt => vt.vehicle_id === pvt.vehicle_type_vehicle_id)?.model)
-            .join(', ');
-    };
+    // Filter parts based on search query
+    const filteredParts = vehicleParts.filter(vp =>
+        vp.part_no.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        vp.part_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        vp.price.toString().toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     const handleDelete = async (part_no) => {
         try {
@@ -77,9 +55,9 @@ function VehiclePart() {
                         <Link to='/vehiclepartadd' className='rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-700'>Add Vehicle Part</Link>
                     </div>
                 </div>
-
+    
                 {error && <div className="alert alert-danger">{error}</div>}
-
+    
                 <table className='w-full text-sm text-left text-gray-900'>
                     <thead className='text-xs uppercase bg-gray-200'>
                         <tr>
@@ -95,19 +73,19 @@ function VehiclePart() {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredParts.map(vp => (
-                            <tr key={vp.part_no} className='bg-white border-b'>
+                        {filteredParts.map((vp, index) => (
+                            <tr key={`${vp.part_no}-${index}`} className='bg-white border-b'>
                                 <td className='py-4 px-6'>{vp.part_no}</td>
                                 <td className='py-4 px-6'>{vp.part_name}</td>
                                 <td className='py-4 px-6'>{vp.price}</td>
                                 <td className='py-4 px-6'>{vp.threshold_no}</td>
                                 <td className='py-4 px-6'>{vp.quantity}</td>
-                                <td className='py-4 px-6'>{categories.find(c => c.category_id === vp.category_category_id)?.name}</td>
-                                <td className='py-4 px-6'>{shelves.find(s => s.shelf_id === vp.shelf_shelf_id)?.shelf_id}</td>
-                                <td className='py-4 px-6'>{getVehicleTypeNames(vp.part_no)}</td>
-
+                                <td className='py-4 px-6'>{vp.category_name}</td>
+                                <td className='py-4 px-6'>{vp.shelf_id}</td>
+                                <td className='py-4 px-6'>{vp.models}</td>
                                 <td className='py-4 px-6'>
-                                    <Link to={`/vehiclepartupdate/${vp.part_no}`} className='bg-blue-500 px-4 py-2 text-white rounded-md mr-3'>Edit</Link>
+                                <Link to={`/vehiclepartupdate/${vp.part_no}`} className='bg-blue-500 px-4 py-2 text-white rounded-md mr-3'>Edit</Link>
+
                                     <button onClick={() => handleDelete(vp.part_no)} className='bg-red-500 px-2 py-1.5 text-white rounded-md'>Delete</button>
                                 </td>
                             </tr>
@@ -120,4 +98,3 @@ function VehiclePart() {
 }
 
 export default VehiclePart;
-

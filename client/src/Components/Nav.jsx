@@ -3,10 +3,9 @@ import { Link } from 'react-router-dom';
 
 export default function Example() {
   // State to manage the visibility of conditional content
-  const [click, setClick] = useState(false);
+  //const [click, setClick] = useState(false);
 
-  // Example content that you might want to conditionally display
-  const content = <div></div>;
+ 
 
   // Array to hold the navigation link details to reduce repetition
   const navLinks = [

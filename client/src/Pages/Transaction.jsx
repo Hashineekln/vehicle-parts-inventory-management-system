@@ -62,6 +62,7 @@ function Transaction() {
     return (
         <div className='overflow-x-auto relative flex-1 p-4'>
             <div className='w-full bg-white rounded p-3'>
+            
                 <div className='flex justify-between mb-3'>
                     <h1 className='text-2xl font-semibold text-gray-200 dark:text-gray-950'>Transactions</h1>
                     <div className="flex items-center">
@@ -84,11 +85,12 @@ function Transaction() {
                     <thead className='text-xs uppercase bg-gray-200'>
                         <tr>
                             <th className='py-3 px-6'>Transaction ID</th>
-                            <th className='py-3 px-6'>Quantity</th>
-                            <th className='py-3 px-6'>Create Time</th>
                             <th className='py-3 px-6'>Vehicle Part</th>
+                            <th className='py-3 px-6'>Quantity</th>
+                            <th className='py-3 px-6'>Buying Price</th>
                             <th className='py-3 px-6'>Supplier</th>
                             <th className='py-3 px-6'>Shelf</th>
+                            <th className='py-3 px-6'>Create Time</th>
                             <th className='py-3 px-6'>Action</th>
                         </tr>
                     </thead>
@@ -96,11 +98,14 @@ function Transaction() {
                         {filteredTransactions.map(tx => (
                             <tr key={tx .transaction_id} className='bg-white border-b'>
                                 <td className='py-4 px-6'>{tx .transaction_id}</td>
-                                <td className='py-4 px-6'>{tx .quantity}</td>
-                                <td className='py-4 px-6'>{tx .create_time}</td>
                                 <td className='py-4 px-6'>{vehicleParts.find(vp => vp.part_no === tx .vehicle_part_part_no)?.part_no}</td>
+                                <td className='py-4 px-6'>{tx .quantity}</td>
+                              
+                                <td className='py-4 px-6'>{tx .buying_price}</td>
+
                                 <td className='py-4 px-6'>{suppliers.find(sp => sp.supplier_id === tx.supplier_supplier_id)?.supplier_id}</td>
                                 <td className='py-4 px-6'>{shelves.find(s => s.shelf_id === tx .shelf_id)?.shelf_id}</td>
+                                <td className='py-4 px-6'>{tx .create_time}</td>
                                 <td className='py-4 px-6'>
                                     <Link to={`/transactionupdate/${tx .transaction_id}`} className='bg-blue-500 px-4 py-2 text-white rounded-md mr-3'>
                                         Edit

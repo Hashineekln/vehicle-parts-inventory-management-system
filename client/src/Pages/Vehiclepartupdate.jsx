@@ -1,95 +1,143 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 
-const VehiclepartUpdate = () => {
-    const [values, setValues] = useState({
-        category_id: "", // Initialize to empty string
-        name: "" // Initialize to empty string
-    });
-    const [errorMessage, setErrorMessage] = useState("");
+function VehiclePartUpdate() {
     const navigate = useNavigate();
-    const { id } = useParams();
+    const { part_no } = useParams();
+    console.log("Part Number:", part_no);
+    const [partData, setPartData] = useState({
+        part_name: '',
+        price: '',
+        threshold_no: '',
+        quantity: '',
+        image_url: '',
+        category_id: '',
+        shelf_id: '',
+        vehicle_type_ids: []
+    });
+    const [categories, setCategories] = useState([]);
+    const [shelves, setShelves] = useState([]);
+    const [vehicleTypes, setVehicleTypes] = useState([]);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Fetch the existing data for the client
-        axios.get(`http://localhost:5000/category/${id}`)
-            .then(response => {
-                setValues({
-                    category_id: response.data.category_id || "", // Keep existing value or set to empty string
-                    name: response.data.name || "" // Keep existing value or set to empty string
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching client data', error);
-                setErrorMessage('Error fetching data. Please refresh the page and try again.');
-            });
-    }, [id]);
+        const fetchData = async () => {
+            try {
+                const [partRes, categoriesRes, shelvesRes, vehicleTypesRes] = await Promise.all([
+                    axios.get(`http://localhost:5000/vehiclepart/${part_no}`),
+                    axios.get('http://localhost:5000/category'),
+                    axios.get('http://localhost:5000/shelf'),
+                    axios.get('http://localhost:5000/vehicletype')
+                ]);
 
-    const handleInput = (e) => {
-        const { name, value } = e.target;
-        setValues(prev => ({ ...prev, [name]: value }));
+                const part = partRes.data;
+                setPartData(part);
+                setCategories(categoriesRes.data);
+                setShelves(shelvesRes.data);
+                setVehicleTypes(vehicleTypesRes.data);
+            } catch (err) {
+                console.error('Error fetching data:', err);
+                setError('Failed to fetch data. Please try again.');
+            }
+        };
+
+        fetchData();
+    }, [part_no]);
+
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setPartData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            await axios.put(`http://localhost:5000/category/${id}`, values); // Updated endpoint
-            alert('Category details updated successfully'); // Display success message
-            
-            // Fetch the updated category data from the server
-            axios.get(`http://localhost:5000/category/${id}`)
-                .then(response => {
-                    setValues({
-                        category_id: response.data.category_id || "", // Keep existing value or set to empty string
-                        name: response.data.name || "" // Keep existing value or set to empty string
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching updated category data', error);
-                    setErrorMessage('Error fetching updated data. Please refresh the page.');
-                });
-    
-            navigate("/Category");
-        } catch (err) {
-            setErrorMessage("Failed to update category. Please try again.");
+    const handleCheckboxChange = (event) => {
+        const { value, checked } = event.target;
+        if (checked) {
+            setPartData(prev => ({ ...prev, vehicle_type_ids: [...prev.vehicle_type_ids, value] }));
+        } else {
+            setPartData(prev => ({ ...prev, vehicle_type_ids: prev.vehicle_type_ids.filter(id => id !== value) }));
         }
     };
-    
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        if (!partData.part_name || !partData.price || !partData.threshold_no || !partData.quantity || !partData.category_id || !partData.shelf_id || partData.vehicle_type_ids.length === 0) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+
+        try {
+            await axios.put(`http://localhost:5000/vehiclepart/${part_no}`, partData);
+            alert('Vehicle part updated successfully!');
+            navigate('/vehiclepart');
+        } catch (err) {
+            console.error('Error updating vehicle part:', err);
+            setError('Failed to update vehicle part. Please try again.');
+        }
+    };
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-            <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '20px', width: '300px' }}>
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <h2 style={{ fontWeight: 'bold', marginBottom: '20px' }}>Update Category</h2>
-                    <label htmlFor="first_name" style={{ marginBottom: '8px' }}>Category ID</label>
-                    <input
-                        id="category_id"
-                        name="category_id"
-                        type="text"
-                        value={values.category_id}
-                        onChange={handleInput}
-                        required
-                        style={{ padding: '8px', marginBottom: '16px', width: '100%', border: '1px solid #ccc', borderRadius: '4px' }}
-                    />
+        <div className='overflow-x-auto relative flex-1 p-4'>
+            <div className='w-full bg-white rounded p-3 shadow'>
+                <div className='flex justify-between mb-3'>
+                    <h1 className='text-2xl font-semibold text-gray-200 dark:text-gray-950'>Update Vehicle Part</h1>
+                    <Link to='/vehiclepart' className='rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>Back to List</Link>
+                </div>
 
-                    <label htmlFor="last_name" style={{ marginBottom: '8px' }}>Category Name</label>
-                    <input
-                        id="name"
-                        name="name"
-                        type="text"
-                        value={values.name}
-                        onChange={handleInput}
-                        required
-                        style={{ padding: '8px', marginBottom: '16px', width: '100%', border: '1px solid #ccc', borderRadius: '4px' }}
-                    />
+                {error && <div className="alert alert-danger">{error}</div>}
 
-                    <button type="submit" style={{ padding: '10px 20px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Update</button>
-                    {errorMessage && <p style={{ color: 'red', marginTop: '10px' }}>{errorMessage}</p>}
+                <form onSubmit={handleSubmit} className="flex flex-col justify-between items-start">
+                    <label className="mb-2" htmlFor="part_name">Part Name:</label>
+                    <input id="part_name" type="text" name="part_name" value={partData.part_name} onChange={handleInputChange} placeholder="Part Name" className="mb-3 p-2 border rounded-md border-gray-300 w-full"/>
+
+                    <label className="mb-2" htmlFor="price">Price:</label>
+                    <input id="price" type="number" name="price" value={partData.price} onChange={handleInputChange} placeholder="Price" className="mb-3 p-2 border rounded-md border-gray-300 w-full"/>
+
+                    <label className="mb-2" htmlFor="threshold_no">Threshold Number:</label>
+                    <input id="threshold_no" type="number" name="threshold_no" value={partData.threshold_no} onChange={handleInputChange} placeholder="Threshold Number" className="mb-3 p-2 border rounded-md border-gray-300 w-full"/>
+
+                    <label className="mb-2" htmlFor="quantity">Quantity:</label>
+                    <input id="quantity" type="number" name="quantity" value={partData.quantity} onChange={handleInputChange} placeholder="Quantity" className="mb-3 p-2 border rounded-md border-gray-300 w-full"/>
+
+                    <label className="mb-2" htmlFor="image_url">Image URL:</label>
+                    <input id="image_url" type="text" name="image_url" value={partData.image_url} onChange={handleInputChange} placeholder="Image URL" className="mb-3 p-2 border rounded-md border-gray-300 w-full"/>
+
+                    <label className="mb-2" htmlFor="category_id">Category:</label>
+                    <select id="category_id" name="category_id" value={partData.category_id} onChange={handleInputChange} className="mb-3 p-2 border rounded-md border-gray-300 w-full">
+                        <option value="">Select Category</option>
+                        {categories.map(category => (
+                            <option key={category.id} value={category.id}>{category.category_id}</option>
+                        ))}
+                    </select>
+
+                    <label className="mb-2" htmlFor="shelf_id">Shelf:</label>
+                    <select id="shelf_id" name="shelf_id" value={partData.shelf_id} onChange={handleInputChange} className="mb-3 p-2 border rounded-md border-gray-300 w-full">
+                        <option value="">Select Shelf</option>
+                        {shelves.map(shelf => (
+                            <option key={shelf.id} value={shelf.id}>{shelf.shelf_id}</option>
+                        ))}
+                    </select>
+
+                    <label className="mb-2">Vehicle Types:</label>
+                    {vehicleTypes.map(vehicle_type => (
+                        <div key={vehicle_type.vehicle_id}>
+                            <input 
+                                type="checkbox" 
+                                id={`vehicle_type_${vehicle_type.vehicle_id}`} 
+                                name="vehicle_type_ids" 
+                                value={vehicle_type.vehicle_id} 
+                                checked={partData.vehicle_type_ids.includes(vehicle_type.vehicle_id.toString())}
+                                onChange={handleCheckboxChange} 
+                            />
+                            <label htmlFor={`vehicle_type_${vehicle_type.vehicle_id}`}>{vehicle_type.model}</label>
+                        </div>
+                    ))}
+
+                    <button type="submit" className="rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-700">Submit</button>
                 </form>
             </div>
         </div>
     );
-};
+}
 
-export default VehiclepartUpdate;
+export default VehiclePartUpdate;

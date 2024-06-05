@@ -1,32 +1,23 @@
+// src/App.jsx
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
+import Returnform from './Components/Returnform';
 
-//BASIC pages
+// Importing pages
 import Login from './Pages/Login';
-import Register from './Pages/Register'; 
-import About from './Pages/About'; 
-import Contact from './Pages/Contact'; 
+import Register from './Pages/Register';
+import About from './Pages/About';
+import Contact from './Pages/Contact';
 import Home from './Pages/Home';
-import Product from './Pages/Product'; 
-import Homefilter from './Pages/Homefilter';
+import Product from './Pages/Product';
 
 
-
-
-//ADMIN
-import Supplier from './Pages/Supplier';
-import Supplieradd from './Pages/Supplieradd';
-import Supplierupdate from './Pages/Supplierupdate';
-
-import Transaction from './Pages/Transaction';
-import Transactionadd from './Pages/Transactionadd';
-import Transactionupdate from './Pages/Transactionupdate';
-
-import Inventory from './Pages/Inventory'; 
+// Admin pages
+import Inventory from './Pages/Inventory';
 
 import Category from './Pages/Category';
-import Categoryupdate from './Pages/Categoryupdate';
 import Categoryadd from './Pages/Categoryadd';
+import Categoryupdate from './Pages/Categoryupdate';
 
 import Vehiclepart from './Pages/Vehiclepart';
 import Vehiclepartadd from './Pages/Vehiclepartadd';
@@ -36,82 +27,114 @@ import Vehicletype from './Pages/Vehicletype';
 import Vehicletypeadd from './Pages/Vehicletypeadd';
 import Vehicletypeupdate from './Pages/Vehicletypeupdate';
 
+import Notify from './Pages/Notify';
+import User from './Pages/User';
+import Userupdate from './Pages/Userupdate';
+import Report from './Pages/Report';
+
+
+
+// Cashier pages
+import Client from './Pages/Client';
+import Clientadd from './Pages/Clientadd';
+import Clientupdate from './Pages/Clientupdate';
 
 import Shelf from './Pages/Shelf';
 import Shelfadd from './Pages/Shelfadd';
 import Shelfupdate from './Pages/Shelfupdate';
 
+import Supplier from './Pages/Supplier';
+import Supplieradd from './Pages/Supplieradd';
+import Supplierupdate from './Pages/Supplierupdate';
 
-//CASHIER
-import Client from '/src/Pages/Client.jsx';
-import Clientadd from '/src/Pages/Clientadd.jsx';
-import Clientupdate from '/src/Pages/Clientupdate.jsx';
+import Transaction from './Pages/Transaction';
+import Transactionadd from './Pages/Transactionadd';
+import Transactionupdate from './Pages/Transactionupdate';
+
+import Bill from './Pages/Bill';
 
 
-
-
-//components and layouts
-import BaseLayout from './Components/BaseLayout'; 
-import CashierLayout from './Components/CashierLayout'; 
-import AdminLayout from './Components/AdminLayout'; 
-
+// Components and layouts
+import BaseLayout from './Components/BaseLayout';
+import CashierLayout from './Components/CashierLayout';
+import AdminLayout from './Components/AdminLayout';
+import ProtectedRoute from './Components/ProtectedRoute';
+import Billshared from './Components/Billshared';
 
 
 
 const App = () => {
   return (
     <Routes>
-      {/* BaseLayout with other pages */}
+      {/* Public routes */}
       <Route path="/Login" element={<BaseLayout><Login /></BaseLayout>} />
-      <Route path="/Register" element={<BaseLayout><Register /></BaseLayout>} />
       <Route path="/About" element={<BaseLayout><About /></BaseLayout>} />
       <Route path="/Contact" element={<BaseLayout><Contact /></BaseLayout>} />
       <Route path="/Home" element={<BaseLayout><Home /></BaseLayout>} />
       <Route path="/Product" element={<BaseLayout><Product /></BaseLayout>} />
-      <Route path="/Homefilter" element={<BaseLayout><Homefilter /></BaseLayout>} />
       
       
 
-
-      {/* Customer part both include pard nav and dashboard */}
-      <Route path="/Client" element={<CashierLayout><Client /></CashierLayout>} />
-      <Route path="/Clientadd" element={<CashierLayout><Clientadd /></CashierLayout>} />
-      <Route path="/Clientupdate/:id" element={<Clientupdate />} />  // Parameterized route
       
-      {/* admin part both include pard nav and dashboard */}
-      <Route path="/Supplier" element={<AdminLayout><Supplier /></AdminLayout>} />
-      <Route path="/Supplieradd" element={<AdminLayout><Supplieradd /></AdminLayout>} />
-      <Route path="/Supplierupdate/:id" element={<Supplierupdate />} />
+      {/* Cashier protected routes */}
+      <Route element={<ProtectedRoute allowedRoles={['cashier']} />}>
 
-      <Route path="/Transaction" element={<AdminLayout><Transaction /></AdminLayout>} />
-      <Route path="/Transactionadd" element={<AdminLayout><Transactionadd /></AdminLayout>} />
-      <Route path="/Transactionupdate/:id" element={<Transactionupdate />} />
+        <Route path="/Client" element={<CashierLayout><Client /></CashierLayout>} />
+        <Route path="/Clientadd" element={<CashierLayout><Clientadd /></CashierLayout>} />
+        <Route path="/Clientupdate/:id" element={<CashierLayout><Clientupdate /></CashierLayout>} />
 
+        <Route path="/Shelf" element={<CashierLayout><Shelf /></CashierLayout>} />
+        <Route path="/Shelfadd" element={<CashierLayout><Shelfadd /></CashierLayout>} />
+        <Route path="/Shelfupdate/:id" element={<CashierLayout><Shelfupdate /></CashierLayout>} />
 
+        <Route path="/Supplier" element={<CashierLayout><Supplier /></CashierLayout>} />
+        <Route path="/Supplieradd" element={<CashierLayout><Supplieradd /></CashierLayout>} />
+        <Route path="/Supplierupdate/:id" element={<CashierLayout><Supplierupdate /></CashierLayout>} />
 
-      <Route path="/Inventory" element={<AdminLayout><Inventory /></AdminLayout>} />
-      <Route path="/Category" element={<AdminLayout><Category /></AdminLayout>} />
-      <Route path="/Categoryadd" element={<AdminLayout><Categoryadd /></AdminLayout>} />
-      <Route path="/Categoryupdate/:id" element={<Categoryupdate />} /> 
-
-
-      <Route path="/Vehiclepart" element={<AdminLayout><Vehiclepart /></AdminLayout>} />
-      <Route path="/Vehiclepartadd" element={<AdminLayout><Vehiclepartadd /></AdminLayout>} />
-      <Route path="/Vehiclepartupdate/:id" element={<Vehiclepartupdate />}/>
-
-
-      <Route path="/Vehicletype" element={<AdminLayout><Vehicletype /></AdminLayout>} />
-      <Route path="/Vehicletypeadd" element={<AdminLayout><Vehicletypeadd /></AdminLayout>} />
-      <Route path="/Vehicletypeupdate/:id" element={<Vehicletypeupdate />} /> 
-
-
-      
-      <Route path="/Shelf" element={<AdminLayout><Shelf /></AdminLayout>} />
-      <Route path="/Shelfadd" element={<AdminLayout><Shelfadd /></AdminLayout>} />
-      <Route path="/Shelfupdate/:id" element={<Shelfupdate />} /> 
+        <Route path="/Transaction" element={<CashierLayout><Transaction /></CashierLayout>} />
+        <Route path="/Transactionadd" element={<CashierLayout><Transactionadd /></CashierLayout>} />
+        <Route path="/Transactionupdate/:id" element={<CashierLayout><Transactionupdate /></CashierLayout>} />
+        
+        <Route path="/Bill" element={<BaseLayout><Bill /></BaseLayout>} />
       
 
-      {/* Redirect to /about as the home page change again after */}
+
+      </Route>
+
+      {/* Admin protected routes */}
+      <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+      /
+        <Route path="/Inventory" element={<AdminLayout><Inventory /></AdminLayout>} />
+
+        <Route path="/Notify" element={<BaseLayout><Notify/></BaseLayout>} />
+        <Route path="/User" element={<AdminLayout><User/></AdminLayout>} /> 
+        <Route path="/Userupdate/:id" element={<AdminLayout><Userupdate /></AdminLayout>} />
+
+
+        <Route path="/Vehiclepart" element={<AdminLayout><Vehiclepart /></AdminLayout>} />   
+        <Route path="/Vehiclepartadd" element={<AdminLayout><Vehiclepartadd /></AdminLayout>} />
+        <Route path="/Vehiclepartupdate/:part_no" element={<AdminLayout><Vehiclepartupdate /></AdminLayout>} />
+
+        <Route path="/Category" element={<AdminLayout><Category /></AdminLayout>} />
+        <Route path="/Categoryadd" element={<AdminLayout><Categoryadd /></AdminLayout>} />
+        <Route path="/Categoryupdate/:id" element={<AdminLayout><Categoryupdate /></AdminLayout>} />
+        
+        <Route path="/Vehicletype" element={<AdminLayout><Vehicletype /></AdminLayout>} />
+        <Route path="/Vehicletypeadd" element={<AdminLayout><Vehicletypeadd /></AdminLayout>} />
+        <Route path="/Vehicletypeupdate/:id" element={<AdminLayout><Vehicletypeupdate /></AdminLayout>} />
+
+        <Route path="/Report" element={<AdminLayout><Report/></AdminLayout>} />
+        <Route path="/Register" element={<BaseLayout><Register /></BaseLayout>} />
+
+      </Route>
+
+
+      {/* shared layouts */}
+      <Route path="/Billdetails" element={<Billshared />} />
+      <Route path="/return/:bill_id" element={<Returnform />} />
+
+
+      {/* Default route */}
       <Route path="/" element={<BaseLayout><Home /></BaseLayout>} />
     </Routes>
   );

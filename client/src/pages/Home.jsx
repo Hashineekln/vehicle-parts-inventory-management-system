@@ -89,7 +89,7 @@ export default function Example() {
                 className=" w-auto justify-center rounded-md bg-sky-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                
-                <Link className="font-semibold text-slate-50 p-3  hover:text-blue-400" to="/Homefilter"> Shop Collection</Link> {/* Visible label */}
+                <Link className="font-semibold text-slate-50 p-3  hover:text-blue-400" to="/Product"> Shop Collection</Link> {/* Visible label */}
               </a>
             </div>
           </div>
