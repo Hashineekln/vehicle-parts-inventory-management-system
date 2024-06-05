@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { AuthContext } from "../context/authContext"; // Adjusted import path
 
-const ProtectedRoute = ({ allowedRoles }) => {
+const ProtectedRoute = ({ allowedRoles, layout: Layout, children }) => {
     const { currentUser } = useContext(AuthContext);
 
     console.log('ProtectedRoute - currentUser:', currentUser);
@@ -19,7 +19,7 @@ const ProtectedRoute = ({ allowedRoles }) => {
         return <Navigate to="/Home" replace />;
     }
 
-    return <Outlet />;
+    return Layout ? <Layout>{children}</Layout> : <Outlet />;
 };
 
 export default ProtectedRoute;

@@ -80,7 +80,7 @@ const Product = () => {
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Select Your Vehicle Part</h1>
-        {currentUser && (currentUser.usertype === 'admin' || currentUser.usertype === 'cashier') && (
+        {currentUser && (currentUser.usertype === 'cashier') && (
           <Link to="/vehiclepartadd" className="bg-blue-500 text-white px-4 py-2 rounded">Add Vehicle Part</Link>
         )}
       </div>
@@ -133,7 +133,7 @@ const Product = () => {
             <p>Price: Rs.{part.price}</p>
             <p>Quantity: {part.quantity}</p>
             
-            {currentUser && (currentUser.usertype === 'admin' || currentUser.usertype === 'cashier') && (
+            {currentUser && (currentUser.usertype === 'cashier') && (
               <>
                 <Link to={`/vehiclepartupdate/${part.part_no}`} className="bg-blue-500 text-white px-4 py-2 rounded">
                   Update

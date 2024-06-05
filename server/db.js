@@ -17,4 +17,8 @@ db.connect(function(err) {
   console.log('Connected to database as id ' + db.threadId);
 });
 
+
+
+
+
 export default db;

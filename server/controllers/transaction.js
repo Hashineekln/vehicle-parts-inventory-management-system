@@ -24,19 +24,19 @@ export const getTransaction = async (req, res) => {
 
 // Add a new transaction
 export const addTransaction = async (req, res) => {
-    const { quantity, vehicle_part_part_no, supplier_supplier_id, shelf_id } = req.body;
+    const { supplier_supplier_id,vehicle_part_part_no,quantity,buying_price,  shelf_id } = req.body;
 
     if (!quantity || !vehicle_part_part_no || !supplier_supplier_id || !shelf_id) {
         return res.status(400).json({ error: "All fields are required" });
     }
 
-    const createTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    //const createTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
     const sql = `
-        INSERT INTO transaction (quantity, create_time, vehicle_part_part_no, supplier_supplier_id, shelf_id)
+        INSERT INTO transaction (supplier_supplier_id,vehicle_part_part_no,quantity,buying_price,shelf_id)
         VALUES (?, ?, ?, ?, ?)
     `;
-    const values = [quantity, createTime, vehicle_part_part_no, supplier_supplier_id, shelf_id];
+    const values = [ supplier_supplier_id,vehicle_part_part_no,quantity,buying_price, shelf_id];
 
     db.query(sql, values, (err, data) => {
         if (err) {
@@ -64,10 +64,10 @@ export const addTransaction = async (req, res) => {
 
 
 
-// Update an existing transaction
+// Update an existing transaction not use since we printing this
 export const updateTransaction = async (req, res) => {
     const { id } = req.params;
-    const { quantity, vehicle_part_part_no, supplier_supplier_id, shelf_id } = req.body;
+    const { quantity, vehicle_part_part_no, supplier_supplier_id, shelf_id,buying_price } = req.body;
 
     if (!quantity || !vehicle_part_part_no || !supplier_supplier_id || !shelf_id) {
         return res.status(400).json({ error: "All fields are required" });
@@ -88,10 +88,10 @@ export const updateTransaction = async (req, res) => {
 
         const sql = `
             UPDATE transaction 
-            SET quantity = ?, vehicle_part_part_no = ?, supplier_supplier_id = ?, shelf_id = ? 
+            SET quantity = ?, vehicle_part_part_no = ?, supplier_supplier_id = ?, shelf_id = ? buying_price=?
             WHERE transaction_id = ?
         `;
-        const values = [quantity, vehicle_part_part_no, supplier_supplier_id, shelf_id, id];
+        const values = [quantity, vehicle_part_part_no, supplier_supplier_id, shelf_id, id,buying_price];
 
         db.query(sql, values, (updateErr, results) => {
             if (updateErr) {

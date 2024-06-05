@@ -1,38 +1,33 @@
 import React, { useState } from 'react';
-// Importing icons from react-icons
 import { FaWarehouse, FaUsers, FaFileInvoiceDollar, FaCog, FaArrowCircleRight } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import { useNavigate } from 'react-router-dom';
+//import Notify from '../Pages/Notify'; // Ensure correct import path
 
 const AdminDash = () => {
-  const [AdminDash, setSidenav] = useState(true);
-  const navigate = useNavigate(); // Instantiate the navigate function
+  const [hasNewNotification, setHasNewNotification] = useState(false);
+  const navigate = useNavigate();
 
   const handleNavigation = (route) => {
-    navigate(route); // Use navigate function with the route
+    navigate(route);
+    if (route === '/report') setHasNewNotification(false); // Reset notification highlight when navigating to Notify
   };
 
-  // Mapping your routes to specific icons and paths
+  const handleNewNotification = () => {
+    setHasNewNotification(true);
+  };
   const menuItems = [
     { name: 'User Details', icon: <FaWarehouse />, path: '/user' },
     { name: 'Catalogue', icon: <FaFileInvoiceDollar /> , path: '/Product' },
     { name: 'Inventory', icon: <FaUsers />, path: '/Inventory' },
     { name: 'Bill Logs', icon: <FaFileInvoiceDollar /> , path: '/Billdetails' },
-    { name: 'Notification', icon: <FaCog />, path: '/notification' },
+    { name: 'Notification', icon: <FaCog />, path: '/Notify' },
     { name: 'Report', icon: <FaArrowCircleRight />, path: '/Report' },
   ];
-
+  
   return (
-    <div className="font-poppins antialiased h-screen w-1/8 ">
-      <button
-        onClick={() => setSidenav(true)}
-        className="p-2 border-2 bg-black rounded-md border-gray-200 shadow-lg text-gray-900 focus:outline-none focus:text-black absolute top-50 left-0 sm:hidden"
-      ></button>
-      <div
-        id="AdminDash"
-        className={`bg-white h-screen md:block shadow-xl px-3 w-1/8 md:w-60 lg:w-60 overflow-x-hidden`}
-        onClick={() => setSidenav(false)}
-      >
-         <div className="space-y-6 md:space-y-10 mt-10">
+    <div className="font-poppins antialiased h-screen w-1/8">
+      <div className="bg-white h-screen md:block shadow-xl px-3 w-1/8 md:w-60 lg:w-60 overflow-x-hidden">
+        <div className="space-y-6 md:space-y-10 mt-10">
           <div id="company" className="space-y-3">
             <img
               src="src/assets/Logo.jpg"
@@ -51,11 +46,18 @@ const AdminDash = () => {
               }}
               className="text-sm font-medium text-gray-700 py-2 px-2 hover:bg-teal-500 hover:text-white hover:scale-105 rounded-md transition duration-150 ease-in-out flex  gap-8"
             >
-              {icon}<span>{name}</span>
+              {icon}
+              <span>{name}</span>
+              {name === 'Notification' && hasNewNotification && (
+                <span className="bg-red-500 text-white rounded-full px-2 py-1 text-xs">New</span>
+              )}
             </a>
           ))}
         </div>
       </div>
+      
+     
+      
     </div>
   );
 };
