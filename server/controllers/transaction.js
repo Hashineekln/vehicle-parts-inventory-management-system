@@ -24,19 +24,19 @@ export const getTransaction = async (req, res) => {
 
 // Add a new transaction
 export const addTransaction = async (req, res) => {
-    const { supplier_supplier_id,vehicle_part_part_no,quantity,buying_price,  shelf_id } = req.body;
+    const { supplier_supplier_id,vehicle_part_part_no,quantity,buying_price} = req.body;
 
-    if (!quantity || !vehicle_part_part_no || !supplier_supplier_id || !shelf_id) {
+    if (!quantity || !vehicle_part_part_no || !supplier_supplier_id ) {
         return res.status(400).json({ error: "All fields are required" });
     }
 
     //const createTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
     const sql = `
-        INSERT INTO transaction (supplier_supplier_id,vehicle_part_part_no,quantity,buying_price,shelf_id)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO transaction (supplier_supplier_id,vehicle_part_part_no,quantity,buying_price)
+        VALUES (?, ?, ?, ?)
     `;
-    const values = [ supplier_supplier_id,vehicle_part_part_no,quantity,buying_price, shelf_id];
+    const values = [ supplier_supplier_id,vehicle_part_part_no,quantity,buying_price];
 
     db.query(sql, values, (err, data) => {
         if (err) {
@@ -67,9 +67,9 @@ export const addTransaction = async (req, res) => {
 // Update an existing transaction not use since we printing this
 export const updateTransaction = async (req, res) => {
     const { id } = req.params;
-    const { quantity, vehicle_part_part_no, supplier_supplier_id, shelf_id,buying_price } = req.body;
+    const { quantity, vehicle_part_part_no, supplier_supplier_id, buying_price } = req.body;
 
-    if (!quantity || !vehicle_part_part_no || !supplier_supplier_id || !shelf_id) {
+    if (!quantity || !vehicle_part_part_no || !supplier_supplier_id ) {
         return res.status(400).json({ error: "All fields are required" });
     }
 
@@ -88,10 +88,10 @@ export const updateTransaction = async (req, res) => {
 
         const sql = `
             UPDATE transaction 
-            SET quantity = ?, vehicle_part_part_no = ?, supplier_supplier_id = ?, shelf_id = ? buying_price=?
+            SET quantity = ?, vehicle_part_part_no = ?, supplier_supplier_id = ?,  buying_price=?
             WHERE transaction_id = ?
         `;
-        const values = [quantity, vehicle_part_part_no, supplier_supplier_id, shelf_id, id,buying_price];
+        const values = [quantity, vehicle_part_part_no, supplier_supplier_id, buying_price];
 
         db.query(sql, values, (updateErr, results) => {
             if (updateErr) {
@@ -121,16 +121,4 @@ export const updateTransaction = async (req, res) => {
 };
 
 
-// Delete a transaction
-export const deleteTransaction = async (req, res) => {
-    const sql = 'DELETE FROM transaction WHERE transaction_id = ?';
-    db.query(sql, [req.params.id], (err, results) => {
-        if (err) {
-            return res.status(500).json({ error: "Error deleting data" });
-        }
-        if (results.affectedRows === 0) {
-            return res.status(404).json({ message: "Transaction not found" });
-        }
-        res.status(200).json({ message: "Transaction deleted successfully" });
-    });
-};
+

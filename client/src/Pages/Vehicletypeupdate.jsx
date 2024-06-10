@@ -85,3 +85,4 @@ function VehicletypeUpdate() {
 }
 
 export default VehicletypeUpdate;
+

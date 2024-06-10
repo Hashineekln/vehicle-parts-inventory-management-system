@@ -6,6 +6,7 @@ function VehiclePartUpdate() {
     const navigate = useNavigate();
     const { part_no } = useParams();
     console.log("Part Number:", part_no);
+
     const [partData, setPartData] = useState({
         part_name: '',
         price: '',
@@ -16,6 +17,7 @@ function VehiclePartUpdate() {
         shelf_id: '',
         vehicle_type_ids: []
     });
+
     const [categories, setCategories] = useState([]);
     const [shelves, setShelves] = useState([]);
     const [vehicleTypes, setVehicleTypes] = useState([]);
@@ -32,7 +34,15 @@ function VehiclePartUpdate() {
                 ]);
 
                 const part = partRes.data;
-                setPartData(part);
+                const vehicle_type_ids = part.models ? part.models.split(', ').map(model => {
+                    const vt = vehicleTypesRes.data.find(vt => vt.model === model);
+                    return vt ? vt.vehicle_id : null;
+                }).filter(id => id !== null) : [];
+                
+                setPartData({
+                    ...part,
+                    vehicle_type_ids
+                });
                 setCategories(categoriesRes.data);
                 setShelves(shelvesRes.data);
                 setVehicleTypes(vehicleTypesRes.data);
@@ -61,7 +71,7 @@ function VehiclePartUpdate() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        if (!partData.part_name || !partData.price || !partData.threshold_no || !partData.quantity || !partData.category_id || !partData.shelf_id || partData.vehicle_type_ids.length === 0) {
+        if (!partData.part_name || !partData.price || !partData.threshold_no || !partData.quantity || !partData.image_url || !partData.category_id || !partData.shelf_id || partData.vehicle_type_ids.length === 0) {
             alert('Please fill in all required fields.');
             return;
         }
@@ -106,7 +116,9 @@ function VehiclePartUpdate() {
                     <select id="category_id" name="category_id" value={partData.category_id} onChange={handleInputChange} className="mb-3 p-2 border rounded-md border-gray-300 w-full">
                         <option value="">Select Category</option>
                         {categories.map(category => (
-                            <option key={category.id} value={category.id}>{category.category_id}</option>
+                           <option key={category.category_id} value={category.category_id}>
+                           {category.category_id} - {category.name}
+                       </option>
                         ))}
                     </select>
 
@@ -114,7 +126,9 @@ function VehiclePartUpdate() {
                     <select id="shelf_id" name="shelf_id" value={partData.shelf_id} onChange={handleInputChange} className="mb-3 p-2 border rounded-md border-gray-300 w-full">
                         <option value="">Select Shelf</option>
                         {shelves.map(shelf => (
-                            <option key={shelf.id} value={shelf.id}>{shelf.shelf_id}</option>
+                           <option key={shelf.shelf_id} value={shelf.shelf_id}>
+                           {shelf.shelf_id} - {shelf.shelf_name}
+                       </option>
                         ))}
                     </select>
 

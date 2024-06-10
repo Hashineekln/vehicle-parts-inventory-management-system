@@ -31,6 +31,8 @@ import Notify from './Pages/Notify';
 import User from './Pages/User';
 import Userupdate from './Pages/Userupdate';
 import Report from './Pages/Report';
+import Reportyear from './Pages/Reportyear';
+
 
 
 
@@ -52,6 +54,7 @@ import Transactionadd from './Pages/Transactionadd';
 import Transactionupdate from './Pages/Transactionupdate';
 
 import Bill from './Pages/Bill';
+import Returntable from './Pages/Returntable';
 
 
 // Components and layouts
@@ -83,20 +86,11 @@ const App = () => {
         <Route path="/Clientadd" element={<CashierLayout><Clientadd /></CashierLayout>} />
         <Route path="/Clientupdate/:id" element={<CashierLayout><Clientupdate /></CashierLayout>} />
 
-        <Route path="/Shelf" element={<CashierLayout><Shelf /></CashierLayout>} />
-        <Route path="/Shelfadd" element={<CashierLayout><Shelfadd /></CashierLayout>} />
-        <Route path="/Shelfupdate/:id" element={<CashierLayout><Shelfupdate /></CashierLayout>} />
-
-        <Route path="/Supplier" element={<CashierLayout><Supplier /></CashierLayout>} />
-        <Route path="/Supplieradd" element={<CashierLayout><Supplieradd /></CashierLayout>} />
-        <Route path="/Supplierupdate/:id" element={<CashierLayout><Supplierupdate /></CashierLayout>} />
-
-        <Route path="/Transaction" element={<CashierLayout><Transaction /></CashierLayout>} />
-        <Route path="/Transactionadd" element={<CashierLayout><Transactionadd /></CashierLayout>} />
-        <Route path="/Transactionupdate/:id" element={<CashierLayout><Transactionupdate /></CashierLayout>} />
+        
         
         <Route path="/Bill" element={<BaseLayout><Bill /></BaseLayout>} />
-      
+        <Route path="/Returntable" element={<CashierLayout><Returntable /></CashierLayout>} />
+
 
 
       </Route>
@@ -123,7 +117,20 @@ const App = () => {
         <Route path="/Vehicletypeadd" element={<AdminLayout><Vehicletypeadd /></AdminLayout>} />
         <Route path="/Vehicletypeupdate/:id" element={<AdminLayout><Vehicletypeupdate /></AdminLayout>} />
 
+        <Route path="/Shelf" element={<AdminLayout><Shelf /></AdminLayout>} />
+        <Route path="/Shelfadd" element={<AdminLayout><Shelfadd /></AdminLayout>} />
+        <Route path="/Shelfupdate/:id" element={<AdminLayout><Shelfupdate /></AdminLayout>} />
+
+        <Route path="/Supplier" element={<AdminLayout><Supplier /></AdminLayout>} />
+        <Route path="/Supplieradd" element={<AdminLayout><Supplieradd /></AdminLayout>} />
+        <Route path="/Supplierupdate/:id" element={<AdminLayout><Supplierupdate /></AdminLayout>} />
+
+        <Route path="/Transaction" element={<AdminLayout><Transaction /></AdminLayout>} />
+        <Route path="/Transactionadd" element={<AdminLayout><Transactionadd /></AdminLayout>} />
+        <Route path="/Transactionupdate/:id" element={<AdminLayout><Transactionupdate /></AdminLayout>} />
+
         <Route path="/Report" element={<AdminLayout><Report/></AdminLayout>} />
+        <Route path="/Reportyear" element={<AdminLayout><Reportyear/></AdminLayout>} />
         <Route path="/Register" element={<BaseLayout><Register /></BaseLayout>} />
 
       </Route>
@@ -132,6 +139,7 @@ const App = () => {
       {/* shared layouts */}
       <Route path="/Billdetails" element={<Billshared />} />
       <Route path="/return/:bill_id" element={<Returnform />} />
+      
 
 
       {/* Default route */}

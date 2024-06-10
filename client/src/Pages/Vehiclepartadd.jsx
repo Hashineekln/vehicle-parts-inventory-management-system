@@ -77,12 +77,13 @@ function VehiclePartAdd() {
             <div className='w-full bg-white rounded p-3 shadow'>
                 <div className='flex justify-between mb-3'>
                     <h1 className='text-2xl font-semibold text-gray-200 dark:text-gray-950'>Add Vehicle Part</h1>
-                    <Link to='/vehicleparts' className='rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-700'>Back to List</Link>
+                    
+                    <Link to='/vehiclepart' className='rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-700'>Back to List</Link>
                 </div>
 
                 {error && <div className="alert alert-danger">{error}</div>}
 
-                <form onSubmit={handleSubmit} className="flex flex-col justify-between items-start">
+                <form onSubmit={handleSubmit} className="flex flex-col justify-between items-start w-full">
                     <label className="mb-2" htmlFor="part_no">Part Number:</label>
                     <input id="part_no" type="text" name="part_no" value={partData.part_no} onChange={handleInputChange} placeholder="Part Number" className="mb-3 p-2 border rounded-md border-gray-300 w-full"/>
 
@@ -101,23 +102,36 @@ function VehiclePartAdd() {
                     <label className="mb-2" htmlFor="image_url">Image URL:</label>
                     <input id="image_url" type="text" name="image_url" value={partData.image_url} onChange={handleInputChange} placeholder="Image URL" className="mb-3 p-2 border rounded-md border-gray-300 w-full"/>
 
-                    <label className="mb-2" htmlFor="category_id">Category:</label>
+                    <div className="flex items-center justify-between w-full mb-2">
+                        <label htmlFor="category_id" className="block">Category:</label>
+                        <Link to='/categoryadd' className='rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-700'>New Category</Link>
+                    </div>
                     <select id="category_id" name="category_id" value={partData.category_id} onChange={handleInputChange} className="mb-3 p-2 border rounded-md border-gray-300 w-full">
                         <option value="">Select Category</option>
                         {categories.map(category => (
-                            <option key={category.id} value={category.id}>{category.category_id}</option>
+                            <option key={category.category_id} value={category.category_id}>
+                                {category.category_id} - {category.name}
+                            </option>
                         ))}
                     </select>
 
-                    <label className="mb-2" htmlFor="shelf_id">Shelf:</label>
+                    <div className="flex items-center justify-between w-full mb-2">
+                        <label htmlFor="shelf_id" className="block">Shelf:</label>
+                        <Link to='/shelfadd' className='rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-700'>New Shelf</Link>
+                    </div>
                     <select id="shelf_id" name="shelf_id" value={partData.shelf_id} onChange={handleInputChange} className="mb-3 p-2 border rounded-md border-gray-300 w-full">
                         <option value="">Select Shelf</option>
                         {shelves.map(shelf => (
-                            <option key={shelf.id} value={shelf.id}>{shelf.shelf_id}</option>
+                            <option key={shelf.shelf_id} value={shelf.shelf_id}>
+                                {shelf.shelf_id} - {shelf.shelf_name}
+                            </option>
                         ))}
                     </select>
 
-                    <label className="mb-2">Vehicle Types:</label>
+                    <div className="flex items-center justify-between w-full mb-2">
+                        <label className="block">Vehicle Types:</label>
+                        <Link to='/vehicletypeadd' className='rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-700'>New Model</Link>
+                    </div>
                     {vehicleTypes.map(vehicle_type => (
                         <div key={vehicle_type.vehicle_id}>
                             <input 

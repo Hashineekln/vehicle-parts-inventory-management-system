@@ -5,7 +5,7 @@ const router = express.Router();
 
 
 router.post('/', createReturn)
-//router.get('/:id', getBillDetailsById);
+
 
 
 export default router;

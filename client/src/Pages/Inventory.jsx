@@ -7,6 +7,7 @@ export default function Example() {
     { to: "/Vehiclepart", label: "Vehicle Part" },
     { to: "/Category", label: "Category" },
     { to: "/Vehicletype", label: "Vehicle Type" },
+    { to: "/Shelf", label: "Shelf Store" },
     // Add more navigation links as needed
   ];
 

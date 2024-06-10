@@ -45,19 +45,6 @@ function Supplier() {
         filterSuppliers(); // Update filtered suppliers whenever searchQuery changes
     }, [searchQuery, suppliers]);
 
-    const handleDelete = (id) => {
-        axios.delete(`http://localhost:5000/supplier/${id}`)
-            .then(() => {
-                // Remove the deleted supplier from the supplier list
-                setSuppliers(suppliers.filter(supplier => supplier.supplier_id !== id));
-                // Display success message
-                alert('Supplier details deleted successfully');
-            })
-            .catch(err => {
-                console.error('Error deleting supplier:', err);
-                setError('Error deleting supplier. Please try again.');
-            });
-    };
 
     return (
         <div className='overflow-x-auto relative flex-1 p-4'>
@@ -86,6 +73,7 @@ function Supplier() {
                             <th className='py-3 px-6'>Address Line 1</th>
                             <th className='py-3 px-6'>Address Line 2</th>
                             <th className='py-3 px-6'>Address Line 3</th>
+                            <th className='py-3 px-6'>Phone No</th>
                             <th className='py-3 px-6'>Action</th>
                         </tr>
                     </thead>
@@ -99,10 +87,10 @@ function Supplier() {
                                 <td className='py-4 px-6'>{supplier.address_line1}</td>
                                 <td className='py-4 px-6'>{supplier.address_line2}</td>
                                 <td className='py-4 px-6'>{supplier.address_line3}</td>
+                                <td className='py-4 px-6'>{supplier.phone}</td>
+
                                 <td className='py-4 px-6'>
-                                    <Link to={`/Supplierupdate/${supplier.supplier_id}`} className='rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>Edit</Link>
-                                    
-                                    <button className='rounded-md bg-red-500 px-2 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ml-3' onClick={() => handleDelete(supplier.supplier_id)}>Delete</button>
+                                    <Link to={`/Supplierupdate/${supplier.supplier_id}`} className='rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>Edit</Link> 
                                 </td>
                             </tr>
                         ))}

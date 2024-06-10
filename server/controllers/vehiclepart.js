@@ -1,7 +1,6 @@
 import db from '../db.js';
 
 // Get all vehicle parts with their categories and shelves
-
 export const getVehicleparts = async (req, res) => {
     const sql = `
         SELECT vp.part_no, vp.part_name, vp.price, vp.threshold_no, vp.quantity, 
@@ -24,17 +23,57 @@ export const getVehicleparts = async (req, res) => {
     });
 };
 
-
-
 // Get a single vehicle part with its category and shelf by part_no
 
 
 
 
 
+// Get a single vehicle part with its category and shelf by part_no
 
+
+// Get a single vehicle part with its models by part_no
+export const getVehiclepart = async (req, res) => {
+    const partNo = req.params.part_no;
+
+    try {
+        console.log(`Fetching part with part_no: ${partNo}`);
+        
+        // Perform the query
+        const query = `
+            SELECT vp.part_no, vp.part_name, vp.price, vp.threshold_no, vp.quantity,vp.image_url,vp.category_category_id, vp.shelf_shelf_id,
+                   c.name AS category_name, s.shelf_id,
+                   GROUP_CONCAT(vt.model SEPARATOR ', ') AS models
+            FROM vehicle_part vp
+            LEFT JOIN vehicle_part_has_vehicle_type vpt ON vp.part_no = vpt.vehicle_part_part_no
+            LEFT JOIN vehicle_type vt ON vpt.vehicle_type_vehicle_id = vt.vehicle_id
+            LEFT JOIN category c ON vp.category_category_id = c.category_id
+            LEFT JOIN shelf s ON vp.shelf_shelf_id = s.shelf_id
+            WHERE vp.part_no = ?
+            GROUP BY vp.part_no, vp.part_name, vp.price, vp.threshold_no, vp.quantity,vp.image_url, c.name, s.shelf_id;
+        `;
+
+        db.query(query, [partNo], (err, results) => {
+            if (err) {
+                console.error('Error fetching vehicle part:', err);
+                return res.status(500).json({ error: 'Error fetching vehicle part. Please try again.' });
+            }
+
+            if (results.length === 0) {
+                return res.status(404).json({ error: 'Vehicle part not found' });
+            }
+
+            const part = results[0];
+            console.log('Part details:', part);
+
+            res.status(200).json(part);
+        });
+    } catch (error) {
+        console.error('Error fetching vehicle part:', error);
+        res.status(500).json({ error: 'Error fetching vehicle part. Please try again.' });
+    }
+};
 // Add a new vehicle part
-// Express route to add a new vehicle part
 export const addVehiclepart = async (req, res) => {
     const { part_no, part_name, price, threshold_no, quantity, image_url, category_id, shelf_id, vehicle_type_ids } = req.body;
 
@@ -67,50 +106,43 @@ export const addVehiclepart = async (req, res) => {
     });
 };
 
-
-
 // Update an existing vehicle part
 export const updateVehiclePart = async (req, res) => {
-    const { part_no } = req.params;
-    const { part_name, price, threshold_no, quantity, image_url, category_id, shelf_id, vehicle_type_ids } = req.body;
+    const partNo = req.params.part_no;
+    const { part_name, price, threshold_no, quantity, category_id, shelf_id, image_url, vehicle_type_ids } = req.body;
 
-    if (!part_no || !part_name || !price || !threshold_no || !quantity || !image_url || !category_id || !shelf_id || vehicle_type_ids.length === 0) {
-        return res.status(400).json({ error: "Required fields are missing" });
-    }
+    try {
+        // Update vehicle part details in the vehicle_part table
+        await db.query(`
+            UPDATE vehicle_part 
+            SET part_name = ?, price = ?, threshold_no = ?, quantity = ?, category_category_id = ?, shelf_shelf_id = ?, image_url = ?
+            WHERE part_no = ?`, 
+            [part_name, price, threshold_no, quantity, category_id, shelf_id, image_url, partNo]
+        );
 
-    const vehiclePartSql = `
-        UPDATE vehicle_part 
-        SET part_name = ?, price = ?, threshold_no = ?, quantity = ?, image_url = ?, category_category_id = ?, shelf_shelf_id = ?
-        WHERE part_no = ?`;
-    const vehiclePartValues = [part_name, price, threshold_no, quantity, image_url, category_id, shelf_id, part_no];
+        // Delete existing vehicle type associations
+        await db.query(`
+            DELETE FROM vehicle_part_has_vehicle_type 
+            WHERE vehicle_part_part_no = ?`, 
+            [partNo]
+        );
 
-    db.query(vehiclePartSql, vehiclePartValues, (err, data) => {
-        if (err) {
-            console.error('Error updating vehicle part:', err);
-            return res.status(500).json({ error: "Error updating data", details: err.message });
+        // Insert updated vehicle type associations
+        if (vehicle_type_ids && vehicle_type_ids.length > 0) {
+            const values = vehicle_type_ids.map(vehicleId => [partNo, vehicleId]);
+            await db.query(`
+                INSERT INTO vehicle_part_has_vehicle_type (vehicle_part_part_no, vehicle_type_vehicle_id) 
+                VALUES ?`, 
+                [values]
+            );
         }
 
-        const deleteSql = `DELETE FROM vehicle_part_has_vehicle_type WHERE vehicle_part_part_no = ?`;
-        db.query(deleteSql, [part_no], (err) => {
-            if (err) {
-                console.error('Error deleting existing vehicle type relations:', err);
-                return res.status(500).json({ error: "Error deleting existing vehicle type relations", details: err.message });
-            }
-
-            const insertSql = 'INSERT INTO vehicle_part_has_vehicle_type (vehicle_part_part_no, vehicle_type_vehicle_id) VALUES ?';
-            const insertValues = vehicle_type_ids.map(vehicle_id => [part_no, vehicle_id]);
-
-            db.query(insertSql, [insertValues], (err) => {
-                if (err) {
-                    console.error('Error adding vehicle part type relation:', err);
-                    return res.status(500).json({ error: "Error adding vehicle type relations", details: err.message });
-                }
-                res.status(200).json({ message: "Vehicle part updated successfully" });
-            });
-        });
-    });
+        res.status(200).json({ message: 'Vehicle part updated successfully' });
+    } catch (error) {
+        console.error('Error updating vehicle part:', error);
+        res.status(500).json({ error: 'Error updating vehicle part. Please try again.' });
+    }
 };
-
 
 
 // Delete a vehicle part
@@ -123,6 +155,8 @@ export const deleteVehiclepart = async (req, res) => {
         return res.json({ message: "Vehicle part deleted successfully" });
     });
 };
+
+// Get all vehicle part has vehicle type relationships
 export const getVehiclePartHasVehicleType = async (req, res) => {
     const sql = 'SELECT * FROM vehicle_part_has_vehicle_type';
     db.query(sql, (err, data) => {

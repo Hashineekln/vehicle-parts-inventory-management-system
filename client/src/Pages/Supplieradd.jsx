@@ -8,6 +8,7 @@ function SupplierAdd() {
     const [addressLine1, setAddressLine1] = useState('');
     const [addressLine2, setAddressLine2] = useState('');
     const [addressLine3, setAddressLine3] = useState('');
+    const [phone, setphone] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -15,8 +16,8 @@ function SupplierAdd() {
         e.preventDefault();
 
         // Validate if all required fields are not empty
-        if (!firstName.trim() || !lastName.trim() || !companyName.trim()) {
-            setErrorMessage('Please enter first name, last name, and company name.');
+        if (!firstName.trim() || !lastName.trim() || !companyName.trim()|| !phone.trim() ){
+            setErrorMessage('Please enter first name, last name, and company name,phone');
             return;
         }
 
@@ -27,7 +28,8 @@ function SupplierAdd() {
             company_name: companyName,
             address_line1: addressLine1,
             address_line2: addressLine2,
-            address_line3: addressLine3
+            address_line3: addressLine3,
+            phone: phone,
         })
         .then(response => {
             console.log('Supplier Added', response);
@@ -38,6 +40,7 @@ function SupplierAdd() {
             setAddressLine1('');
             setAddressLine2('');
             setAddressLine3('');
+            setphone('');
             setErrorMessage(''); // Clear any previous error messages
         })
         .catch(error => {
@@ -102,6 +105,16 @@ function SupplierAdd() {
                             type="text"
                             value={addressLine3}
                             onChange={e => setAddressLine3(e.target.value)}
+                            className="block w-full py-2 px-9 border rounded mt-7"
+                        />
+                    </label>
+
+                    <label className="block mb-2">
+                        Phone No:
+                        <input
+                            type="text"
+                            value={phone}
+                            onChange={e => setphone(e.target.value)}
                             className="block w-full py-2 px-9 border rounded mt-7"
                         />
                     </label>

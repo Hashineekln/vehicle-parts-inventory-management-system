@@ -105,7 +105,7 @@ className="space-y-6" action="#" method="POST">
                 <option value="">Select a type</option>
                 <option value="cashier">Cashier</option>
                 <option value="admin">Admin</option>
-                <option value="employee">Employee</option>
+                <option value="employee">Inactive</option>
               </select>
             </div>
           </div>

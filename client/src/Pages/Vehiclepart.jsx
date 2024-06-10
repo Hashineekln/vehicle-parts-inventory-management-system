@@ -29,15 +29,7 @@ function VehiclePart() {
         vp.price.toString().toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const handleDelete = async (part_no) => {
-        try {
-            await axios.delete(`http://localhost:5000/vehiclepart/${part_no}`);
-            setVehicleParts(vehicleParts.filter(vp => vp.part_no !== part_no));
-        } catch (err) {
-            console.error('Error deleting part:', err);
-            setError('Error deleting part. Please try again.');
-        }
-    };
+
 
     return (
         <div className='overflow-x-auto relative flex-1 p-4'>
@@ -86,7 +78,7 @@ function VehiclePart() {
                                 <td className='py-4 px-6'>
                                 <Link to={`/vehiclepartupdate/${vp.part_no}`} className='bg-blue-500 px-4 py-2 text-white rounded-md mr-3'>Edit</Link>
 
-                                    <button onClick={() => handleDelete(vp.part_no)} className='bg-red-500 px-2 py-1.5 text-white rounded-md'>Delete</button>
+                                    
                                 </td>
                             </tr>
                         ))}

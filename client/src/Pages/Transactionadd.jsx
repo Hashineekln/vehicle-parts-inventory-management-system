@@ -1,26 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
-
-
-//total_amount should be auto calculated in the backend
-
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Header from "../Components/Header";
 import ReactToPrint from 'react-to-print';
-import Footer from "../Components/Footer";
 
 function AddTransaction() {
     const [suppliers, setSuppliers] = useState([]);
     const [vehicleParts, setVehicleParts] = useState([]);
     const [quantity, setQuantity] = useState('');
-    const [buying_price, setBuyingPrice] = useState('');
+    const [buyingPrice, setBuyingPrice] = useState('');
     const [vehiclePartPartNo, setVehiclePartPartNo] = useState('');
     const [supplierSupplierId, setSupplierSupplierId] = useState('');
     const [shelfId, setShelfId] = useState('');
     const [shelves, setShelves] = useState([]);
     const [error, setError] = useState(null);
+    const [transactionId, setTransactionId] = useState(null);
     const navigate = useNavigate();
-    const componentRef = useRef(); // Define the ref here
+    const componentRef = useRef();
 
     useEffect(() => {
         // Fetch vehicle parts
@@ -43,16 +39,19 @@ function AddTransaction() {
         e.preventDefault();
 
         try {
-            await axios.post('http://localhost:5000/transaction', {
+            const response = await axios.post('http://localhost:5000/transaction', {
                 quantity,
-                buying_price,
+                buying_price: buyingPrice,
                 vehicle_part_part_no: vehiclePartPartNo,
                 supplier_supplier_id: supplierSupplierId,
                 shelf_id: shelfId
             });
 
+            const { transaction_id } = response.data;
+            setTransactionId(transaction_id);
+
             alert('Transaction added successfully');
-            navigate('/transaction'); // Redirect to transactions page
+            navigate(`/transaction/${transaction_id}`); // Redirect to transaction details page
         } catch (err) {
             console.error('Error adding transaction:', err);
             setError('Error adding transaction. Please try again.');
@@ -67,15 +66,25 @@ function AddTransaction() {
                     content={() => componentRef.current}
                 />
                 <div ref={componentRef} className="p-5">
-                    <Header />
-
                     {error && <div className="alert alert-danger">{error}</div>}
-                    <form onSubmit={handleSubmit}>
-
-                    <h1 className="font-bold uppercase tracking-wide text-2xl mb-3">
-   Transaction Recipt
-  </h1>
-<br></br>
+                    <div className="text-center mb-4">
+                        <h1 className="font-bold uppercase tracking-wide text-3xl mb-3">Transaction Receipt</h1>
+                        <div className="flex items-center justify-center">
+                            <img src="src/assets/Logo.jpg" alt="LHI Company" className="w-36 h-36 mr-6" />
+                        </div>
+                        <div className="font-bold text-lg">LHI LOGISTIC</div>
+                        <div>Address: No 164/B, Kottawa - Malabe Rd, Pannipitiya</div>
+                        <div>Tel: +94 7652 996</div>
+                        <div>Fax: 7684935493</div>
+                    </div>
+                    <div className="text-center mb-4">
+                        {transactionId && <div>Transaction ID: {transactionId}</div>}
+                    </div>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div className="flex justify-end mb-4 space-x-4">
+                            <Link to="/supplieradd" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Add New Supplier</Link>
+                            <Link to="/Vehiclepartadd" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Add New Part</Link>
+                        </div>
                         <div className='mb-4'>
                             <label className='block text-gray-700'>Supplier ID</label>
                             <select
@@ -92,7 +101,6 @@ function AddTransaction() {
                                 ))}
                             </select>
                         </div>
-
                         <div className='mb-4'>
                             <label className='block text-gray-700'>Vehicle Part No</label>
                             <select
@@ -109,48 +117,39 @@ function AddTransaction() {
                                 ))}
                             </select>
                         </div>
-
                         <div className='mb-4'>
                             <label className='block text-gray-700'>Quantity</label>
                             <input
                                 type='number'
+                                min='0'
                                 value={quantity}
                                 onChange={(e) => setQuantity(e.target.value)}
                                 className='w-full px-3 py-2 border rounded-md'
                                 required
                             />
                         </div>
-
                         <div className='mb-4'>
                             <label className='block text-gray-700'>Buying Price</label>
                             <input
                                 type='number'
-                                value={buying_price}
+                                min='0'
+                                value={buyingPrice}
                                 onChange={(e) => setBuyingPrice(e.target.value)}
                                 className='w-full px-3 py-2 border rounded-md'
                                 required
                             />
                         </div>
-
                         <div className='mb-4'>
-                            <label className='block text-gray-700'>Shelf ID</label>
-                            <select
-                                value={shelfId}
-                                onChange={(e) => setShelfId(e.target.value)}
+                            <label className='block text-gray-700'>Total Amount</label>
+                            <input
+                                type='text'
+                                value={quantity && buyingPrice ? (buyingPrice * quantity).toFixed(2) : ''}
                                 className='w-full px-3 py-2 border rounded-md'
-                                required
-                            >
-                                <option value=''>Select Shelf</option>
-                                {shelves.map(shelf => (
-                                    <option key={shelf.shelf_id} value={shelf.shelf_id}>
-                                        {shelf.shelf_id} - {shelf.shelf_name}
-                                    </option>
-                                ))}
-                            </select>
+                                readOnly
+                            />
                         </div>
-                        <button type='submit' className='bg-blue-500 text-white px-4 py-2 rounded-md'>Print the Recipt</button>
+                        <button type='submit' className='bg-blue-500 text-white px-4 py-2 rounded-md'>Create bill</button>
                     </form>
-                    <Footer />
                 </div>
             </main>
         </div>

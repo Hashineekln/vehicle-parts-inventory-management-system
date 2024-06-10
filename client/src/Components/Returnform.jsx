@@ -16,8 +16,8 @@ function ReturnForm() {
                 const items = res.data[0].part_nos.split(',').map((part_no, index) => ({
                     part_no,
                     part_name: res.data[0].part_names.split(',')[index],
-                    price: res.data[0].selling_prices.split(',')[index],
-                    quantity: res.data[0].selling_quantities.split(',')[index],
+                    price: parseFloat(res.data[0].selling_prices.split(',')[index]), // parse price as float
+                    quantity: parseInt(res.data[0].selling_quantities.split(',')[index], 10), // parse quantity as int
                     return_quantity: 0,
                     return_type: ''
                 }));
@@ -31,16 +31,16 @@ function ReturnForm() {
     useEffect(() => {
         // Compute return amount when returnItems change
         const totalAmount = returnItems.reduce((sum, item) => sum + (item.price * item.return_quantity), 0);
-        setReturnAmount(totalAmount);
+        setReturnAmount(totalAmount.toFixed(2)); // Format the total amount to two decimal places
     }, [returnItems]);
 
     const handleReturnQuantityChange = (index, value) => {
         const newReturnItems = [...returnItems];
-        newReturnItems[index].return_quantity = value;
+        newReturnItems[index].return_quantity = parseInt(value, 10); // Ensure return quantity is an integer
         setReturnItems(newReturnItems);
     };
 
-    const handleReturnTypeChange = (index, value) => { 
+    const handleReturnTypeChange = (index, value) => {
         const newReturnItems = [...returnItems];
         newReturnItems[index].return_type = value;
         setReturnItems(newReturnItems);
@@ -52,7 +52,7 @@ function ReturnForm() {
             bill_bill_id: bill_id,
             return_date: new Date().toISOString().slice(0, 19).replace('T', ' '),
             type: 'return',
-            total_amount: returnAmount
+            total_amount: parseFloat(returnAmount) // Ensure total amount is sent as a float
         };
         axios.post('http://localhost:5000/api/returnitem', { returnData, returnItems })
             .then(res => {
@@ -122,7 +122,7 @@ function ReturnForm() {
                         </tbody>
                     </table>
                     <div className="mt-4">
-                        <strong>Total Return Amount: {returnAmount}</strong>
+                        <strong>Total Return Amount: Rs.{returnAmount}</strong>
                     </div>
                     <button
                         type='submit'

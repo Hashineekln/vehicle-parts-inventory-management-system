@@ -20,11 +20,15 @@ export const getSupplier = async (req, res) => {
 
 // Add a new supplier
 export const addSupplier = async (req, res) => {
-    const sql = 'INSERT INTO supplier (first_name, last_name, company_name) VALUES (?, ?, ?)';
+    const sql = 'INSERT INTO supplier (first_name, last_name, company_name,address_line1,address_line2,address_line3,phone) VALUES (?, ?, ?,?, ?, ?,?)';
     const values = [
         req.body.first_name, 
         req.body.last_name,
-        req.body.company_name
+        req.body.company_name,
+        req.body.address_line1,
+        req.body.address_line2,
+        req.body.address_line3,
+        req.body.phone
     ];
     db.query(sql, values, (err, data) => {
         if (err) return res.json({ error: "Error adding data" });
@@ -35,10 +39,10 @@ export const addSupplier = async (req, res) => {
 // Update an existing supplier
 export const updateSupplier = async (req, res) => {
     const { id } = req.params;
-    const { first_name, last_name, company_name } = req.body;
+    const { first_name, last_name, company_name,address_line1,address_line2,address_line3,phone } = req.body;
 
-    const sql = 'UPDATE supplier SET first_name = ?, last_name = ?, company_name = ? WHERE supplier_id = ?';
-    db.query(sql, [first_name, last_name, company_name, id], (error, results) => {
+    const sql = 'UPDATE supplier SET first_name = ?, last_name = ?, company_name = ? address_line1 = ? address_line2 = ? ,address_line3 = ? ,phone = ? WHERE supplier_id = ?';
+    db.query(sql, [first_name, last_name, company_name,address_line1,address_line2,address_line3,phone, id], (error, results) => {
         if (error) {
             return res.status(500).json({ message: "Database error", error });
         }

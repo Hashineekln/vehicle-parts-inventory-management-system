@@ -88,7 +88,7 @@ function Shelf() {
                                 <td className='py-4 px-6'>{shelf.shelf_name}</td>
                                 <td className='py-4 px-6'>
                                     <Link to={`/ShelfUpdate/${shelf.shelf_id}`} className='rounded-md bg-blue-500  px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>Edit</Link>
-                                    <button className='rounded-md bg-red-500  px-2 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ml-3' onClick={() => handleDelete(shelf.shelf_id)}>Delete</button>
+                                    
                                 </td>
                             </tr>
                         ))}

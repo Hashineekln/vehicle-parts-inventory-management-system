@@ -89,33 +89,33 @@ const Dashboard = () => {
   };
 
   return (
-    <div className='overflow-x-auto relative flex-1 p-4'>
-      <div className='w-full bg-white rounded p-3'>
-        <div className='flex justify-between mb-3'>
-          <h1 className='text-2xl font-semibold text-gray-800'>Dashboard</h1>
-        </div>
-        <div className='mb-6 grid grid-cols-2 gap-4'>
-          <div className='bg-gray-100 rounded p-4 text-center'>
-            <h2 className='text-lg font-medium text-gray-700'>Number of Categories</h2>
-            <p className='text-4xl font-bold text-gray-900'>{categoryCount}</p>
+    <div className="flex flex-col p-4 space-y-6">
+      <div className="bg-white rounded-lg shadow-lg p-6">
+        <h1 className="text-2xl font-semibold text-gray-800 mb-4"></h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          <div className="bg-gray-100 rounded-lg p-6 text-center shadow-sm">
+            <h2 className="text-lg font-medium text-gray-700">Number of Categories</h2>
+            <p className="text-4xl font-bold text-gray-900">{categoryCount}</p>
           </div>
-          <div className='bg-gray-100 rounded p-4 text-center'>
-            <h2 className='text-lg font-medium text-gray-700'>Number of Parts</h2>
-            <p className='text-4xl font-bold text-gray-900'>{partCount}</p>
+          <div className="bg-gray-100 rounded-lg p-6 text-center shadow-sm">
+            <h2 className="text-lg font-medium text-gray-700">Number of Parts</h2>
+            <p className="text-4xl font-bold text-gray-900">{partCount}</p>
           </div>
         </div>
-        <div className='flex justify-between mb-3'>
-          <h2 className='text-lg font-medium text-gray-700'>Top 05 Selling Parts</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-medium text-gray-700">Top 5 Selling Parts</h2>
           <input
             type="text"
             placeholder="Search by Part Number or Quantity"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-72 px-3 py-1.5"
+            className="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-full sm:w-72 px-3 py-1.5"
           />
         </div>
-        {error && <div className="alert alert-danger">{error}</div>}
-        <Bar data={topPartsData} />
+        {error && <div className="alert alert-danger mb-4">{error}</div>}
+        <div className="relative h-96">
+          <Bar data={topPartsData} options={{ maintainAspectRatio: false }} />
+        </div>
       </div>
     </div>
   );

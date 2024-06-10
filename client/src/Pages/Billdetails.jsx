@@ -46,6 +46,14 @@ function Bill() {
         navigate(`/return/${bill_id}`);
     };
 
+    const formatDecimal = (value) => {
+        return parseFloat(value).toFixed(2); // Formats value to two decimal places
+    };
+
+    const formatCellValues = (values) => {
+        return values.split(',').join('\n'); // Joins values with a new line
+    };
+
     return (
         <div className='overflow-x-auto relative flex-1 p-4'>
             <div className='w-full bg-white rounded p-3'>
@@ -54,14 +62,14 @@ function Bill() {
                     <div className="flex items-center">
                         <input
                             type="text"
-                            placeholder="Search by Bill ID or User ID"
+                            placeholder="Search by Bill ID, User ID, or Customer ID"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-72 mr-3 px-3 py-1.5"
                         />
                     </div>
                 </div>
-                {error && <div className="alert alert-danger">{error}</div>}
+                {error && <div className="alert alert-danger bg-red-100 text-red-800 p-3 rounded-md mb-4">{error}</div>}
                 <table className='w-full text-sm text-left text-gray-50 dark:text-gray-950'>
                     <thead className='text-xs text-gray-950 uppercase bg-gray-50 dark:bg-slate-80 dark:text-gray-950'>
                         <tr>
@@ -70,9 +78,9 @@ function Bill() {
                             <th className='py-3 px-6'>Customer ID</th>      
                             <th className='py-3 px-6'>Part Numbers</th>
                             <th className='py-3 px-6'>Part Names</th>
-                            <th className='py-3 px-6'>Selling Prices</th>
+                            <th className='py-3 px-6'>Selling Prices (RS.)</th>
                             <th className='py-3 px-6'>Selling Quantities</th>
-                            <th className='py-3 px-6'>Total Amount</th>
+                            <th className='py-3 px-6'>Total Amount (RS.)</th>
                             <th className='py-3 px-6'>Total Discount</th>
                             <th className='py-3 px-6'>Actions</th>
                         </tr>
@@ -83,16 +91,16 @@ function Bill() {
                                 <td className='py-4 px-6'>{bill.bill_id}</td>
                                 <td className='py-4 px-6'>{bill.user_user_id}</td>
                                 <td className='py-4 px-6'>{bill.customer_customer_id}</td>
-                                <td className='py-4 px-6'>{bill.part_nos.split(',').join(', ')}</td>
-                                <td className='py-4 px-6'>{bill.part_names.split(',').join(', ')}</td>
-                                <td className='py-4 px-6'>{bill.selling_prices.split(',').join(', ')}</td>
-                                <td className='py-4 px-6'>{bill.selling_quantities.split(',').join(', ')}</td>
-                                <td className='py-4 px-6'>{bill.total_amount}</td>
-                                <td className='py-4 px-6'>{bill.total_discount}</td>
+                                <td className='py-4 px-6 whitespace-pre-wrap'>{formatCellValues(bill.part_nos)}</td>
+                                <td className='py-4 px-6 whitespace-pre-wrap'>{formatCellValues(bill.part_names)}</td>
+                                <td className='py-4 px-6 whitespace-pre-wrap'>{formatCellValues(bill.selling_prices)}</td>
+                                <td className='py-4 px-6 whitespace-pre-wrap'>{formatCellValues(bill.selling_quantities)}</td>
+                                <td className='py-4 px-6'>{formatDecimal(bill.total_amount)}</td>
+                                <td className='py-4 px-6'>{formatDecimal(bill.total_discount)}</td>
                                 <td className='py-4 px-6'>
                                     <button
                                         onClick={() => navigateToReturnForm(bill.bill_id)}
-                                        className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+                                        className='rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
                                     >
                                         Return
                                     </button>

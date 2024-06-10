@@ -17,12 +17,12 @@ const Dashboard = () => {
   const menuItems = [
     { name: 'Catalogue', icon: <FaFileInvoiceDollar /> , path: '/Product' },
     
-    { name: 'Transactions', icon: <FaArrowCircleRight />, path: '/Transaction' },
-    { name: 'Supplier', icon: <FaFileInvoiceDollar />, path: '/Supplier' },
+    
+   
     { name: 'Bill Logs', icon: <FaFileInvoiceDollar /> , path: '/Billdetails' },
     { name: 'Clients', icon: <FaUsers /> , path: '/Client' },
-    { name: 'Shef Store', icon: <FaFileInvoiceDollar /> , path: '/Shelf' },
-    { name: 'Return', icon: <FaCog />, path: '/Notify' },
+    
+    { name: 'Return', icon: <FaCog />, path: '/Returntable' },
 
   ];
 

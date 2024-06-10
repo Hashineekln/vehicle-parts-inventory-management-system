@@ -32,6 +32,15 @@ function Transaction() {
         fetchData();
     }, []);
 
+    const formattedDateTime = (dateTimeString) => {
+        const dateTime = new Date(dateTimeString);
+        return dateTime.toLocaleString(); // You can customize the formatting as needed
+    };
+
+    const formatDecimal = (value) => {
+        return parseFloat(value).toFixed(2); // Formats value to two decimal places
+    };
+
     const filteredTransactions = transactions.filter(tx => {
         if (searchQuery.trim() === '') {
             return true;
@@ -40,24 +49,13 @@ function Transaction() {
             return (
                 tx.transaction_id.toString().includes(searchQuery) ||
                 tx.quantity.toString().includes(searchQuery) ||
-                tx.create_time.toLowerCase().includes(lowerQuery) ||
+                formattedDateTime(tx.create_time).toLowerCase().includes(lowerQuery) ||
                 vehicleParts.find(vp => vp.part_no === tx.vehicle_part_part_no)?.name.toLowerCase().includes(lowerQuery) ||
                 suppliers.find(sp => sp.supplier_id === tx.supplier_supplier_id)?.name.toLowerCase().includes(lowerQuery) ||
                 shelves.find(s => s.shelf_id === tx.shelf_id)?.name.toLowerCase().includes(lowerQuery)
             );
         }
     });
-
-    const handleDelete = async (transaction_id) => {
-        try {
-            await axios.delete(`http://localhost:5000/transaction/${transaction_id}`);
-            setTransactions(transactions.filter(tx => tx.transaction_id !== transaction_id));
-            alert('Transaction deleted successfully');
-        } catch (err) {
-            console.error('Error deleting transaction:', err);
-            setError('Error deleting transaction. Please try again.');
-        }
-    };
 
     return (
         <div className='overflow-x-auto relative flex-1 p-4'>
@@ -88,32 +86,23 @@ function Transaction() {
                             <th className='py-3 px-6'>Vehicle Part</th>
                             <th className='py-3 px-6'>Quantity</th>
                             <th className='py-3 px-6'>Buying Price</th>
+                            <th className='py-4 px-6'>Total Price</th>
                             <th className='py-3 px-6'>Supplier</th>
-                            <th className='py-3 px-6'>Shelf</th>
+                            
                             <th className='py-3 px-6'>Create Time</th>
-                            <th className='py-3 px-6'>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {filteredTransactions.map(tx => (
-                            <tr key={tx .transaction_id} className='bg-white border-b'>
-                                <td className='py-4 px-6'>{tx .transaction_id}</td>
-                                <td className='py-4 px-6'>{vehicleParts.find(vp => vp.part_no === tx .vehicle_part_part_no)?.part_no}</td>
-                                <td className='py-4 px-6'>{tx .quantity}</td>
-                              
-                                <td className='py-4 px-6'>{tx .buying_price}</td>
-
+                            <tr key={tx.transaction_id} className='bg-white border-b'>
+                                <td className='py-4 px-6'>{tx.transaction_id}</td>
+                                <td className='py-4 px-6'>{vehicleParts.find(vp => vp.part_no === tx.vehicle_part_part_no)?.part_no}</td>
+                                <td className='py-4 px-6'>{tx.quantity}</td>
+                                <td className='py-4 px-6'>{formatDecimal(tx.buying_price)}</td>
+                                <td className='py-4 px-6'>{formatDecimal(tx.buying_price * tx.quantity)}</td>
                                 <td className='py-4 px-6'>{suppliers.find(sp => sp.supplier_id === tx.supplier_supplier_id)?.supplier_id}</td>
-                                <td className='py-4 px-6'>{shelves.find(s => s.shelf_id === tx .shelf_id)?.shelf_id}</td>
-                                <td className='py-4 px-6'>{tx .create_time}</td>
-                                <td className='py-4 px-6'>
-                                    <Link to={`/transactionupdate/${tx .transaction_id}`} className='bg-blue-500 px-4 py-2 text-white rounded-md mr-3'>
-                                        Edit
-                                    </Link>
-                                    <button onClick={() => handleDelete(tx .transaction_id)} className='bg-red-500 px-2 py-1.5 text-white rounded-md'>
-                                        Delete
-                                    </button>
-                                </td>
+                                
+                                <td className='py-4 px-6'>{formattedDateTime(tx.create_time)}</td>
                             </tr>
                         ))}
                     </tbody>

@@ -48,7 +48,7 @@ function Categoryadd() {
                         <input type="text" value={categoryName} onChange={e => setCategoryName(e.target.value)} className="block w-full py-2 px-9 border rounded mt-7" />
                     </label>
                   
-                    <button type="submit" className="bg-green-500 text-white py-2 px-4 rounded mt-2 hover:bg-green-700">Add Category</button>
+                    <button type="submit" className='rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-700'>Add Category</button>
                 </form>
                 {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                 {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
