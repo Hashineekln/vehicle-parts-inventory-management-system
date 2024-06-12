@@ -36,10 +36,10 @@ export const getClient = async (req, res) => {
 
     export const updateClient = async (req, res) => {
         const { id } = req.params;
-        const { first_name, last_name } = req.body;
+        const { first_name, last_name,phone } = req.body;
     
-        const sql = 'UPDATE customer SET first_name = ?, last_name = ? WHERE customer_id = ?'; // Fixed WHERE clause
-        db.query(sql, [first_name, last_name, id], (error, results) => {
+        const sql = 'UPDATE customer SET first_name = ?, last_name = ?, phone=? WHERE customer_id = ?'; // Fixed WHERE clause
+        db.query(sql, [first_name, last_name, phone, id], (error, results) => {
           if (error) {
             return res.status(500).json({ message: "Database error", error });
           }

@@ -10,6 +10,7 @@ function VehicletypeUpdate() {
     const [year, setYear] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         // Fetch vehicle type details when the component mounts
@@ -17,17 +18,22 @@ function VehicletypeUpdate() {
     }, []);
 
     const fetchVehicleType = () => {
-        // Fetch vehicle type details based on the id parameter from the URL
         axios.get(`http://localhost:5000/vehicletype/${id}`)
             .then(response => {
-                const { brand, model, year } = response.data;
-                setBrand(brand);
-                setModel(model);
-                setYear(year);
+                const data = response.data[0]; // Extract the first object from the array
+                if (data && typeof data.brand !== 'undefined' && typeof data.model !== 'undefined' && typeof data.year !== 'undefined') {
+                    setBrand(data.brand);
+                    setModel(data.model);
+                    setYear(data.year);
+                } else {
+                    setErrorMessage('Invalid data format received.');
+                }
+                setLoading(false);
             })
             .catch(error => {
                 console.error('Error fetching vehicle type:', error);
                 setErrorMessage('Failed to fetch vehicle type details. Please try again.');
+                setLoading(false);
             });
     };
 
@@ -58,6 +64,10 @@ function VehicletypeUpdate() {
         });
     };
 
+    if (loading) {
+        return <p>Loading...</p>;
+    }
+
     return (
         <div className="flex justify-center items-center h-screen">
             <div className="border p-10 rounded max-w-md">
@@ -85,4 +95,3 @@ function VehicletypeUpdate() {
 }
 
 export default VehicletypeUpdate;
-

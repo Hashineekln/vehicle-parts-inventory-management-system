@@ -7,6 +7,7 @@ const CategoryUpdate = () => {
         category_id: "", // Initialize to empty string
         name: "" // Initialize to empty string
     });
+    const [loading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
     const { id } = useParams();
@@ -15,14 +16,22 @@ const CategoryUpdate = () => {
         // Fetch the existing data for the client
         axios.get(`http://localhost:5000/category/${id}`)
             .then(response => {
-                setValues({
-                    category_id: response.data.category_id || "", // Keep existing value or set to empty string
-                    name: response.data.name || "" // Keep existing value or set to empty string
-                });
+                console.log('API response:', response.data); // Log the API response
+                const data = response.data[0]; // Extract the first object from the array
+                if (data && typeof data.category_id !== 'undefined' && typeof data.name !== 'undefined') {
+                    setValues({
+                        category_id: data.category_id,
+                        name: data.name
+                    });
+                } else {
+                    setErrorMessage('Invalid data format received.');
+                }
+                setLoading(false);
             })
             .catch(error => {
                 console.error('Error fetching client data', error);
                 setErrorMessage('Error fetching data. Please refresh the page and try again.');
+                setLoading(false);
             });
     }, [id]);
 
@@ -34,35 +43,25 @@ const CategoryUpdate = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:5000/category/${id}`, values); // Updated endpoint
-            alert('Category details updated successfully'); // Display success message
-            
-            // Fetch the updated category data from the server
-            axios.get(`http://localhost:5000/category/${id}`)
-                .then(response => {
-                    setValues({
-                        category_id: response.data.category_id || "", // Keep existing value or set to empty string
-                        name: response.data.name || "" // Keep existing value or set to empty string
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching updated category data', error);
-                    setErrorMessage('Error fetching updated data. Please refresh the page.');
-                });
-    
+            await axios.put(`http://localhost:5000/category/${id}`, values);
+            alert('Category details updated successfully');
             navigate("/Category");
         } catch (err) {
+            console.error('Failed to update category:', err);
             setErrorMessage("Failed to update category. Please try again.");
         }
     };
-    
+
+    if (loading) {
+        return <p>Loading...</p>;
+    }
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
             <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '20px', width: '300px' }}>
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <h2 style={{ fontWeight: 'bold', marginBottom: '20px' }}>Update Category</h2>
-                    <label htmlFor="first_name" style={{ marginBottom: '8px' }}>Category ID</label>
+                    <label htmlFor="category_id" style={{ marginBottom: '8px' }}>Category ID **</label>
                     <input
                         id="category_id"
                         name="category_id"
@@ -73,7 +72,7 @@ const CategoryUpdate = () => {
                         style={{ padding: '8px', marginBottom: '16px', width: '100%', border: '1px solid #ccc', borderRadius: '4px' }}
                     />
 
-                    <label htmlFor="last_name" style={{ marginBottom: '8px' }}>Category Name</label>
+                    <label htmlFor="name" style={{ marginBottom: '8px' }}>Category Name</label>
                     <input
                         id="name"
                         name="name"

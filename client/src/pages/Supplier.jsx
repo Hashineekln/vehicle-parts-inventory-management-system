@@ -31,10 +31,8 @@ function Supplier() {
                     supplier.supplier_id.toString().includes(searchQuery) || // Search by supplier ID
                     supplier.first_name.toLowerCase().includes(searchQuery.toLowerCase()) || // Search by first name
                     supplier.last_name.toLowerCase().includes(searchQuery.toLowerCase()) || // Search by last name
-                    supplier.company_name.toLowerCase().includes(searchQuery.toLowerCase()) || // Search by company name
-                    supplier.address_line1.toLowerCase().includes(searchQuery.toLowerCase()) || // Search by address line 1
-                    supplier.address_line2.toLowerCase().includes(searchQuery.toLowerCase()) || // Search by address line 2
-                    supplier.address_line3.toLowerCase().includes(searchQuery.toLowerCase()) // Search by address line 3
+                    supplier.company_name.toLowerCase().includes(searchQuery.toLowerCase())  // Search by company name
+                   
                 );
             });
             setFilteredSuppliers(filtered);

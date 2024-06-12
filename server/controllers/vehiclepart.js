@@ -4,14 +4,14 @@ import db from '../db.js';
 export const getVehicleparts = async (req, res) => {
     const sql = `
         SELECT vp.part_no, vp.part_name, vp.price, vp.threshold_no, vp.quantity, 
-               c.name as category_name, s.shelf_id, 
+               c.name as category_name, s.shelf_id,vt.year ,
                GROUP_CONCAT(vt.model SEPARATOR ', ') as models
         FROM vehicle_part vp
         LEFT JOIN vehicle_part_has_vehicle_type vpt ON vp.part_no = vpt.vehicle_part_part_no
         LEFT JOIN vehicle_type vt ON vpt.vehicle_type_vehicle_id = vt.vehicle_id
         LEFT JOIN category c ON vp.category_category_id = c.category_id
         LEFT JOIN shelf s ON vp.shelf_shelf_id = s.shelf_id
-        GROUP BY vp.part_no, vp.part_name, vp.price, vp.threshold_no, vp.quantity, c.name, s.shelf_id
+        GROUP BY vp.part_no, vp.part_name, vp.price, vp.threshold_no, vp.quantity, c.name, s.shelf_id,vt.year
     `;
     db.query(sql, (err, data) => {
         if (err) {

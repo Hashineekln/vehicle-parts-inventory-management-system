@@ -21,20 +21,34 @@ const Product = () => {
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const getUniqueBrands = (data) => {
+    const uniqueBrands = data.reduce((acc, item) => {
+      const normalizedBrand = item.brand.toLowerCase().trim(); // Normalize brand name
+      if (!acc.includes(normalizedBrand)) {
+        acc.push(normalizedBrand);
+      }
+      return acc;
+    }, []);
+    return uniqueBrands;
+  };
+
+  // make unique brand
   useEffect(() => {
     axios.get('http://localhost:5000/vehicletype')
       .then(response => {
         const data = response.data;
-        setBrands([...new Set(data.map(item => item.brand))]);
+        const uniqueBrands = getUniqueBrands(data);
+        setBrands(uniqueBrands);
         setModels([...new Set(data.map(item => item.model))]);
         setYears([...new Set(data.map(item => item.year))]);
       })
       .catch(error => console.error(error));
-
+    
     axios.get('http://localhost:5000/category')
       .then(response => setCategories(response.data))
       .catch(error => console.error(error));
   }, []);
+  
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -81,6 +95,10 @@ const Product = () => {
   const proceedToBilling = () => {
     navigate('/bill'); // Ensure you have this route defined in your router
   };
+
+  const formatDecimal = (value) => {
+    return parseFloat(value).toFixed(2); // Formats value to two decimal places
+};
 
   return (
     <div className="container mx-auto p-4">
@@ -164,9 +182,10 @@ const Product = () => {
                 <img src={part.image_url} alt={part.part_name} className="mb-2 w-full h-40 object-cover rounded" />
                 <h2 className="text-lg font-bold">{part.part_name}</h2>
                 <p>Part No: {part.part_no}</p>
-                <p>Price: Rs.{part.price}</p>
+                <p>Price: Rs.{formatDecimal(part.price)}</p>
                 <p>Quantity: {part.quantity}</p>
 
+                
                 {currentUser && (currentUser.usertype === 'cashier') && (
                   <div className="flex justify-between mt-2">
                    {/* <Link to={`/vehiclepartupdate/${part.part_no}`} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Update</Link>}*/}
@@ -217,4 +236,4 @@ const Product = () => {
   );
 };
 
-export default Product;
+export default Product; 

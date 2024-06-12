@@ -29,6 +29,7 @@ function User() {
             const filtered = users.filter(user => {
                 return (
                     user.user_id.toString().includes(searchQuery) ||
+                    user.usertype.toLowerCase().includes(searchQuery.toLowerCase()) ||
                     user.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                     user.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                     `${user.first_name.toLowerCase()} ${user.last_name.toLowerCase()}`.includes(searchQuery.toLowerCase())
@@ -62,13 +63,15 @@ function User() {
                     <div className="flex items-center">
                         <input
                             type="text"
-                            placeholder="Search by User ID or Name"
+                            placeholder="Search by User ID, Role or Name"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-72 mr-3 px-3 py-1.5"
                         />
-                        
+                <Link to={`/Register`} className='rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>Register</Link>
+
                     </div>
+
                 </div>
                 {error && <div className="alert alert-danger">{error}</div>}
                 <table className='w-full text-sm text-left text-gray-50 dark:text-gray-950'>

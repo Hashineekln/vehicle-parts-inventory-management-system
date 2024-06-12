@@ -21,8 +21,14 @@ function UserUpdate() {
     useEffect(() => {
         const fetchUser = async () => {
             try {
+                console.log(`Fetching data for user id: ${id}`);
                 const response = await axios.get(`http://localhost:5000/api/user/${id}`);
-                setUser(response.data);
+                if (response.data && response.data.length > 0) {
+                    console.log('User data fetched successfully:', response.data[0]);
+                    setUser(response.data[0]);
+                } else {
+                    setError('No user found with the given ID');
+                }
             } catch (err) {
                 console.error('Error fetching user:', err);
                 setError('Error fetching user. Please try again.');
@@ -34,7 +40,7 @@ function UserUpdate() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setUser({ ...user, [name]: value });
+        setUser((prevUser) => ({ ...prevUser, [name]: value }));
     };
 
     const handleSubmit = async (e) => {
@@ -57,21 +63,25 @@ function UserUpdate() {
             <form onSubmit={handleSubmit}>
                 <div className='mb-4'>
                     <label className='block text-gray-700'>User Type</label>
-                    <input
-                        type='text'
+                    <select
                         name='usertype'
-                        value={user.usertype}
+                        value={user.usertype || ''}
                         onChange={handleChange}
                         className='w-full px-3 py-2 border rounded-md'
                         required
-                    />
+                    >
+                        <option value="">Select a type</option>
+                        <option value="cashier">Cashier</option>
+                        <option value="admin">Admin</option>
+                        <option value="employee">Inactive</option>
+                    </select>
                 </div>
                 <div className='mb-4'>
                     <label className='block text-gray-700'>First Name</label>
                     <input
                         type='text'
                         name='first_name'
-                        value={user.first_name}
+                        value={user.first_name || ''}
                         onChange={handleChange}
                         className='w-full px-3 py-2 border rounded-md'
                         required
@@ -82,7 +92,7 @@ function UserUpdate() {
                     <input
                         type='text'
                         name='last_name'
-                        value={user.last_name}
+                        value={user.last_name || ''}
                         onChange={handleChange}
                         className='w-full px-3 py-2 border rounded-md'
                         required
@@ -93,7 +103,7 @@ function UserUpdate() {
                     <input
                         type='text'
                         name='username'
-                        value={user.username}
+                        value={user.username || ''}
                         onChange={handleChange}
                         className='w-full px-3 py-2 border rounded-md'
                         required
@@ -104,7 +114,7 @@ function UserUpdate() {
                     <input
                         type='text'
                         name='NIC'
-                        value={user.NIC}
+                        value={user.NIC || ''}
                         onChange={handleChange}
                         className='w-full px-3 py-2 border rounded-md'
                         required
@@ -115,7 +125,7 @@ function UserUpdate() {
                     <input
                         type='email'
                         name='email'
-                        value={user.email}
+                        value={user.email || ''}
                         onChange={handleChange}
                         className='w-full px-3 py-2 border rounded-md'
                         required
@@ -126,7 +136,7 @@ function UserUpdate() {
                     <input
                         type='text'
                         name='contact'
-                        value={user.contact}
+                        value={user.contact || ''}
                         onChange={handleChange}
                         className='w-full px-3 py-2 border rounded-md'
                         required

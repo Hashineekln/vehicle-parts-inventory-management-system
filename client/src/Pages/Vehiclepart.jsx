@@ -26,9 +26,13 @@ function VehiclePart() {
     const filteredParts = vehicleParts.filter(vp =>
         vp.part_no.toLowerCase().includes(searchQuery.toLowerCase()) ||
         vp.part_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        vp.price.toString().toLowerCase().includes(searchQuery.toLowerCase())
+        vp.price.toString().toLowerCase().includes(searchQuery.toLowerCase())||
+        vp.shelf_id.toString().toLowerCase().includes(searchQuery.toLowerCase())||
+        vp.models.toLowerCase().includes(searchQuery.toLowerCase()) 
     );
-
+    const formatDecimal = (value) => {
+        return parseFloat(value).toFixed(2); // Formats value to two decimal places
+    };
 
 
     return (
@@ -69,12 +73,12 @@ function VehiclePart() {
                             <tr key={`${vp.part_no}-${index}`} className='bg-white border-b'>
                                 <td className='py-4 px-6'>{vp.part_no}</td>
                                 <td className='py-4 px-6'>{vp.part_name}</td>
-                                <td className='py-4 px-6'>{vp.price}</td>
+                                <td className='py-4 px-6'>{formatDecimal(vp.price)} </td>
                                 <td className='py-4 px-6'>{vp.threshold_no}</td>
                                 <td className='py-4 px-6'>{vp.quantity}</td>
                                 <td className='py-4 px-6'>{vp.category_name}</td>
                                 <td className='py-4 px-6'>{vp.shelf_id}</td>
-                                <td className='py-4 px-6'>{vp.models}</td>
+                                <td className='py-4 px-6'>{vp.models}-{vp.year} </td>
                                 <td className='py-4 px-6'>
                                 <Link to={`/vehiclepartupdate/${vp.part_no}`} className='bg-blue-500 px-4 py-2 text-white rounded-md mr-3'>Edit</Link>
 

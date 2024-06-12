@@ -33,14 +33,21 @@ function VehiclePartUpdate() {
                     axios.get('http://localhost:5000/vehicletype')
                 ]);
 
+                console.log("Fetched Part Data:", partRes.data);
+                console.log("Fetched Categories Data:", categoriesRes.data);
+                console.log("Fetched Shelves Data:", shelvesRes.data);
+                console.log("Fetched Vehicle Types Data:", vehicleTypesRes.data);
+
                 const part = partRes.data;
                 const vehicle_type_ids = part.models ? part.models.split(', ').map(model => {
                     const vt = vehicleTypesRes.data.find(vt => vt.model === model);
-                    return vt ? vt.vehicle_id : null;
+                    return vt ? vt.vehicle_id.toString() : null; // Convert to string here
                 }).filter(id => id !== null) : [];
-                
+
                 setPartData({
                     ...part,
+                    category_id: part.category_category_id, // Ensure correct category ID
+                    shelf_id: part.shelf_shelf_id.toString(), // Convert to string if necessary
                     vehicle_type_ids
                 });
                 setCategories(categoriesRes.data);
@@ -62,10 +69,12 @@ function VehiclePartUpdate() {
 
     const handleCheckboxChange = (event) => {
         const { value, checked } = event.target;
+        const stringValue = value.toString(); // Ensure value is a string
+
         if (checked) {
-            setPartData(prev => ({ ...prev, vehicle_type_ids: [...prev.vehicle_type_ids, value] }));
+            setPartData(prev => ({ ...prev, vehicle_type_ids: [...prev.vehicle_type_ids, stringValue] }));
         } else {
-            setPartData(prev => ({ ...prev, vehicle_type_ids: prev.vehicle_type_ids.filter(id => id !== value) }));
+            setPartData(prev => ({ ...prev, vehicle_type_ids: prev.vehicle_type_ids.filter(id => id !== stringValue) }));
         }
     };
 
@@ -117,8 +126,8 @@ function VehiclePartUpdate() {
                         <option value="">Select Category</option>
                         {categories.map(category => (
                            <option key={category.category_id} value={category.category_id}>
-                           {category.category_id} - {category.name}
-                       </option>
+                               {category.category_id} - {category.name}
+                           </option>
                         ))}
                     </select>
 
@@ -127,8 +136,8 @@ function VehiclePartUpdate() {
                         <option value="">Select Shelf</option>
                         {shelves.map(shelf => (
                            <option key={shelf.shelf_id} value={shelf.shelf_id}>
-                           {shelf.shelf_id} - {shelf.shelf_name}
-                       </option>
+                               {shelf.shelf_id} - {shelf.shelf_name}
+                           </option>
                         ))}
                     </select>
 
@@ -139,11 +148,11 @@ function VehiclePartUpdate() {
                                 type="checkbox" 
                                 id={`vehicle_type_${vehicle_type.vehicle_id}`} 
                                 name="vehicle_type_ids" 
-                                value={vehicle_type.vehicle_id} 
-                                checked={partData.vehicle_type_ids.includes(vehicle_type.vehicle_id.toString())}
+                                value={vehicle_type.vehicle_id.toString()} // Convert to string here
+                                checked={partData.vehicle_type_ids.includes(vehicle_type.vehicle_id.toString())} // Ensure comparison is correct
                                 onChange={handleCheckboxChange} 
                             />
-                            <label htmlFor={`vehicle_type_${vehicle_type.vehicle_id}`}>{vehicle_type.model}</label>
+                            <label htmlFor={`vehicle_type_${vehicle_type.vehicle_id}`}>{vehicle_type.model}-{vehicle_type.year} </label>
                         </div>
                     ))}
 

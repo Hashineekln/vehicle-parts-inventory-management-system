@@ -11,6 +11,7 @@ const SupplierUpdate = () => {
         address_line2: "",
         address_line3: ""
     });
+    const [loading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
     const { id } = useParams();
@@ -19,18 +20,21 @@ const SupplierUpdate = () => {
         // Fetch the existing data for the supplier
         axios.get(`http://localhost:5000/supplier/${id}`)
             .then(response => {
+                const data = Array.isArray(response.data) ? response.data[0] : response.data; // Handle array response
                 setValues({
-                    first_name: response.data.first_name || "",
-                    last_name: response.data.last_name || "",
-                    company_name: response.data.company_name || "",
-                    address_line1: response.data.address_line1 || "",
-                    address_line2: response.data.address_line2 || "",
-                    address_line3: response.data.address_line3 || ""
+                    first_name: data.first_name || "",
+                    last_name: data.last_name || "",
+                    company_name: data.company_name || "",
+                    address_line1: data.address_line1 || "",
+                    address_line2: data.address_line2 || "",
+                    address_line3: data.address_line3 || ""
                 });
+                setLoading(false);
             })
             .catch(error => {
                 console.error('Error fetching supplier data', error);
                 setErrorMessage('Error fetching data. Please refresh the page and try again.');
+                setLoading(false);
             });
     }, [id]);
 
@@ -46,9 +50,14 @@ const SupplierUpdate = () => {
             alert('Supplier details updated successfully');
             navigate("/Supplier");
         } catch (err) {
+            console.error('Failed to update supplier', err);
             setErrorMessage("Failed to update supplier. Please try again.");
         }
     };
+
+    if (loading) {
+        return <p>Loading...</p>;
+    }
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
