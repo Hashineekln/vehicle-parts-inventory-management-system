@@ -26,7 +26,7 @@ export const getTransaction = async (req, res) => {
 export const addTransaction = async (req, res) => {
     const { supplier_supplier_id,vehicle_part_part_no,quantity,buying_price} = req.body;
 
-    if (!quantity || !vehicle_part_part_no || !supplier_supplier_id ) {
+    if (!quantity || !vehicle_part_part_no || !supplier_supplier_id || !buying_price ) {
         return res.status(400).json({ error: "All fields are required" });
     }
 

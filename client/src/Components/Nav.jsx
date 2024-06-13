@@ -13,7 +13,7 @@ export default function Example() {
     { to: "/About", label: "About" },
     { to: "/Contact", label: "Contact" },
     { to: "/Login", label: "Login" },
-    { to: "/Register", label: "Register" },
+   
     // Add more navigation links as needed
   ];
 

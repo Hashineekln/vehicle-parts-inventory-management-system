@@ -32,7 +32,6 @@ const Product = () => {
     return uniqueBrands;
   };
 
-  // make unique brand
   useEffect(() => {
     axios.get('http://localhost:5000/vehicletype')
       .then(response => {
@@ -49,7 +48,6 @@ const Product = () => {
       .catch(error => console.error(error));
   }, []);
   
-
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters({ ...filters, [name]: value });
@@ -67,7 +65,7 @@ const Product = () => {
 
   const fetchVehicleParts = () => {
     if (filters.category.length === 0) {
-      alert('Please select at least one category before fetching vehicle parts.');
+      alert('Please select at all the fields before fetching vehicle parts.');
       return;
     }
 
@@ -93,12 +91,12 @@ const Product = () => {
   };
 
   const proceedToBilling = () => {
-    navigate('/bill'); // Ensure you have this route defined in your router
+    navigate('/bill'); 
   };
 
   const formatDecimal = (value) => {
-    return parseFloat(value).toFixed(2); // Formats value to two decimal places
-};
+    return parseFloat(value).toFixed(2); 
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -172,7 +170,7 @@ const Product = () => {
         <div className="w-3/4 p-4">
           {vehicleParts.length === 0 && (
             <div className="text-center text-gray-500 mt-4">
-              No search results found for the selected parts.
+              No search results found for that Vehicle type.
             </div>
           )}
 
@@ -206,7 +204,7 @@ const Product = () => {
                       <div>
                         <h3 className="text-lg font-bold">{item.part_name}</h3>
                         <p>Part No: {item.part_no}</p>
-                        <p>Price: Rs.{item.price}</p>
+                        <p>Price: Rs.{formatDecimal(item.price)}</p>
                         <p>Shelf No: {item.shelf_shelf_id}</p>
                         <p>Category No: {item.category_category_id}</p>
                       </div>
@@ -214,14 +212,13 @@ const Product = () => {
                       <div className="flex items-center">
                         <input 
                           type="number" 
-                          //here in cart max quantity is the quantity of the partnot work
                           value={item.quantity} 
                           min="1" 
-                         
+                          max={item.quantity} // max quantity is now the quantity available
                           onChange={(e) => updateQuantity(item.part_no, parseInt(e.target.value))} 
                           className="border p-1 w-16 mr-2 rounded"
                         />
-                        <p>Total: Rs.{item.price * item.quantity}</p>
+                        <p>Total: Rs.{formatDecimal(item.price * item.quantity)}</p>
                       </div>
                     </div>
                   ))}
@@ -236,4 +233,4 @@ const Product = () => {
   );
 };
 
-export default Product; 
+export default Product;

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Bar } from 'react-chartjs-2';
+import { Link } from 'react-router-dom';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -103,15 +104,21 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-medium text-gray-700">Top 5 Selling Parts</h2>
-          <input
+    <h2 className="text-lg font-medium text-gray-700">Top 5 Selling Parts</h2>
+    
+    <div className="flex space-x-4">
+        <Link to="/Reportyear" className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700">Check Report</Link>
+
+        <input
             type="text"
             placeholder="Search by Part Number or Quantity"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-full sm:w-72 px-3 py-1.5"
-          />
-        </div>
+        />
+    </div>
+</div>
+
         {error && <div className="alert alert-danger mb-4">{error}</div>}
         <div className="relative h-96">
           <Bar data={topPartsData} options={{ maintainAspectRatio: false }} />

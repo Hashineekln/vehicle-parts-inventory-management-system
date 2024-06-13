@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { TypeValidation } from './Vehiclevalidate.jsx';
 
 function Vehicletypeadd() {
     const [brand, setBrand] = useState('');
@@ -11,31 +12,30 @@ function Vehicletypeadd() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Validate if brand, model, and year are not empty
-        if (!brand.trim() || !model.trim() || !year.trim()) {
-            setErrorMessage('Please enter brand, model, and year.');
+        const values = { brand, model, year };
+        const errors = TypeValidation(values);
+
+        if (Object.keys(errors).length > 0) {
+            // If there are validation errors, set error message and return
+            setErrorMessage(Object.values(errors).join(', '));
             return;
         }
 
         // If all fields are valid, proceed with adding vehicle type
-        axios.post('http://localhost:5000/vehicletype', {
-            brand: brand,
-            model: model,
-            year: year
-        })
-        .then(response => {
-            console.log('Vehicle Type Added', response);
-            setSuccessMessage('Vehicle type added successfully');
-            setBrand(''); // Clear input fields after successful addition
-            setModel('');
-            setYear('');
-            setErrorMessage(''); // Clear any previous error messages
-        })
-        .catch(error => {
-            console.error('Error adding vehicle type', error);
-            setErrorMessage('Failed to add vehicle type. Please try again.');
-            setSuccessMessage('');
-        });
+        axios.post('http://localhost:5000/vehicletype', values)
+            .then(response => {
+                console.log('Vehicle Type Added', response);
+                setSuccessMessage('Vehicle type added successfully');
+                setBrand(''); // Clear input fields after successful addition
+                setModel('');
+                setYear('');
+                setErrorMessage(''); // Clear any previous error messages
+            })
+            .catch(error => {
+                console.error('Error adding vehicle type', error);
+                setErrorMessage('Failed to add vehicle type. Please try again.');
+                setSuccessMessage('');
+            });
     };
 
     return (

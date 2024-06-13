@@ -61,6 +61,8 @@ import Returntable from './Pages/Returntable';
 import BaseLayout from './Components/BaseLayout';
 import CashierLayout from './Components/CashierLayout';
 import AdminLayout from './Components/AdminLayout';
+import InLayout from './Components/InLayout';
+
 import ProtectedRoute from './Components/ProtectedRoute';
 import Billshared from './Components/Billshared';
 
@@ -87,7 +89,6 @@ const App = () => {
         <Route path="/Clientupdate/:id" element={<CashierLayout><Clientupdate /></CashierLayout>} />
 
         
-        
         <Route path="/Bill" element={<BaseLayout><Bill /></BaseLayout>} />
         <Route path="/Returntable" element={<CashierLayout><Returntable /></CashierLayout>} />
 
@@ -100,8 +101,8 @@ const App = () => {
       /
         <Route path="/Inventory" element={<AdminLayout><Inventory /></AdminLayout>} />
 
-        <Route path="/Notify" element={<BaseLayout><Notify/></BaseLayout>} />
-        <Route path="/User" element={<AdminLayout><User/></AdminLayout>} /> 
+        <Route path="/Notify" element={<AdminLayout><Notify/></AdminLayout>} />
+        <Route path="/Users" element={<AdminLayout><User/></AdminLayout>} /> 
         <Route path="/Userupdate/:id" element={<AdminLayout><Userupdate /></AdminLayout>} />
 
 

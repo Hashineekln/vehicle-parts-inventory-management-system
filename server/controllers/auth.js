@@ -28,7 +28,7 @@ export const register = (req, res) => {
             console.error(err);
             return res.json(err);
         }
-        if (data.length) return res.status(409).json("User already exists");
+        if (data.length) return res.status(409).json("User already exists with the same username, NIC, email or contact number");
 
         // User does not exist, proceed with registration
 

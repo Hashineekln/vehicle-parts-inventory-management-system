@@ -33,14 +33,16 @@ const ClientSearch = () => {
 
   return (
     <div>
-      <input
-        type="text"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        placeholder="Search for a client"
-        className="border p-2 mb-4"
-      />
-      <button onClick={handleSearch} className="bg-blue-500 text-white p-2">Search</button>
+      <div className="print:hidden"> {/* Hide the input and button when printing */}
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search for a client"
+          className="border p-2 mb-4"
+        />
+        <button onClick={handleSearch} className="bg-blue-500 text-white p-2">Search</button>
+      </div>
       {error && <div className="text-red-500">{error}</div>}
       {searchResults.length > 0 && (
         <ul className="border p-2 mt-2">
@@ -50,7 +52,7 @@ const ClientSearch = () => {
               onClick={() => handleSelectClient(client)}
               className="cursor-pointer p-1 hover:bg-gray-200"
             >
-             {client.customer_id} {client.first_name} {client.last_name} - {client.phone}
+              {client.customer_id} {client.first_name} {client.last_name} - {client.phone}
             </li>
           ))}
         </ul>

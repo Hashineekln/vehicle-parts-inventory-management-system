@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { FaWarehouse, FaUsers, FaFileInvoiceDollar, FaCog, FaArrowCircleRight } from 'react-icons/fa';
+import { FaWarehouse , FaUsers, FaFileInvoiceDollar, FaCog, FaArrowCircleRight } from 'react-icons/fa';
+import { VscBell, VscArchive ,VscSymbolMethod,VscGitPullRequestGoToChanges,VscAccount,VscGraphLine} from "react-icons/vsc";
 import { useNavigate } from 'react-router-dom';
-//import Notify from '../Pages/Notify'; // Ensure correct import path
+
 
 const AdminDash = () => {
   const [hasNewNotification, setHasNewNotification] = useState(false);
@@ -16,19 +17,19 @@ const AdminDash = () => {
     setHasNewNotification(true);
   };
   const menuItems = [
-    { name: 'User Details', icon: <FaWarehouse />, path: '/user' },
-    { name: 'Catalogue', icon: <FaFileInvoiceDollar /> , path: '/Product' },
-    { name: 'Inventory', icon: <FaUsers />, path: '/Inventory' },
-    { name: 'Transaction', icon: <FaFileInvoiceDollar /> , path: '/Transaction' },
-    { name: 'Supplier', icon: <FaFileInvoiceDollar /> , path: '/Supplier' },
+    { name: 'User Details', icon: <FaUsers />, path: '/users' },
+    { name: 'Catalogue', icon: <VscArchive /> , path: '/Product' },
+    { name: 'Inventory', icon: < VscSymbolMethod/>, path: '/Inventory' },
+    { name: 'Transaction', icon: <VscGitPullRequestGoToChanges /> , path: '/Transaction' },
+    { name: 'Supplier', icon: <VscAccount /> , path: '/Supplier' },
     { name: 'Bill Logs', icon: <FaFileInvoiceDollar /> , path: '/Billdetails' },
-    { name: 'Notification', icon: <FaCog />, path: '/Notify' },
-    { name: 'Report', icon: <FaArrowCircleRight />, path: '/Report' },
+    { name: 'Notification', icon: <VscBell />, path: '/Notify' },
+    { name: 'Report', icon: <VscGraphLine />, path: '/Report' },
   ];
   
   return (
-    <div className="font-poppins antialiased h-screen w-1/8">
-      <div className="bg-white h-screen md:block shadow-xl px-3 w-1/8 md:w-60 lg:w-60 overflow-x-hidden">
+    <div className="font-poppins antialiased  w-1/8">
+      <div className="bg-white  md:block shadow-xl px-3 w-1/8 md:w-60 lg:w-60 overflow-x-hidden">
         <div className="space-y-6 md:space-y-10 mt-10">
           <div id="company" className="space-y-3">
             <img

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Dashboard from '../Components/AdminDash';
+
 
 function Vehicletype() {
     const [vehicles, setVehicles] = useState([]);
@@ -59,7 +61,9 @@ function Vehicletype() {
     };
 
     return (
-        <div className='overflow-x-auto relative flex-1 p-4'>
+        <div className="flex h-screen">
+        
+        <main className="flex-grow m-5 p-5 bg-white rounded shadow overflow-auto">
             <div className='w-full bg-white rounded p-3'>
                 <div className='flex justify-between mb-3'>
                     <h1 className='text-2xl font-semibold text-gray-200 dark:text-gray-950'>Vehicle Types</h1>
@@ -100,6 +104,7 @@ function Vehicletype() {
                     </tbody>
                 </table>
             </div>
+            </main>
         </div>
     );
 }

@@ -1,15 +1,16 @@
-import React, { useContext, useState, useRef } from 'react';
+import React, { useContext, useState } from 'react';
 import { State } from "../context/stateContext";
 import axios from 'axios';
 import ReactToPrint from 'react-to-print'; 
 import Dates from "../Components/Dates";
 import Footer from "../Components/Footer";
 import MainDetails from "../Components/MainDetails";
-import Notes from "../Components/Notes";
 import TableForm from "../Components/TableForm";
 import Clientsearch from "../Components/Clientsearch";
 import { Link, useNavigate } from 'react-router-dom';
 import Dashboard from '../Components/Dashboard';
+
+
 
 const Bill = () => {
   const { 
@@ -20,7 +21,6 @@ const Bill = () => {
     phone, setPhone,
     invoiceDate, setInvoiceDate,
     warrantyDate, setWarrantyDate,
-    notes, setNotes,
     cart, componentRef,
     validateCartStock, 
     alertMessage 
@@ -30,6 +30,8 @@ const Bill = () => {
   const [billAlertMessage, setBillAlertMessage] = useState(null); 
   const [billId, setBillId] = useState(null); 
 
+  const navigate = useNavigate(); // Add the useNavigate hook
+
   const clientName = `${firstName} ${lastName}`;
   const totalAmount = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
   const totalDiscount = totalAmount * (discount / 100);
@@ -38,7 +40,7 @@ const Bill = () => {
   const handleCreateBill = async () => {
     const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
 
-    if (!userId || !invoiceDate || !warrantyDate || cart.length === 0) {
+    if (!userId || !invoiceDate || !warrantyDate || !clientId || !clientName || cart.length === 0) {
       setBillAlertMessage({ type: 'error', text: 'Please fill in all required details and ensure the cart is not empty.' });
       return;
     }
@@ -71,20 +73,34 @@ const Bill = () => {
           });
         }
 
-        setBillAlertMessage({ type: 'success', text: 'Bill created successfully' });
+        setBillAlertMessage({ type: 'success', text: 'Thank You for shopping with us !' });
       } catch (error) {
         setBillAlertMessage({ type: 'error', text: 'Error creating bill: ' + (error.response?.data?.error || error.message) });
       }
     }
   };
 
+  const handleAfterPrint = () => {
+    navigate(`/Billdetails`); // Navigate to the BillDetails page after printing
+  };
+
   return (
     <div className="flex h-screen">
       <Dashboard /> {/* Include the Dashboard sidebar */}
       <main className="flex-grow m-5 p-5 bg-white rounded shadow overflow-auto">
+        <style>
+          {`
+            @media print {
+              .no-print {
+                display: none;
+              }
+            }
+          `}
+        </style>
         <ReactToPrint
-          trigger={() => <button className="bg-blue-500 text-white p-2 mt-4">Print/Download</button>}
+          trigger={() => <button className="bg-blue-500 text-white p-2 mt-4 no-print">Print/Download</button>}
           content={() => componentRef.current}
+          onAfterPrint={handleAfterPrint} // Add the onAfterPrint handler
         />
         <div ref={componentRef} className="p-5">
           <div className="text-center mb-4">
@@ -107,26 +123,29 @@ const Bill = () => {
             cashierId={userId}
             setCashierId={setUserId}
           />
+
           <div className="my-4">
             <h2 className="text-xl font-bold">Cashier Information</h2>
             <p><strong>Cashier ID:</strong> {userId}</p>
           </div>
-          <Clientsearch />
+
+          <Clientsearch className="print:hidden" /> {/* Hide ClientSearch component when printing */}
           <div className="my-4">
             <h2 className="text-xl font-bold">Client Information</h2>
             <p><strong>Name:</strong> {clientName}</p>
             <p><strong>Client ID:</strong> {clientId}</p>
             <p><strong>Phone:</strong> {phone}</p>
           </div>
-          <Link to="/clientadd" className="bg-green-500 text-white p-2 mt-4">Add New Client</Link>
+
+          <Link to="/clientadd" className="bg-green-500 text-white p-2 mt-4 no-print">Add New Client</Link>
           <Dates 
             invoiceDate={invoiceDate}
             setInvoiceDate={setInvoiceDate}
             warrantyDate={warrantyDate}
             setWarrantyDate={setWarrantyDate}
           />
-          <TableForm cart={cart} />
-          <Notes notes={notes} setNotes={setNotes} />
+          <TableForm />
+          
           <div className="p-5">
             <label htmlFor="discount" className="block mb-2">Discount (%)</label>
             <input 
@@ -135,18 +154,18 @@ const Bill = () => {
               id="discount"
               value={discount}
               onChange={(e) => setDiscount(e.target.value)}
-              className="border p-2 mb-4"
+              className="border p-2 mb-4 no-print"
             />
             <h2 className="text-lg font-bold">Total: Rs.{discountedTotal.toFixed(2)}</h2>
           </div>
-          <button onClick={handleCreateBill} className="bg-blue-500 text-white p-2 mt-4">Create Bill</button>
+          <button onClick={handleCreateBill} className="bg-blue-500 text-white p-2 mt-4 no-print">Create Bill</button>
           {alertMessage && (
-            <div className={`mt-4 p-2 text-white ${alertMessage.includes('Insufficient stock') ? 'bg-red-500' : 'bg-green-500'}`}>
+            <div className={`mt-4 p-2 text-white no-print ${alertMessage.includes('Insufficient stock') ? 'bg-red-500' : 'bg-green-500'}`}>
               {alertMessage}
             </div>
           )}
           {billAlertMessage && (
-            <div className={`mt-4 p-2 text-white ${billAlertMessage.type === 'success' ? 'bg-green-500' : 'bg-red-500'}`}>
+            <div className={`mt-4 p-2 text-white no-print ${billAlertMessage.type === 'success' ? 'bg-green-500' : 'bg-red-500'}`}>
               {billAlertMessage.text}
             </div>
           )}

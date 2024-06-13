@@ -77,13 +77,13 @@ export const getVehiclepart = async (req, res) => {
 export const addVehiclepart = async (req, res) => {
     const { part_no, part_name, price, threshold_no, quantity, image_url, category_id, shelf_id, vehicle_type_ids } = req.body;
 
-    if (!part_no || !part_name || !price || !threshold_no || !quantity || !image_url || !category_id || !shelf_id || vehicle_type_ids.length === 0) {
+    if (!part_no || !part_name || !price || !threshold_no || !category_id || !shelf_id || vehicle_type_ids.length === 0) {
         return res.status(400).json({ error: "Required fields are missing" });
     }
 
     const sql = `INSERT INTO vehicle_part (part_no, part_name, price, threshold_no, quantity, image_url, category_category_id, shelf_shelf_id) 
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-    const values = [part_no, part_name, price, threshold_no, quantity, image_url, category_id, shelf_id];
+    const values = [part_no, part_name, price, threshold_no, quantity || null, image_url || null, category_id, shelf_id];
 
     db.query(sql, values, (err, data) => {
         if (err) {
@@ -105,6 +105,7 @@ export const addVehiclepart = async (req, res) => {
         });
     });
 };
+
 
 // Update an existing vehicle part
 export const updateVehiclePart = async (req, res) => {

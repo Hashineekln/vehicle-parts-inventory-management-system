@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 
+import Validation from './Registervalidation';
+
 function UserUpdate() {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -16,6 +18,7 @@ function UserUpdate() {
         email: '',
         contact: ''
     });
+    const [errors, setErrors] = useState({});
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -45,6 +48,11 @@ function UserUpdate() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const validationErrors = Validation(user);
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return;
+        }
 
         try {
             await axios.put(`http://localhost:5000/api/user/${id}`, user);
@@ -57,6 +65,10 @@ function UserUpdate() {
     };
 
     return (
+      
+               
+             
+
         <div className='container mx-auto p-4'>
             <h1 className='text-2xl font-semibold mb-4'>Update User</h1>
             {error && <div className="alert alert-danger">{error}</div>}
@@ -75,6 +87,7 @@ function UserUpdate() {
                         <option value="admin">Admin</option>
                         <option value="employee">Inactive</option>
                     </select>
+                    {errors.usertype && <p className="text-red-500">{errors.usertype}</p>}
                 </div>
                 <div className='mb-4'>
                     <label className='block text-gray-700'>First Name</label>
@@ -86,6 +99,7 @@ function UserUpdate() {
                         className='w-full px-3 py-2 border rounded-md'
                         required
                     />
+                    {errors.first_name && <p className="text-red-500">{errors.first_name}</p>}
                 </div>
                 <div className='mb-4'>
                     <label className='block text-gray-700'>Last Name</label>
@@ -97,6 +111,7 @@ function UserUpdate() {
                         className='w-full px-3 py-2 border rounded-md'
                         required
                     />
+                    {errors.last_name && <p className="text-red-500">{errors.last_name}</p>}
                 </div>
                 <div className='mb-4'>
                     <label className='block text-gray-700'>Username</label>
@@ -108,6 +123,7 @@ function UserUpdate() {
                         className='w-full px-3 py-2 border rounded-md'
                         required
                     />
+                    {errors.username && <p className="text-red-500">{errors.username}</p>}
                 </div>
                 <div className='mb-4'>
                     <label className='block text-gray-700'>NIC</label>
@@ -119,6 +135,7 @@ function UserUpdate() {
                         className='w-full px-3 py-2 border rounded-md'
                         required
                     />
+                    {errors.NIC && <p className="text-red-500">{errors.NIC}</p>}
                 </div>
                 <div className='mb-4'>
                     <label className='block text-gray-700'>Email</label>
@@ -130,6 +147,7 @@ function UserUpdate() {
                         className='w-full px-3 py-2 border rounded-md'
                         required
                     />
+                    {errors.email && <p className="text-red-500">{errors.email}</p>}
                 </div>
                 <div className='mb-4'>
                     <label className='block text-gray-700'>Contact</label>
@@ -141,6 +159,7 @@ function UserUpdate() {
                         className='w-full px-3 py-2 border rounded-md'
                         required
                     />
+                    {errors.contact && <p className="text-red-500">{errors.contact}</p>}
                 </div>
                 <button type='submit' className='bg-blue-500 text-white px-4 py-2 rounded-md'>Update User</button>
             </form>

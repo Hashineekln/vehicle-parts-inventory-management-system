@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { CategoryValidation } from './Vehiclevalidate'; // Adjust import path as needed
 
 function Categoryadd() {
     const [categoryId, setCategoryId] = useState('');
@@ -10,13 +11,16 @@ function Categoryadd() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Validate if first name and last name are not empty
-        if (!categoryId.trim() || !categoryName.trim()) {
-            setErrorMessage('Please enter both first name and last name.');
+        // Validate input fields using CategoryValidation function
+        const values = { categoryId, categoryName };
+        const errors = CategoryValidation(values);
+
+        if (Object.keys(errors).length > 0) {
+            setErrorMessage(Object.values(errors).join('. ') + '.');
             return;
         }
 
-        // If all fields are valid, proceed with adding client
+        // If all fields are valid, proceed with adding category
         axios.post('http://localhost:5000/category', {
             category_id: categoryId,
             name: categoryName
@@ -40,11 +44,11 @@ function Categoryadd() {
             <div className="border p-10 rounded max-w-md">
                 <form onSubmit={handleSubmit} className="mb-4">
                     <label className="block mb-2">
-                    CategoryID:
+                        Category ID:
                         <input type="text" value={categoryId} onChange={e => setCategoryId(e.target.value)} className="block w-full py-2 px-9 border rounded mt-7" />
                     </label>
                     <label className="block mb-2">
-                    Category Name:
+                        Category Name:
                         <input type="text" value={categoryName} onChange={e => setCategoryName(e.target.value)} className="block w-full py-2 px-9 border rounded mt-7" />
                     </label>
                   

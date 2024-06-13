@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import Dashboard from '../Components/AdminDash';
+import { TypeValidation } from './Vehiclevalidate.jsx';
 
 function VehicletypeUpdate() {
     const { id } = useParams(); // Extract the id parameter from the URL
@@ -40,9 +42,12 @@ function VehicletypeUpdate() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Validate if brand, model, and year are not empty
-        if (!brand.trim() || !model.trim() || !year.trim()) {
-            setErrorMessage('Please enter brand, model, and year.');
+        // Validate the input fields using TypeValidation function
+        const values = { brand, model, year };
+        const errors = TypeValidation(values);
+
+        if (Object.keys(errors).length > 0) {
+            setErrorMessage(Object.values(errors).join('. ') + '.');
             return;
         }
 
@@ -69,27 +74,29 @@ function VehicletypeUpdate() {
     }
 
     return (
-        <div className="flex justify-center items-center h-screen">
-            <div className="border p-10 rounded max-w-md">
-                <form onSubmit={handleSubmit} className="mb-4">
-                    <label className="block mb-2">
-                        Brand:
-                        <input type="text" value={brand} onChange={e => setBrand(e.target.value)} className="block w-full py-2 px-3 border rounded mt-1" />
-                    </label>
-                    <label className="block mb-2">
-                        Model:
-                        <input type="text" value={model} onChange={e => setModel(e.target.value)} className="block w-full py-2 px-3 border rounded mt-1" />
-                    </label>
-                    <label className="block mb-2">
-                        Year:
-                        <input type="text" value={year} onChange={e => setYear(e.target.value)} className="block w-full py-2 px-3 border rounded mt-1" />
-                    </label>
-                  
-                    <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded mt-2 hover:bg-blue-700">Update Vehicle Type</button>
-                </form>
-                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-            </div>
+        <div className="flex h-screen">
+           
+            <main className="flex-grow m-5 p-5 bg-white rounded shadow overflow-auto">
+                <div>
+                    <form onSubmit={handleSubmit} className="mb-4">
+                        <label className="block mb-2">
+                            Brand:
+                            <input type="text" value={brand} onChange={e => setBrand(e.target.value)} className="block w-full py-2 px-3 border rounded mt-1" required />
+                        </label>
+                        <label className="block mb-2">
+                            Model:
+                            <input type="text" value={model} onChange={e => setModel(e.target.value)} className="block w-full py-2 px-3 border rounded mt-1" required />
+                        </label>
+                        <label className="block mb-2">
+                            Year:
+                            <input type="text" value={year} onChange={e => setYear(e.target.value)} className="block w-full py-2 px-3 border rounded mt-1" required />
+                        </label>
+                        <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded mt-2 hover:bg-blue-700">Update Vehicle Type</button>
+                    </form>
+                    {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                    {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+                </div>
+            </main>
         </div>
     );
 }
