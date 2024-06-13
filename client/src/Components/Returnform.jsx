@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function ReturnForm() {
     const { bill_id } = useParams();
@@ -8,6 +9,7 @@ function ReturnForm() {
     const [billDetails, setBillDetails] = useState(null);
     const [returnItems, setReturnItems] = useState([]);
     const [returnAmount, setReturnAmount] = useState(0);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         axios.get(`http://localhost:5000/api/bills/${bill_id}`)
@@ -16,8 +18,8 @@ function ReturnForm() {
                 const items = res.data[0].part_nos.split(',').map((part_no, index) => ({
                     part_no,
                     part_name: res.data[0].part_names.split(',')[index],
-                    price: res.data[0].selling_prices.split(',')[index],
-                    quantity: res.data[0].selling_quantities.split(',')[index],
+                    price: parseFloat(res.data[0].selling_prices.split(',')[index]), // parse price as float
+                    quantity: parseInt(res.data[0].selling_quantities.split(',')[index], 10), // parse quantity as int
                     return_quantity: 0,
                     return_type: ''
                 }));
@@ -31,16 +33,16 @@ function ReturnForm() {
     useEffect(() => {
         // Compute return amount when returnItems change
         const totalAmount = returnItems.reduce((sum, item) => sum + (item.price * item.return_quantity), 0);
-        setReturnAmount(totalAmount);
+        setReturnAmount(totalAmount.toFixed(2)); // Format the total amount to two decimal places
     }, [returnItems]);
 
     const handleReturnQuantityChange = (index, value) => {
         const newReturnItems = [...returnItems];
-        newReturnItems[index].return_quantity = value;
+        newReturnItems[index].return_quantity = parseInt(value, 10); // Ensure return quantity is an integer
         setReturnItems(newReturnItems);
     };
 
-    const handleReturnTypeChange = (index, value) => { 
+    const handleReturnTypeChange = (index, value) => {
         const newReturnItems = [...returnItems];
         newReturnItems[index].return_type = value;
         setReturnItems(newReturnItems);
@@ -48,24 +50,38 @@ function ReturnForm() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setError(null);
+
+        for (const item of returnItems) {
+            if (item.return_quantity <= 0 || item.return_quantity > item.quantity) {
+                setError(`Invalid return quantity for part number: ${item.part_no}`);
+                return;
+            }
+            if (!item.return_type) {
+                setError(`Return type is required for part number: ${item.part_no}`);
+                return;
+            }
+        }
+
         const returnData = {
             bill_bill_id: bill_id,
             return_date: new Date().toISOString().slice(0, 19).replace('T', ' '),
             type: 'return',
-            total_amount: returnAmount
+            total_amount: parseFloat(returnAmount) // Ensure total amount is sent as a float
         };
+
         axios.post('http://localhost:5000/api/returnitem', { returnData, returnItems })
             .then(res => {
                 // Show success message
                 alert('Return submitted successfully.');
-                navigate('/billdetails');
+                navigate('/Returntable');
             })
             .catch(err => {
                 // Show error message
                 if (err.response && err.response.data && err.response.data.error) {
-                    alert(`Error: ${err.response.data.error}`);
+                    setError(`Error: ${err.response.data.error}`);
                 } else {
-                    alert('Error submitting return.');
+                    setError('Error submitting return.');
                 }
                 console.error('Error submitting return:', err);
             });
@@ -77,6 +93,11 @@ function ReturnForm() {
         <div className='overflow-x-auto relative flex-1 p-4'>
             <div className='w-full bg-white rounded p-3'>
                 <h1 className='text-2xl font-semibold text-gray-800'>Return Form for Bill ID: {bill_id}</h1>
+                {error && (
+                    <div className="bg-red-500 text-white p-2 mb-4 rounded">
+                        {error}
+                    </div>
+                )}
                 <form onSubmit={handleSubmit}>
                     <table className='w-full text-sm text-left text-gray-800'>
                         <thead className='text-xs text-gray-800 uppercase bg-gray-200'>
@@ -86,7 +107,7 @@ function ReturnForm() {
                                 <th className='py-3 px-6'>Price</th>
                                 <th className='py-3 px-6'>Quantity</th>
                                 <th className='py-3 px-6'>Return Quantity</th>
-                                <th className='py-3 px-6'>Return type</th>
+                                <th className='py-3 px-6'>Return Type</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -101,9 +122,10 @@ function ReturnForm() {
                                             type='number'
                                             value={item.return_quantity}
                                             onChange={(e) => handleReturnQuantityChange(index, e.target.value)}
-                                            min='0'
+                                            min='1'
                                             max={item.quantity}
                                             className='border rounded py-1 px-2'
+                                            required
                                         />
                                     </td>
                                     <td className='py-4 px-6'>
@@ -111,6 +133,7 @@ function ReturnForm() {
                                             value={item.return_type}
                                             onChange={(e) => handleReturnTypeChange(index, e.target.value)}
                                             className='border rounded py-1 px-2'
+                                            required
                                         >
                                             <option value="">Select a type</option>
                                             <option value="defected">Defected</option>
@@ -122,8 +145,9 @@ function ReturnForm() {
                         </tbody>
                     </table>
                     <div className="mt-4">
-                        <strong>Total Return Amount: {returnAmount}</strong>
+                        <strong>Total Return Amount: Rs.{returnAmount}</strong>
                     </div>
+
                     <button
                         type='submit'
                         className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4'

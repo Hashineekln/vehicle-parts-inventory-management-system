@@ -4,9 +4,11 @@ import axios from 'axios';
 
 const ClientUpdate = () => {
     const [values, setValues] = useState({
-        first_name: "", // Initialize to empty string
-        last_name: "" // Initialize to empty string
+        first_name: "",
+        last_name: "",
+        phone: ""
     });
+    const [loading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
     const { id } = useParams();
@@ -15,14 +17,18 @@ const ClientUpdate = () => {
         // Fetch the existing data for the client
         axios.get(`http://localhost:5000/client/${id}`)
             .then(response => {
+                const data = Array.isArray(response.data) ? response.data[0] : response.data; // Handle array response
                 setValues({
-                    first_name: response.data.first_name || "", // Keep existing value or set to empty string
-                    last_name: response.data.last_name || "" // Keep existing value or set to empty string
+                    first_name: data.first_name || "",
+                    last_name: data.last_name || "",
+                    phone: data.phone || ""
                 });
+                setLoading(false);
             })
             .catch(error => {
                 console.error('Error fetching client data', error);
                 setErrorMessage('Error fetching data. Please refresh the page and try again.');
+                setLoading(false);
             });
     }, [id]);
 
@@ -34,13 +40,18 @@ const ClientUpdate = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:5000/client/${id}`, values); // Updated endpoint
-            alert('Client details updated successfully'); // Display success message
+            await axios.put(`http://localhost:5000/client/${id}`, values);
+            alert('Client details updated successfully');
             navigate("/Client");
         } catch (err) {
+            console.error('Failed to update client', err);
             setErrorMessage("Failed to update client. Please try again.");
         }
     };
+
+    if (loading) {
+        return <p>Loading...</p>;
+    }
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -66,6 +77,16 @@ const ClientUpdate = () => {
                         value={values.last_name}
                         onChange={handleInput}
                         required
+                        style={{ padding: '8px', marginBottom: '16px', width: '100%', border: '1px solid #ccc', borderRadius: '4px' }}
+                    />
+
+                    <label htmlFor="phone" style={{ marginBottom: '8px' }}>Contact No</label>
+                    <input
+                        id="phone"
+                        name="phone"
+                        type="text"
+                        value={values.phone}
+                        onChange={handleInput}
                         style={{ padding: '8px', marginBottom: '16px', width: '100%', border: '1px solid #ccc', borderRadius: '4px' }}
                     />
 

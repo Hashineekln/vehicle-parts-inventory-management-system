@@ -13,7 +13,7 @@ const TableForm = () => {
           <th className="border p-2">Price</th>
           <th className="border p-2">Quantity</th>
           <th className="border p-2">Total</th>
-          <th className="border p-2">Actions</th>
+          <th className="border p-2 print:hidden">Actions</th> {/* Hide Actions column when printing */}
         </tr>
       </thead>
       <tbody>
@@ -24,7 +24,7 @@ const TableForm = () => {
             <td className="border p-2">Rs.{item.price}</td>
             <td className="border p-2">{item.quantity}</td>
             <td className="border p-2">Rs.{item.price * item.quantity}</td>
-            <td className="border p-2">
+            <td className="border p-2 print:hidden">
               <button onClick={() => removeFromCart(item.part_no)} className="bg-red-500 text-white p-1">Remove</button>
             </td>
           </tr>

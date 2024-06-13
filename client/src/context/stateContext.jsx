@@ -1,5 +1,4 @@
 import React, { createContext, useState, useRef, useContext, useEffect } from "react";
-//import { v4 as uuidv4 } from "uuid";
 import { AuthContext } from "./authContext"; // Adjust the path as necessary
 import axios from 'axios';
 
@@ -78,12 +77,25 @@ export const StateContextProvider = ({ children }) => {
     return true;
   };
 
-  const updateQuantity = (part_no, quantity) => {
-    setCart(prevCart =>
-      prevCart.map(item =>
-        item.part_no === part_no ? { ...item, quantity } : item
-      )
-    );
+  const updateQuantity = async (part_no, quantity) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/vehiclepart/${part_no}`);
+      const availableStock = response.data.quantity;
+      
+      if (quantity > availableStock) {
+        alert(`Cannot set quantity higher than available stock. Available: ${availableStock}`);
+        return;
+      }
+      
+      setCart(prevCart =>
+        prevCart.map(item =>
+          item.part_no === part_no ? { ...item, quantity } : item
+        )
+      );
+    } catch (error) {
+      console.error('Error updating part stock:', error);
+      alert('Error updating part stock');
+    }
   };
 
   const removeFromCart = (part_no) => {
@@ -103,7 +115,6 @@ export const StateContextProvider = ({ children }) => {
       firstName, setFirstName,
       lastName, setLastName,
       phone, setPhone,
-      
       invoiceDate, setInvoiceDate,
       warrantyDate, setWarrantyDate,
       notes, setNotes,

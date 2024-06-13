@@ -54,8 +54,8 @@ const Notify = ({ onNewNotification }) => {
               <li key={index} className='bg-white border-b border-gray-200 p-4 rounded shadow-sm'>
                 <div className='flex justify-between items-center'>
                   <div>
-                    <h2 className='text-lg font-semibold text-gray-700'>Part {notification.partName}</h2>
-                    <p className='text-sm text-gray-500'>ID: {notification.partId}</p>
+                    <h2 className='text-lg font-semibold text-gray-700'> {notification.partName}</h2>
+                    <p className='text-sm text-gray-500'>Part No: {notification.partId}</p>
                     <p className='text-sm text-gray-500'>Quantity: {notification.quantity}, Threshold: {notification.threshold}</p>
                   </div>
                   <button

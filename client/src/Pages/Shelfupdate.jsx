@@ -8,6 +8,7 @@ function ShelfUpdate() {
     const [shelfName, setShelfName] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         // Fetch shelf details when the component mounts
@@ -18,12 +19,18 @@ function ShelfUpdate() {
         // Fetch shelf details based on the id parameter from the URL
         axios.get(`http://localhost:5000/shelf/${id}`)
             .then(response => {
-                const { shelf_name } = response.data;
-                setShelfName(shelf_name);
+                const data = response.data[0]; // Extract the first object from the array if it's an array
+                if (data && typeof data.shelf_name !== 'undefined') {
+                    setShelfName(data.shelf_name);
+                } else {
+                    setErrorMessage('Invalid data format received.');
+                }
+                setLoading(false);
             })
             .catch(error => {
                 console.error('Error fetching shelf:', error);
                 setErrorMessage('Failed to fetch shelf details. Please try again.');
+                setLoading(false);
             });
     };
 
@@ -52,15 +59,28 @@ function ShelfUpdate() {
         });
     };
 
+    if (loading) {
+        return <p>Loading...</p>;
+    }
+
     return (
         <div className="flex justify-center items-center h-screen">
             <div className="border p-10 rounded max-w-md">
                 <form onSubmit={handleSubmit} className="mb-4">
                     <label className="block mb-2">
                         Shelf Name:
-                        <input type="text" value={shelfName} onChange={e => setShelfName(e.target.value)} className="block w-full py-2 px-3 border rounded mt-1" />
+                        <input 
+                            type="text" 
+                            value={shelfName} 
+                            onChange={e => setShelfName(e.target.value)} 
+                            className="block w-full py-2 px-3 border rounded mt-1" 
+                        />
                     </label>
-                    <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded mt-2 hover:bg-blue-700">Update Shelf</button>
+                    <button 
+                        type="submit" 
+                        className="bg-blue-500 text-white py-2 px-4 rounded mt-2 hover:bg-blue-700">
+                        Update Shelf
+                    </button>
                 </form>
                 {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                 {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}

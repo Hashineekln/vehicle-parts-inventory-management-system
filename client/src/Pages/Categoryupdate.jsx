@@ -1,85 +1,85 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const CategoryUpdate = () => {
+    const { id } = useParams(); // Extract the id parameter from the URL
+
     const [values, setValues] = useState({
         category_id: "", // Initialize to empty string
         name: "" // Initialize to empty string
     });
+    const [loading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
-    const { id } = useParams();
 
     useEffect(() => {
-        // Fetch the existing data for the client
-        axios.get(`http://localhost:5000/category/${id}`)
-            .then(response => {
-                setValues({
-                    category_id: response.data.category_id || "", // Keep existing value or set to empty string
-                    name: response.data.name || "" // Keep existing value or set to empty string
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching client data', error);
-                setErrorMessage('Error fetching data. Please refresh the page and try again.');
-            });
-    }, [id]);
+        const fetchCategory = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/category/${id}`);
+                console.log('API response:', response.data);
 
-    const handleInput = (e) => {
-        const { name, value } = e.target;
-        setValues(prev => ({ ...prev, [name]: value }));
-    };
+                const data = response.data[0]; // Assuming data is an array and you need the first item
+                if (data && typeof data.category_id !== 'undefined' && typeof data.name !== 'undefined') {
+                    setValues({
+                        category_id: data.category_id,
+                        name: data.name
+                    });
+                } else {
+                    setErrorMessage('Invalid data format received.');
+                }
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching category data', error);
+                setErrorMessage('Error fetching data. Please refresh the page and try again.');
+                setLoading(false);
+            }
+        };
+
+        fetchCategory();
+    }, [id]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         try {
-            await axios.put(`http://localhost:5000/category/${id}`, values); // Updated endpoint
-            alert('Category details updated successfully'); // Display success message
-            
-            // Fetch the updated category data from the server
-            axios.get(`http://localhost:5000/category/${id}`)
-                .then(response => {
-                    setValues({
-                        category_id: response.data.category_id || "", // Keep existing value or set to empty string
-                        name: response.data.name || "" // Keep existing value or set to empty string
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching updated category data', error);
-                    setErrorMessage('Error fetching updated data. Please refresh the page.');
-                });
-    
+            await axios.put(`http://localhost:5000/category/${id}`, values);
+            alert('Category details updated successfully');
             navigate("/Category");
         } catch (err) {
+            console.error('Failed to update category:', err);
             setErrorMessage("Failed to update category. Please try again.");
         }
     };
-    
+
+    if (loading) {
+        return <p>Loading...</p>;
+    }
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
             <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '20px', width: '300px' }}>
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <h2 style={{ fontWeight: 'bold', marginBottom: '20px' }}>Update Category</h2>
-                    <label htmlFor="first_name" style={{ marginBottom: '8px' }}>Category ID</label>
+                    
+                    <label htmlFor="category_id" style={{ marginBottom: '8px' }}>Category ID **</label>
                     <input
                         id="category_id"
                         name="category_id"
                         type="text"
                         value={values.category_id}
-                        onChange={handleInput}
+                        onChange={(e) => setValues({ ...values, category_id: e.target.value })}
                         required
                         style={{ padding: '8px', marginBottom: '16px', width: '100%', border: '1px solid #ccc', borderRadius: '4px' }}
                     />
 
-                    <label htmlFor="last_name" style={{ marginBottom: '8px' }}>Category Name</label>
+                    <label htmlFor="name" style={{ marginBottom: '8px' }}>Category Name</label>
                     <input
                         id="name"
                         name="name"
                         type="text"
                         value={values.name}
-                        onChange={handleInput}
+                        onChange={(e) => setValues({ ...values, name: e.target.value })}
                         required
                         style={{ padding: '8px', marginBottom: '16px', width: '100%', border: '1px solid #ccc', borderRadius: '4px' }}
                     />

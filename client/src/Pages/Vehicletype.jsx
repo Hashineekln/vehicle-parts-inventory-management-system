@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Dashboard from '../Components/AdminDash';
+
 
 function Vehicletype() {
     const [vehicles, setVehicles] = useState([]);
@@ -59,7 +61,9 @@ function Vehicletype() {
     };
 
     return (
-        <div className='overflow-x-auto relative flex-1 p-4'>
+        <div className="flex h-screen">
+        
+        <main className="flex-grow m-5 p-5 bg-white rounded shadow overflow-auto">
             <div className='w-full bg-white rounded p-3'>
                 <div className='flex justify-between mb-3'>
                     <h1 className='text-2xl font-semibold text-gray-200 dark:text-gray-950'>Vehicle Types</h1>
@@ -94,13 +98,13 @@ function Vehicletype() {
                                 <td className='py-4 px-6'>{vehicle_type.year}</td>
                                 <td className='py-4 px-6'>
                                     <Link to={`/Vehicletypeupdate/${vehicle_type.vehicle_id}`} className='rounded-md bg-blue-500  px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>Edit</Link>
-                                    <button className='rounded-md bg-red-500  px-2 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ml-3' onClick={() => handleDelete(vehicle_type.vehicle_id)}>Delete</button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+            </main>
         </div>
     );
 }

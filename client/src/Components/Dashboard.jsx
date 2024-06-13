@@ -1,8 +1,10 @@
 //cashier dashboard
+
 import React, { useState } from 'react';
-// Importing icons from react-icons
-import { FaUsers, FaFileInvoiceDollar, FaCog, FaArrowCircleRight } from 'react-icons/fa';
+
+import { FaUsers, FaFileInvoiceDollar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { VscIssueReopened, VscArchive } from "react-icons/vsc";
 
 const Dashboard = () => {
   const [Dashboard, setSidenav] = useState(true);
@@ -15,14 +17,14 @@ const Dashboard = () => {
 
   // Mapping your routes to specific icons
   const menuItems = [
-    { name: 'Catalogue', icon: <FaFileInvoiceDollar /> , path: '/Product' },
+    { name: 'Catalogue', icon: <VscArchive /> , path: '/Product' },
     
-    { name: 'Transactions', icon: <FaArrowCircleRight />, path: '/Transaction' },
-    { name: 'Supplier', icon: <FaFileInvoiceDollar />, path: '/Supplier' },
+    
+   
     { name: 'Bill Logs', icon: <FaFileInvoiceDollar /> , path: '/Billdetails' },
     { name: 'Clients', icon: <FaUsers /> , path: '/Client' },
-    { name: 'Shef Store', icon: <FaFileInvoiceDollar /> , path: '/Shelf' },
-    { name: 'Return', icon: <FaCog />, path: '/Notify' },
+  
+    { name: 'Return', icon: <VscIssueReopened />, path: '/Returntable' },
 
   ];
 

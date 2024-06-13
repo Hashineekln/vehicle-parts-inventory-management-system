@@ -3,7 +3,7 @@ import db from '../db.js';
 // Function to get vehicle types
 export const getVehicleTypes = async (req, res) => {
   try {
-    const sql = 'SELECT DISTINCT brand, model, year FROM vehicle_type';
+    const sql = 'SELECT DISTINCT LOWER(TRIM(brand)) AS normalized_brand, model, year FROM vehicle_type';
     db.query(sql, (err, data) => {
       if (err) {
         return res.status(500).json({ error: "Error fetching vehicle types", details: err.message });
@@ -14,6 +14,7 @@ export const getVehicleTypes = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 // Function to get categories
 export const getCategories = async (req, res) => {
@@ -40,13 +41,15 @@ export const getVehicleParts = async (req, res) => {
   }
 
   try {
+    const normalizedBrand = brand.toLowerCase().trim();
+
     // Step 1: Get vehicle_id from vehicle_type table
     const getVehicleIdQuery = `
       SELECT vehicle_id 
       FROM vehicle_type 
-      WHERE brand = ? AND model = ? AND year = ?
+      WHERE LOWER(TRIM(brand)) = ? AND model = ? AND year = ?
     `;
-    db.query(getVehicleIdQuery, [brand, model, year], (err, vehicleTypeResults) => {
+    db.query(getVehicleIdQuery, [normalizedBrand, model, year], (err, vehicleTypeResults) => {
       if (err) {
         return res.status(500).json({ error: "Error fetching vehicle type data", details: err.message });
       }
@@ -93,7 +96,7 @@ export const getVehicleParts = async (req, res) => {
 
           // Step 4: Get vehicle part details from vehicle_part table with category filter
           const getVehiclePartsQuery = `
-            SELECT part_no, part_name, price, quantity, image_url ,shelf_shelf_id,category_category_id
+            SELECT part_no, part_name, price, quantity, image_url, shelf_shelf_id, category_category_id
             FROM vehicle_part 
             WHERE part_no IN (?) AND category_category_id IN (?)
           `;

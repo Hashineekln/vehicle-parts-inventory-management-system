@@ -9,7 +9,10 @@ import { setIOInstance } from '../controllers/notification.js'; // Import setIOI
 import router from '../routes/product.js';
 import apiRouter from '../routes/cartstate.js';
 import reportRoutes from '../routes/report.js';
-import returnRoutes from '../routes/return.js';
+import reportyearRoutes from '../routes/reportyear.js';
+import returnRoutes from '../routes/return.js'; //return recipt 
+ //return table
+
 
 const app = express();
 const server = http.createServer(app);
@@ -53,7 +56,10 @@ import shelfRoutes from '../routes/shelf.js';
 import vehiclepartRoutes from '../routes/vehiclepart.js';
 import categoryRoutes from '../routes/category.js';
 import vehicletypeRoutes from '../routes/vehicletype.js';
+
 import userRoutes from '../routes/user.js';
+import returntableRoutes from '../routes/returntable.js';
+
 import roleRoutes from '../routes/role.js';
 import billRoutes from '../routes/bill.js';
 import cartstateRoutes from '../routes/cartstate.js';
@@ -77,6 +83,8 @@ app.use('/category', categoryRoutes);
 app.use('/vehicletype', vehicletypeRoutes);
 app.use('/shelf', shelfRoutes);
 app.use('/vehiclepart', vehiclepartRoutes);
+//app.use('/vehiclepartupdate', vehiclepartRoutes);
+
 app.use('/supplier', supplierRoutes);
 app.use('/transaction', transactionRoutes);
 app.use('/bill', billRoutes);
@@ -84,6 +92,8 @@ app.use('/cartstate', cartstateRoutes);
 app.use('/api', notificationRoutes);
 app.use('/api', userRoutes);
 app.use('/api', billdetailsRoutes);
+app.use('/api/reportyear', reportyearRoutes);
+app.use('/api', returntableRoutes);
 
 app.use('/api', reportRoutes);
 app.use('/api/returnitem', returnRoutes);

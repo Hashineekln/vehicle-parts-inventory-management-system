@@ -41,5 +41,5 @@ export const deleteUser = async (req, res) => {
     db.query(sql, [req.params.id], (err, data) => {
         if (err) return res.json({ error: "Error deleting data" });
         return res.json(data);
-    });
+    });
 };

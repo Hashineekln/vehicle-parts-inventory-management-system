@@ -1,17 +1,16 @@
-import React, { useContext, useState, useRef } from 'react';
+import React, { useContext, useState } from 'react';
 import { State } from "../context/stateContext";
 import axios from 'axios';
 import ReactToPrint from 'react-to-print'; 
-//import ClientDetails from "../Components/ClientDetails";
 import Dates from "../Components/Dates";
 import Footer from "../Components/Footer";
-import Header from "../Components/Header";
 import MainDetails from "../Components/MainDetails";
-import Notes from "../Components/Notes";
 import TableForm from "../Components/TableForm";
 import Clientsearch from "../Components/Clientsearch";
 import { Link, useNavigate } from 'react-router-dom';
 import Dashboard from '../Components/Dashboard';
+
+
 
 const Bill = () => {
   const { 
@@ -20,17 +19,18 @@ const Bill = () => {
     firstName, setFirstName,
     lastName, setLastName,
     phone, setPhone,
-    
     invoiceDate, setInvoiceDate,
     warrantyDate, setWarrantyDate,
-    notes, setNotes,
     cart, componentRef,
-    validateCartStock, // Import validateCartStock function
-    alertMessage // Import alertMessage state
+    validateCartStock, 
+    alertMessage 
   } = useContext(State);
 
   const [discount, setDiscount] = useState(0);
-  const [billAlertMessage, setBillAlertMessage] = useState(null); // Bill creation alert message
+  const [billAlertMessage, setBillAlertMessage] = useState(null); 
+  const [billId, setBillId] = useState(null); 
+
+  const navigate = useNavigate(); // Add the useNavigate hook
 
   const clientName = `${firstName} ${lastName}`;
   const totalAmount = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -38,9 +38,20 @@ const Bill = () => {
   const discountedTotal = totalAmount - totalDiscount;
 
   const handleCreateBill = async () => {
-    if (await validateCartStock()) { // Validate stock before proceeding
+    const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+
+    if (!userId || !invoiceDate || !warrantyDate || !clientId || !clientName || cart.length === 0) {
+      setBillAlertMessage({ type: 'error', text: 'Please fill in all required details and ensure the cart is not empty.' });
+      return;
+    }
+
+    if (invoiceDate < today || warrantyDate < today) {
+      setBillAlertMessage({ type: 'error', text: 'Invoice date and warranty date cannot be before today.' });
+      return;
+    }
+
+    if (await validateCartStock()) { 
       try {
-        // Create a new bill
         const billResponse = await axios.post('http://localhost:5000/bill', {
           total_amount: discountedTotal,
           total_discount: totalDiscount,
@@ -50,11 +61,11 @@ const Bill = () => {
           customer_customer_id: clientId
         });
 
-        const billId = billResponse.data.bill_id;
+        const newBillId = billResponse.data.bill_id;
+        setBillId(newBillId);
 
-        // Create bill items
         for (const item of cart) {
-          await axios.post(`http://localhost:5000/bill/${billId}`, {
+          await axios.post(`http://localhost:5000/bill/${newBillId}`, {
             vehicle_part_part_no: item.part_no,
             vehicle_part_part_name: item.part_name,
             selling_price: item.price,
@@ -62,72 +73,105 @@ const Bill = () => {
           });
         }
 
-        // Show success message
-        setBillAlertMessage({ type: 'success', text: 'Bill created successfully' });
+        setBillAlertMessage({ type: 'success', text: 'Thank You for shopping with us !' });
       } catch (error) {
-        // Show error message
         setBillAlertMessage({ type: 'error', text: 'Error creating bill: ' + (error.response?.data?.error || error.message) });
       }
     }
+  };
+
+  const handleAfterPrint = () => {
+    navigate(`/Billdetails`); // Navigate to the BillDetails page after printing
   };
 
   return (
     <div className="flex h-screen">
       <Dashboard /> {/* Include the Dashboard sidebar */}
       <main className="flex-grow m-5 p-5 bg-white rounded shadow overflow-auto">
+        <style>
+          {`
+            @media print {
+              .no-print {
+                display: none;
+              }
+            }
+          `}
+        </style>
         <ReactToPrint
-          trigger={() => <button className="bg-blue-500 text-white p-2 mt-4">Print/Download</button>}
+          trigger={() => <button className="bg-blue-500 text-white p-2 mt-4 no-print">Print/Download</button>}
           content={() => componentRef.current}
+          onAfterPrint={handleAfterPrint} // Add the onAfterPrint handler
         />
         <div ref={componentRef} className="p-5">
-          <Header />
+          <div className="text-center mb-4">
+            <h1 className="font-bold uppercase tracking-wide text-3xl mb-3">Bill Invoice</h1>
+            <div className="flex items-center justify-center">
+              <img
+                src="src/assets/Logo.jpg"
+                alt="LHI Company"
+                className="w-36 h-36 mr-6"
+              />
+            </div>
+            <div className="font-bold text-lg">LHI LOGISTIC</div>
+            <div>Address: No 164/B, Kottawa - Malabe Rd, Pannipitiya</div>
+            <div>Tel: +94 7652 996</div>
+            <div>Fax: 7684935493</div>
+          </div>
           <MainDetails 
             id={userId}
             setId={setUserId}
             cashierId={userId}
             setCashierId={setUserId}
           />
+
           <div className="my-4">
             <h2 className="text-xl font-bold">Cashier Information</h2>
             <p><strong>Cashier ID:</strong> {userId}</p>
           </div>
-          <Clientsearch />
+
+          <Clientsearch className="print:hidden" /> {/* Hide ClientSearch component when printing */}
           <div className="my-4">
             <h2 className="text-xl font-bold">Client Information</h2>
             <p><strong>Name:</strong> {clientName}</p>
             <p><strong>Client ID:</strong> {clientId}</p>
             <p><strong>Phone:</strong> {phone}</p>
           </div>
-          <Link to="/clientadd" className="bg-green-500 text-white p-2 mt-4">Add New Client</Link>
+
+          <Link to="/clientadd" className="bg-green-500 text-white p-2 mt-4 no-print">Add New Client</Link>
           <Dates 
-           
             invoiceDate={invoiceDate}
             setInvoiceDate={setInvoiceDate}
             warrantyDate={warrantyDate}
             setWarrantyDate={setWarrantyDate}
           />
-          <TableForm cart={cart} />
-          <Notes notes={notes} setNotes={setNotes} />
+          <TableForm />
+          
           <div className="p-5">
             <label htmlFor="discount" className="block mb-2">Discount (%)</label>
             <input 
               type="number"
+              min="0"
               id="discount"
               value={discount}
               onChange={(e) => setDiscount(e.target.value)}
-              className="border p-2 mb-4"
+              className="border p-2 mb-4 no-print"
             />
             <h2 className="text-lg font-bold">Total: Rs.{discountedTotal.toFixed(2)}</h2>
           </div>
-          <button onClick={handleCreateBill} className="bg-blue-500 text-white p-2 mt-4">Create Bill</button>
+          <button onClick={handleCreateBill} className="bg-blue-500 text-white p-2 mt-4 no-print">Create Bill</button>
           {alertMessage && (
-            <div className={`mt-4 p-2 text-white ${alertMessage.includes('Insufficient stock') ? 'bg-red-500' : 'bg-green-500'}`}>
+            <div className={`mt-4 p-2 text-white no-print ${alertMessage.includes('Insufficient stock') ? 'bg-red-500' : 'bg-green-500'}`}>
               {alertMessage}
             </div>
           )}
           {billAlertMessage && (
-            <div className={`mt-4 p-2 text-white ${billAlertMessage.type === 'success' ? 'bg-green-500' : 'bg-red-500'}`}>
+            <div className={`mt-4 p-2 text-white no-print ${billAlertMessage.type === 'success' ? 'bg-green-500' : 'bg-red-500'}`}>
               {billAlertMessage.text}
+            </div>
+          )}
+          {billId && (
+            <div className="mt-4 p-2 text-green-500">
+              <strong>Bill ID:</strong> {billId}
             </div>
           )}
           <Footer />
