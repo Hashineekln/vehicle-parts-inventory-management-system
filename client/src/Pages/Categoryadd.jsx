@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { CategoryValidation } from './Vehiclevalidate'; // Adjust import path as needed
+import { CategoryValidation } from './Vehiclevalidate'; 
 
 function Categoryadd() {
     const [categoryId, setCategoryId] = useState('');
@@ -34,7 +34,7 @@ function Categoryadd() {
         })
         .catch(error => {
             console.error('Error adding Category', error);
-            setErrorMessage('Failed to add Category. Please try again.');
+            setErrorMessage('Failed to add Category. Check category id.');
             setSuccessMessage('');
         });
     };
@@ -47,15 +47,14 @@ function Categoryadd() {
                         Category ID:
                         <input type="text" value={categoryId} onChange={e => setCategoryId(e.target.value)} className="block w-full py-2 px-9 border rounded mt-7" />
                     </label>
+                    {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <label className="block mb-2">
                         Category Name:
                         <input type="text" value={categoryName} onChange={e => setCategoryName(e.target.value)} className="block w-full py-2 px-9 border rounded mt-7" />
                     </label>
-                  
+                    {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
                     <button type="submit" className='rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-700'>Add Category</button>
                 </form>
-                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
             </div>
         </div>
     );

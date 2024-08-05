@@ -1,5 +1,5 @@
 function Validation(values) {
-    let errors = {}; // Renamed error to errors for clarity
+    let errors = {}; 
 
     const username_pattern = /^[A-Za-z0-9_-]{3,30}$/;
     //const email_pattern= /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Corrected regex pattern

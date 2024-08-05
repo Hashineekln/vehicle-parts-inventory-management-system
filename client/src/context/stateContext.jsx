@@ -1,5 +1,5 @@
 import React, { createContext, useState, useRef, useContext, useEffect } from "react";
-import { AuthContext } from "./authContext"; // Adjust the path as necessary
+import { AuthContext } from "./authContext"; 
 import axios from 'axios';
 
 export const State = createContext();
@@ -15,8 +15,8 @@ export const StateContextProvider = ({ children }) => {
   
   const [invoiceDate, setInvoiceDate] = useState('');
   const [warrantyDate, setWarrantyDate] = useState('');
-  const [notes, setNotes] = useState('');
-  const [alertMessage, setAlertMessage] = useState(null); // Alert message state
+  //const [notes, setNotes] = useState('');
+  const [alertMessage, setAlertMessage] = useState(null); 
   const componentRef = useRef();
 
   useEffect(() => {
@@ -30,6 +30,9 @@ export const StateContextProvider = ({ children }) => {
       const response = await axios.get(`http://localhost:5000/api/vehiclepart/${part.part_no}`);
       const availableStock = response.data.quantity;
   
+
+      //Calculates the new quantity of the part added.If the part is already in the cart, 
+      //it adds 1 to its current quantity or sets the quantity to 1.
       setCart(prevCart => {
         const partInCart = prevCart.find(item => item.part_no === part.part_no);
         const requestedQuantity = partInCart ? partInCart.quantity + 1 : 1;
@@ -39,6 +42,10 @@ export const StateContextProvider = ({ children }) => {
           return prevCart;
         }
   
+
+        //if the part is not already in the cart, it adds the part to the cart with a quantity of 1
+        //new array that includes the previous cart items and the new part.
+
         if (partInCart) {
           return prevCart.map(item =>
             item.part_no === part.part_no
@@ -63,6 +70,8 @@ export const StateContextProvider = ({ children }) => {
     }
   };
 
+
+  //Validates if there is sufficient stock for all items in the cart. If any item has insufficient stock,
   const validateCartStock = async () => {
     for (const item of cart) {
       const response = await axios.get(`http://localhost:5000/api/vehiclepart/${item.part_no}`);
@@ -73,9 +82,13 @@ export const StateContextProvider = ({ children }) => {
         return false;
       }
     }
-    setAlertMessage(null); // Clear alert message if stock is sufficient
+    setAlertMessage('part added to cart'); 
     return true;
   };
+
+  
+
+
 
   const updateQuantity = async (part_no, quantity) => {
     try {
@@ -117,11 +130,12 @@ export const StateContextProvider = ({ children }) => {
       phone, setPhone,
       invoiceDate, setInvoiceDate,
       warrantyDate, setWarrantyDate,
-      notes, setNotes,
-      alertMessage, // Provide alertMessage state
+      //notes, setNotes,
+      alertMessage, setAlertMessage,
       componentRef,
     }}>
-      {children}
+      {children} 
+      
     </State.Provider>
   );
 };

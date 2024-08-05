@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-
-import Validation from './Registervalidation';
+import { UpdateValidation } from './Registervalidation'; 
 
 function UserUpdate() {
     const { id } = useParams();
@@ -24,17 +23,14 @@ function UserUpdate() {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                console.log(`Fetching data for user id: ${id}`);
                 const response = await axios.get(`http://localhost:5000/api/user/${id}`);
-                if (response.data && response.data.length > 0) {
-                    console.log('User data fetched successfully:', response.data[0]);
-                    setUser(response.data[0]);
+                if (response.data) {
+                    setUser(response.data);
                 } else {
                     setError('No user found with the given ID');
                 }
             } catch (err) {
-                console.error('Error fetching user:', err);
-                setError('Error fetching user. Please try again.');
+                setError(`Error fetching user. ${err.response?.data?.details || err.message}`);
             }
         };
 
@@ -48,7 +44,7 @@ function UserUpdate() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const validationErrors = Validation(user);
+        const validationErrors = UpdateValidation(user);
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
             return;
@@ -57,18 +53,13 @@ function UserUpdate() {
         try {
             await axios.put(`http://localhost:5000/api/user/${id}`, user);
             alert('User updated successfully');
-            navigate('/users'); // Redirect to users page
+            navigate('/users');
         } catch (err) {
-            console.error('Error updating user:', err);
-            setError('Error updating user. Please try again.');
+            setError(`Error updating user. ${err.response?.data?.details || err.message}`);
         }
     };
 
     return (
-      
-               
-             
-
         <div className='container mx-auto p-4'>
             <h1 className='text-2xl font-semibold mb-4'>Update User</h1>
             {error && <div className="alert alert-danger">{error}</div>}

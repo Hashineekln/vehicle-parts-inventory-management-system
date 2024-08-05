@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/authContext'; // Adjust the path as necessary
+import { AuthContext } from '../context/authContext'; 
 import Validation from './Loginvalidation';
 
 const Login = () => {

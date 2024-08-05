@@ -44,10 +44,4 @@ export const updateShelf = async (req, res) => {
     });
 };
 
-export const deleteShelf = async (req, res) => {
-    const sql = 'DELETE FROM shelf WHERE shelf_id = ?';
-    db.query(sql, [req.params.id], (err, data) => {
-        if (err) return res.json({ error: "Error deleting data" });
-        return res.json(data);
-    });
-};
+

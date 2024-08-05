@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { ClientValidation } from './Validationall.jsx'; // Named import
+import { ClientValidation } from './Validationall.jsx'; 
 
 function Clientadd() {
     const [values, setValues] = useState({

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ReactToPrint from 'react-to-print';
-import Dashboard from '../Components/AdminDash';
+
 
 function AddTransaction() {
     const [suppliers, setSuppliers] = useState([]);

@@ -1,5 +1,5 @@
-function Validation(values) {
-  let errors = {}; // Renamed error to errors for clarity
+export function Validation(values) {
+  let errors = {}; 
 
   const firstname_pattern = /^[A-Za-z]{4,}$/;
   const lastname_pattern = /^[A-Za-z]{4,}$/;
@@ -60,7 +60,57 @@ function Validation(values) {
   return errors;
 }
 
+export function UpdateValidation(values) {
+    let errors = {};
 
-export default Validation;
+    const firstname_pattern = /^[A-Za-z]{4,}$/;
+    const lastname_pattern = /^[A-Za-z]{4,}$/;
+    const username_pattern = /^[A-Za-z0-9_-]{3,30}$/;
+    const email_pattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/;
+    const nic_pattern = /^[0-9]{12}$|^[0-9]{9}V$/;
+    const contact_pattern = /^\d{10}$/;
+
+    if (!values.first_name) {
+        errors.first_name = "First name required";
+    } else if (!firstname_pattern.test(values.first_name)) {
+        errors.first_name = "First name should only contain letters least 4";
+    }
+
+    if (!values.last_name) {
+        errors.last_name = "Last name required";
+    } else if (!lastname_pattern.test(values.last_name)) {
+        errors.last_name = "Last name should only contain letters least 4";
+    }
+
+    if (!values.username) {
+        errors.username = "Username required";
+    } else if (!username_pattern.test(values.username)) {
+        errors.username = "Username should be 3-30 characters and can include letters, numbers, underscores, and dashes";
+    }
+
+    if (!values.NIC) {
+        errors.NIC = "NIC required";
+    } else if (!nic_pattern.test(values.NIC)) {
+        errors.NIC = "NIC is invalid";
+    }
+
+
+    if (!values.email) {
+        errors.email = "Email required";
+    } else if (!email_pattern.test(values.email)) {
+        errors.email = "Email is invalid";
+    }
+
+    if (!values.contact) {
+        errors.contact = "Contact number required";
+    } else if (!contact_pattern.test(values.contact)) {
+        errors.contact = "Contact number is invalid";
+    }
+
+    return errors;
+}
+
+export default { UpdateValidation,Validation };
+
 
 

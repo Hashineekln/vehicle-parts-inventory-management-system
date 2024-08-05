@@ -1,5 +1,5 @@
 import db from '../db.js';
-//import jwt from 'jsonwebtoken';
+
 
 
 export const getCategorys = async (req, res) => {

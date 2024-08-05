@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { SupplierValidation } from './Validationall'; // Ensure this path is correct based on your project structure
+import { SupplierValidation } from './Validationall'; 
 
 const SupplierUpdate = () => {
     const [values, setValues] = useState({

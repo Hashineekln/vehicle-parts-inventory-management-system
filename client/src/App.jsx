@@ -51,7 +51,7 @@ import Supplierupdate from './Pages/Supplierupdate';
 
 import Transaction from './Pages/Transaction';
 import Transactionadd from './Pages/Transactionadd';
-import Transactionupdate from './Pages/Transactionupdate';
+
 
 import Bill from './Pages/Bill';
 import Returntable from './Pages/Returntable';
@@ -128,7 +128,7 @@ const App = () => {
 
         <Route path="/Transaction" element={<AdminLayout><Transaction /></AdminLayout>} />
         <Route path="/Transactionadd" element={<AdminLayout><Transactionadd /></AdminLayout>} />
-        <Route path="/Transactionupdate/:id" element={<AdminLayout><Transactionupdate /></AdminLayout>} />
+        
 
         <Route path="/Report" element={<AdminLayout><Report/></AdminLayout>} />
         <Route path="/Reportyear" element={<AdminLayout><Reportyear/></AdminLayout>} />

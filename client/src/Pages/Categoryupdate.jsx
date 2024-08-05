@@ -10,6 +10,7 @@ const CategoryUpdate = () => {
         name: "" // Initialize to empty string
     });
     const [loading, setLoading] = useState(true);
+    const [errors, setErrors] = useState({});
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
 
@@ -39,8 +40,36 @@ const CategoryUpdate = () => {
         fetchCategory();
     }, [id]);
 
+    const categoryIdPattern = /^\d+-[A-Z]{2}$/;
+    const categoryNamePattern = /^[A-Za-z\s]+$/;
+
+    const validate = () => {
+        const validationErrors = {};
+
+        // Validate categoryId
+        if (!values.category_id) {
+            validationErrors.category_id = "Category ID is required";
+        } else if (!categoryIdPattern.test(values.category_id.trim())) {
+            validationErrors.category_id = "Category ID format is invalid (e.g., 5-WB)";
+        }
+
+        // Validate categoryName
+        if (!values.name) {
+            validationErrors.name = "Category Name is required";
+        } else if (!categoryNamePattern.test(values.name)) {
+            validationErrors.name = "Category Name is invalid";
+        }
+
+        setErrors(validationErrors);
+        return Object.keys(validationErrors).length === 0;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!validate()) {
+            return;
+        }
 
         try {
             await axios.put(`http://localhost:5000/category/${id}`, values);
@@ -50,6 +79,11 @@ const CategoryUpdate = () => {
             console.error('Failed to update category:', err);
             setErrorMessage("Failed to update category. Please try again.");
         }
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setValues((prevValues) => ({ ...prevValues, [name]: value }));
     };
 
     if (loading) {
@@ -68,10 +102,11 @@ const CategoryUpdate = () => {
                         name="category_id"
                         type="text"
                         value={values.category_id}
-                        onChange={(e) => setValues({ ...values, category_id: e.target.value })}
+                        onChange={handleChange}
                         required
                         style={{ padding: '8px', marginBottom: '16px', width: '100%', border: '1px solid #ccc', borderRadius: '4px' }}
                     />
+                    {errors.category_id && <p style={{ color: 'red' }}>{errors.category_id}</p>}
 
                     <label htmlFor="name" style={{ marginBottom: '8px' }}>Category Name</label>
                     <input
@@ -79,10 +114,11 @@ const CategoryUpdate = () => {
                         name="name"
                         type="text"
                         value={values.name}
-                        onChange={(e) => setValues({ ...values, name: e.target.value })}
+                        onChange={handleChange}
                         required
                         style={{ padding: '8px', marginBottom: '16px', width: '100%', border: '1px solid #ccc', borderRadius: '4px' }}
                     />
+                    {errors.name && <p style={{ color: 'red' }}>{errors.name}</p>}
 
                     <button type="submit" style={{ padding: '10px 20px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Update</button>
                     {errorMessage && <p style={{ color: 'red', marginTop: '10px' }}>{errorMessage}</p>}

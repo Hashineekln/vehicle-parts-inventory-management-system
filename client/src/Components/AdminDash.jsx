@@ -1,21 +1,19 @@
 import React, { useState } from 'react';
-import { FaWarehouse , FaUsers, FaFileInvoiceDollar, FaCog, FaArrowCircleRight } from 'react-icons/fa';
+import { FaUsers, FaFileInvoiceDollar } from 'react-icons/fa';
 import { VscBell, VscArchive ,VscSymbolMethod,VscGitPullRequestGoToChanges,VscAccount,VscGraphLine} from "react-icons/vsc";
 import { useNavigate } from 'react-router-dom';
 
 
 const AdminDash = () => {
-  const [hasNewNotification, setHasNewNotification] = useState(false);
+  //const [hasNewNotification, setHasNewNotification] = useState(false);
   const navigate = useNavigate();
 
   const handleNavigation = (route) => {
     navigate(route);
-    if (route === '/report') setHasNewNotification(false); // Reset notification highlight when navigating to Notify
+    
   };
 
-  const handleNewNotification = () => {
-    setHasNewNotification(true);
-  };
+  
   const menuItems = [
     { name: 'User Details', icon: <FaUsers />, path: '/users' },
     { name: 'Catalogue', icon: <VscArchive /> , path: '/Product' },
@@ -51,9 +49,7 @@ const AdminDash = () => {
             >
               {icon}
               <span>{name}</span>
-              {name === 'Notification' && hasNewNotification && (
-                <span className="bg-red-500 text-white rounded-full px-2 py-1 text-xs">New</span>
-              )}
+              
             </a>
           ))}
         </div>

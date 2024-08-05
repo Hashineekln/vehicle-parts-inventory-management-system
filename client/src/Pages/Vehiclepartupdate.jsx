@@ -5,10 +5,12 @@ import { VehicleValidation } from './Vehiclevalidate.jsx';
 import Dashboard from '../Components/AdminDash';
 
 function VehiclePartUpdate() {
-    const navigate = useNavigate();
-    const { part_no } = useParams();
+    const navigate = useNavigate(); //navigate to diffrwnt routes
+    const { part_no } = useParams(); //extract the part no from url
     console.log("Part Number:", part_no);
 
+
+//satate variables initialization
     const [partData, setPartData] = useState({
         part_name: '',
         price: '',
@@ -35,6 +37,7 @@ function VehiclePartUpdate() {
                     axios.get('http://localhost:5000/vehicletype')
                 ]);
 
+                //vehicle_type_ids are derived by matching models
                 const part = partRes.data;
                 const vehicle_type_ids = part.models ? part.models.split(', ').map(model => {
                     const vt = vehicleTypesRes.data.find(vt => vt.model === model);
@@ -59,11 +62,12 @@ function VehiclePartUpdate() {
         fetchData();
     }, [part_no]);
 
+    // updates the partData state when an name and value input field changes 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setPartData(prev => ({ ...prev, [name]: value }));
     };
-
+//check handled by id
     const handleCheckboxChange = (event) => {
         const { value, checked } = event.target;
         const stringValue = value.toString();
@@ -76,6 +80,7 @@ function VehiclePartUpdate() {
         }));
     };
 
+    //validation and update of vehicle part
     const handleSubmit = async (event) => {
         event.preventDefault();
         const validationErrors = VehicleValidation(partData);

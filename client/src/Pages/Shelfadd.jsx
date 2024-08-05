@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { ShelfValidation } from './Vehiclevalidate'; 
 
 function Shelfadd() {
     const [shelfName, setShelfName] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [errors, setErrors] = useState({});
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Validate if shelf name is not empty
-        if (!shelfName.trim()) {
-            setErrorMessage('Please enter shelf name.');
+        const validationErrors = ShelfValidation({ shelfName });
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
             return;
         }
 
@@ -24,6 +26,7 @@ function Shelfadd() {
             setSuccessMessage('Shelf added successfully');
             setShelfName(''); // Clear input field after successful addition
             setErrorMessage(''); // Clear any previous error messages
+            setErrors({}); // Clear validation errors
         })
         .catch(error => {
             console.error('Error adding shelf', error);
@@ -38,9 +41,17 @@ function Shelfadd() {
                 <form onSubmit={handleSubmit} className="mb-4">
                     <label className="block mb-2">
                         Shelf Name:
-                        <input type="text" value={shelfName} onChange={e => setShelfName(e.target.value)} className="block w-full py-2 px-3 border rounded mt-2" />
+                        <input
+                            type="text"
+                            value={shelfName}
+                            onChange={e => setShelfName(e.target.value)}
+                            className="block w-full py-2 px-3 border rounded mt-2"
+                        />
                     </label>
-                    <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded mt-2 hover:bg-blue-700">Add Shelf</button>
+                    {errors.shelfName && <p style={{ color: 'red' }}>{errors.shelfName}</p>}
+                    <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded mt-2 hover:bg-blue-700">
+                        Add Shelf
+                    </button>
                 </form>
                 {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                 {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
