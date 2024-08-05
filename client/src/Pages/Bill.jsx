@@ -4,7 +4,6 @@ import axios from 'axios';
 import ReactToPrint from 'react-to-print'; 
 import Dates from "../Components/Dates";
 import Footer from "../Components/Footer";
-import MainDetails from "../Components/MainDetails";
 import TableForm from "../Components/TableForm";
 import Clientsearch from "../Components/Clientsearch";
 import { Link, useNavigate } from 'react-router-dom';
@@ -14,11 +13,11 @@ import Dashboard from '../Components/Dashboard';
 
 const Bill = () => {
   const { 
-    userId, setUserId,
-    clientId, setClientId,
-    firstName, setFirstName,
-    lastName, setLastName,
-    phone, setPhone,
+    userId, 
+    clientId, 
+    firstName, 
+    lastName, 
+    phone, 
     invoiceDate, setInvoiceDate,
     warrantyDate, setWarrantyDate,
     cart, componentRef,
@@ -30,7 +29,7 @@ const Bill = () => {
   const [billAlertMessage, setBillAlertMessage] = useState(null); 
   const [billId, setBillId] = useState(null); 
 
-  const navigate = useNavigate(); // Add the useNavigate hook
+  const navigate = useNavigate(); 
 
   const clientName = `${firstName} ${lastName}`;
   const totalAmount = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -44,7 +43,7 @@ const Bill = () => {
       setBillAlertMessage({ type: 'error', text: 'Please fill in all required details and ensure the cart is not empty.' });
       return;
     }
-
+//validate dates
     if (invoiceDate < today || warrantyDate < today) {
       setBillAlertMessage({ type: 'error', text: 'Invoice date and warranty date cannot be before today.' });
       return;
@@ -81,12 +80,12 @@ const Bill = () => {
   };
 
   const handleAfterPrint = () => {
-    navigate(`/Billdetails`); // Navigate to the BillDetails page after printing
+    navigate(`/Billdetails`); 
   };
 
   return (
     <div className="flex h-screen">
-      <Dashboard /> {/* Include the Dashboard sidebar */}
+      <Dashboard /> 
       <main className="flex-grow m-5 p-5 bg-white rounded shadow overflow-auto">
         <style>
           {`
@@ -117,12 +116,8 @@ const Bill = () => {
             <div>Tel: +94 7652 996</div>
             <div>Fax: 7684935493</div>
           </div>
-          <MainDetails 
-            id={userId}
-            setId={setUserId}
-            cashierId={userId}
-            setCashierId={setUserId}
-          />
+
+   
 
           <div className="my-4">
             <h2 className="text-xl font-bold">Cashier Information</h2>
@@ -159,6 +154,7 @@ const Bill = () => {
             <h2 className="text-lg font-bold">Total: Rs.{discountedTotal.toFixed(2)}</h2>
           </div>
           <button onClick={handleCreateBill} className="bg-blue-500 text-white p-2 mt-4 no-print">Create Bill</button>
+
           {alertMessage && (
             <div className={`mt-4 p-2 text-white no-print ${alertMessage.includes('Insufficient stock') ? 'bg-red-500' : 'bg-green-500'}`}>
               {alertMessage}

@@ -23,13 +23,7 @@ export const getVehicleparts = async (req, res) => {
     });
 };
 
-// Get a single vehicle part with its category and shelf by part_no
 
-
-
-
-
-// Get a single vehicle part with its category and shelf by part_no
 
 
 // Get a single vehicle part with its models by part_no
@@ -39,7 +33,7 @@ export const getVehiclepart = async (req, res) => {
     try {
         console.log(`Fetching part with part_no: ${partNo}`);
         
-        // Perform the query
+        
         const query = `
             SELECT vp.part_no, vp.part_name, vp.price, vp.threshold_no, vp.quantity,vp.image_url,vp.category_category_id, vp.shelf_shelf_id,
                    c.name AS category_name, s.shelf_id,
@@ -146,18 +140,9 @@ export const updateVehiclePart = async (req, res) => {
 };
 
 
-// Delete a vehicle part
-export const deleteVehiclepart = async (req, res) => {
-    const sql = 'DELETE FROM vehicle_part WHERE part_no = ?';
-    db.query(sql, [req.params.id], (err, data) => {
-        if (err) {
-            return res.status(500).json({ error: "Error deleting data" });
-        }
-        return res.json({ message: "Vehicle part deleted successfully" });
-    });
-};
 
-// Get all vehicle part has vehicle type relationships
+
+// Get all vehicle part has vehicle type relationships for forms checkboxes
 export const getVehiclePartHasVehicleType = async (req, res) => {
     const sql = 'SELECT * FROM vehicle_part_has_vehicle_type';
     db.query(sql, (err, data) => {

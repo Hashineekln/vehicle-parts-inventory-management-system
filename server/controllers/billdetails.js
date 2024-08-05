@@ -1,5 +1,5 @@
 import db from '../db.js';
-
+//concatenates values from multiple rows into a single string. Each value is separated by a comma by default.
 export const getBills = async (req, res) => {
     const sql = `
         SELECT b.bill_id, b.user_user_id, b.customer_customer_id, b.total_amount, b.total_discount, 

@@ -54,8 +54,4 @@ export function ClientValidation(values) {
     return errors;
 }
 
-
-
-
-
 export default { SupplierValidation,ClientValidation };

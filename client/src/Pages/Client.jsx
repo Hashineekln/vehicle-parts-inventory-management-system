@@ -11,7 +11,7 @@ function Client() {
     useEffect(() => {
         axios.get('http://localhost:5000/client')
             .then(res => {
-                setClients(res.data); // Assuming the response is an array of client objects
+                setClients(res.data); // response is an array of client objects
                 setFilteredClients(res.data); // Initialize filtered clients with all clients
                 setError(null); // Reset error state if successful
             })
@@ -41,19 +41,7 @@ function Client() {
         filterClients(); // Update filtered clients whenever searchQuery changes
     }, [searchQuery, clients]);
 
-    const handleDelete = (id) => {
-        axios.delete(`http://localhost:5000/client/${id}`)
-            .then(() => {
-                // Remove the deleted client from the client list
-                setClients(clients.filter(client => client.customer_id !== id));
-                // Display success message
-                alert('Client details deleted successfully');
-            })
-            .catch(err => {
-                console.error('Error deleting client:', err);
-                setError('Error deleting client. Please try again.');
-            });
-    };
+  
 
     return (
         <div className='overflow-x-auto relative flex-1 p-4'>

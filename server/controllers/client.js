@@ -1,7 +1,4 @@
 import db from '../db.js';
-//import jwt from 'jsonwebtoken';
-
-
 
 export const getClients = async (req, res) => {
     const sql = 'SELECT * FROM customer';
@@ -33,7 +30,6 @@ export const getClient = async (req, res) => {
     };
     
     
-
     export const updateClient = async (req, res) => {
         const { id } = req.params;
         const { first_name, last_name,phone } = req.body;
@@ -50,15 +46,4 @@ export const getClient = async (req, res) => {
         });
     };
     
-      
-
-
-
-
-export const deleteClient = async (req, res) => {
-    const sql = 'DELETE FROM customer WHERE customer_id = ?';
-    db.query(sql, [req.params.id], (err, data) => {
-        if (err) return res.json({ error: "Error deleting data" });
-        return res.json(data);
-    });
-};
+    

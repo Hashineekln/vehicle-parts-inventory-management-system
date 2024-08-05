@@ -55,11 +55,3 @@ export const updateSupplier = async (req, res) => {
 };
 
 
-// Delete a supplier
-export const deleteSupplier = async (req, res) => {
-    const sql = 'DELETE FROM supplier WHERE supplier_id = ?';
-    db.query(sql, [req.params.id], (err, data) => {
-        if (err) return res.json({ error: "Error deleting data" });
-        return res.json(data);
-    });
-};

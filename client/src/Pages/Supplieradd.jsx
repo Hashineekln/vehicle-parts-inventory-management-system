@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { SupplierValidation } from './Validationall.jsx'; // Named import
+import { SupplierValidation } from './Validationall.jsx'; 
 
 function SupplierAdd() {
     const [firstName, setFirstName] = useState('');

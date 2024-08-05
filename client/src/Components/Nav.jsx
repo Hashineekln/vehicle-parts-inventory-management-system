@@ -1,20 +1,15 @@
-import React, { useState } from 'react';
+import React, { } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Example() {
-  // State to manage the visibility of conditional content
-  //const [click, setClick] = useState(false);
-
  
-
-  // Array to hold the navigation link details to reduce repetition
   const navLinks = [
     { to: "/Home", label: "Home" },
     { to: "/About", label: "About" },
     { to: "/Contact", label: "Contact" },
     { to: "/Login", label: "Login" },
    
-    // Add more navigation links as needed
+
   ];
 
   return (

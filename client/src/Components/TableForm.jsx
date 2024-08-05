@@ -1,3 +1,6 @@
+// bill item table parts
+
+
 import React, { useContext } from 'react';
 import { State } from '../context/stateContext';
 

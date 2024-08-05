@@ -11,14 +11,14 @@ import apiRouter from '../routes/cartstate.js';
 import reportRoutes from '../routes/report.js';
 import reportyearRoutes from '../routes/reportyear.js';
 import returnRoutes from '../routes/return.js'; //return recipt 
- //return table
+ 
 
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:5173', // Replace with your frontend origin
+    origin: 'http://localhost:5173', // frontend origin
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
@@ -27,7 +27,7 @@ const io = new Server(server, {
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:5173', // Replace with your frontend origin
+  origin: 'http://localhost:5173', 
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
@@ -74,7 +74,6 @@ import billdetailsRoutes from '../routes/billdetails.js';
 
 
 app.use('/product', productRoutes);
-//app.use('/server/report', reportRoutes);
 app.use('/auth', authRoutes);
 
 app.use('/server/role', roleRoutes);
@@ -83,7 +82,7 @@ app.use('/category', categoryRoutes);
 app.use('/vehicletype', vehicletypeRoutes);
 app.use('/shelf', shelfRoutes);
 app.use('/vehiclepart', vehiclepartRoutes);
-//app.use('/vehiclepartupdate', vehiclepartRoutes);
+
 
 app.use('/supplier', supplierRoutes);
 app.use('/transaction', transactionRoutes);
@@ -100,9 +99,9 @@ app.use('/api/returnitem', returnRoutes);
 
 
 io.on('connection', (socket) => {
-  console.log('New client connected');
+  console.log('Notification Available');
   socket.on('disconnect', () => {
-    console.log('Client disconnected');
+    console.log('Notification Not Available');
   });
 });
 

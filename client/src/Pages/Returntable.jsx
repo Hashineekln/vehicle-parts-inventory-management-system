@@ -8,7 +8,7 @@ function ReturnTable() {
     const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/returnitems') // Assuming your API endpoint for return items is '/api/return_items'
+        axios.get('http://localhost:5000/api/returnitems') 
             .then(res => {
                 console.log('API response:', res.data); // Log the response data
                 setReturnItems(res.data);
@@ -22,6 +22,7 @@ function ReturnTable() {
     }, []);
 
     const filterReturnItems = () => {
+        //check serch query emplty
         if (searchQuery.trim() === '') {
             setFilteredReturnItems(returnItems);
         } else {
@@ -37,6 +38,7 @@ function ReturnTable() {
         }
     };
 
+    //searchQuery or returnItems states change, filterReturnItems function to update 
     useEffect(() => {
         filterReturnItems();
     }, [searchQuery, returnItems]);

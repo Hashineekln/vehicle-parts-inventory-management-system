@@ -18,6 +18,7 @@ const Report = () => {
   });
 
   const componentRef = useRef();
+//Creates a reference to the component using useRef
 
   useEffect(() => {
     axios.get('http://localhost:5000/api/reportyear')
@@ -83,8 +84,8 @@ const Report = () => {
                   <table className="w-full">
                     <tbody>
                       <tr>
-                        <td className="pt-1 text-sm text-gray-600 pl-4">Buying Quantity</td>
-                        <td className="pt-1 text-sm text-right text-gray-900">{report.inventory_buy_quantity}</td>
+                        {/*<td className="pt-1 text-sm text-gray-600 pl-4">Buying Quantity</td>
+                        <td className="pt-1 text-sm text-right text-gray-900">{report.inventory_buy_quantity}</td>  */}
                       </tr>
                     </tbody>
                   </table>

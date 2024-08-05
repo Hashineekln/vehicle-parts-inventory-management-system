@@ -26,7 +26,7 @@ export const getReport = async (req, res) => {
             WHERE r.type = 'defected';
         `;
 
-        // Query for Total Inventory in Hand
+        // Query for Total Inventory in Hand Value
         const totalInventoryInHandQuery = `
             SELECT SUM(sell_to) AS inventory_in_hand 
             FROM (
@@ -35,7 +35,7 @@ export const getReport = async (req, res) => {
             ) AS subquery;
         `;
 
-        // Query for Total Quantity in Hand
+        // Query for Total Quantity in Hand inventory count
         const totalQuantityQuery = `
             SELECT SUM(quantity) AS total_quantity
             FROM vehicle_part;
@@ -43,33 +43,26 @@ export const getReport = async (req, res) => {
 
 
         
-        // Query for Total Quantity in Hand
+        // Query for Total sold Quantity in Hand count
         const totalSoldQuantityQuery = `
             SELECT SUM(selling_quantity) AS total_sold_quantity
             FROM bill_item;
         `;
 
         
-        // Query for Total Quantity in Hand
+        // Query for Total Quantity in Hand as defected itens
         const totalReturnQuantityQuery = `
             SELECT SUM(quantity) AS total_return_quantity
             FROM return_item
             Where type = 'defected';
         `;
 
+        // Query for Total Quantity from supplliers
         const totalBuyQuantityQuery = `
             SELECT SUM(quantity) AS total_buy_quantity
             FROM transaction;
             
         `;
-
-
-
-
-
-
-
-
 
 
 

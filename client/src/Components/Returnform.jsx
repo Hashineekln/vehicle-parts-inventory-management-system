@@ -1,7 +1,8 @@
+//return managemnet for bills
+
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 
 function ReturnForm() {
     const { bill_id } = useParams();
@@ -15,11 +16,13 @@ function ReturnForm() {
         axios.get(`http://localhost:5000/api/bills/${bill_id}`)
             .then(res => {
                 setBillDetails(res.data[0]);
+                //Fetches bill details from 
+                //the API and initializes returnItems current data.
                 const items = res.data[0].part_nos.split(',').map((part_no, index) => ({
                     part_no,
                     part_name: res.data[0].part_names.split(',')[index],
-                    price: parseFloat(res.data[0].selling_prices.split(',')[index]), // parse price as float
-                    quantity: parseInt(res.data[0].selling_quantities.split(',')[index], 10), // parse quantity as int
+                    price: parseFloat(res.data[0].selling_prices.split(',')[index]), // price as float
+                    quantity: parseInt(res.data[0].selling_quantities.split(',')[index], 10), //  quantity as int
                     return_quantity: 0,
                     return_type: ''
                 }));
@@ -36,12 +39,15 @@ function ReturnForm() {
         setReturnAmount(totalAmount.toFixed(2)); // Format the total amount to two decimal places
     }, [returnItems]);
 
+
+    //Updates the return quantity for item
     const handleReturnQuantityChange = (index, value) => {
         const newReturnItems = [...returnItems];
-        newReturnItems[index].return_quantity = parseInt(value, 10); // Ensure return quantity is an integer
+        newReturnItems[index].return_quantity = parseInt(value, 10); // return quantity is an integer
         setReturnItems(newReturnItems);
     };
 
+    //Updates the return type for  item
     const handleReturnTypeChange = (index, value) => {
         const newReturnItems = [...returnItems];
         newReturnItems[index].return_type = value;
@@ -52,11 +58,15 @@ function ReturnForm() {
         e.preventDefault();
         setError(null);
 
+        //checks if the return quantity is less than or equal to zero
+        //return quantity exceeds the original quantity of the item
         for (const item of returnItems) {
             if (item.return_quantity <= 0 || item.return_quantity > item.quantity) {
                 setError(`Invalid return quantity for part number: ${item.part_no}`);
                 return;
             }
+
+            //type required
             if (!item.return_type) {
                 setError(`Return type is required for part number: ${item.part_no}`);
                 return;
@@ -67,9 +77,10 @@ function ReturnForm() {
             bill_bill_id: bill_id,
             return_date: new Date().toISOString().slice(0, 19).replace('T', ' '),
             type: 'return',
-            total_amount: parseFloat(returnAmount) // Ensure total amount is sent as a float
+            total_amount: parseFloat(returnAmount) //  total amount is sent as a float
         };
 
+        
         axios.post('http://localhost:5000/api/returnitem', { returnData, returnItems })
             .then(res => {
                 // Show success message

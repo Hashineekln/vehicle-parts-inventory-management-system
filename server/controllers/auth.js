@@ -13,9 +13,7 @@ export const register = (req, res) => {
 
     // Values from the request body to check if the user already exists with same email,conatct and username
     const checkValues = [
-        //req.body.usertype,
-        //req.body.first_name,
-        //req.body.last_name,
+       
         req.body.username,
         req.body.NIC,
         req.body.email,

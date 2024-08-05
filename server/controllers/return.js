@@ -1,3 +1,5 @@
+//return logic 
+
 import db from '../db.js';
 
 export const createReturn = (req, res) => {
@@ -13,6 +15,7 @@ export const createReturn = (req, res) => {
     db.query(sqlGetBillDetails, [returnData.bill_bill_id], (err, billDetails) => {
         if (err) return res.status(500).json({ error: 'Error fetching bill details' });
 
+        //stores the original quantities in the originalQuantities object
         const originalQuantities = {};
         billDetails.forEach(item => {
             originalQuantities[item.part_no] = item.selling_quantity;
@@ -21,7 +24,10 @@ export const createReturn = (req, res) => {
         // Create a list of promises for each return item
         const promises = returnItems.map(item => {
             return new Promise((resolve, reject) => {
+
+                // Check if return quantity is greater than 0
                 if (item.return_quantity > 0) {
+
                     // Retrieve total returned quantity for the part from the return_item table
                     const sqlGetTotalReturned = `
                         SELECT SUM(quantity) as total_returned 
@@ -33,9 +39,11 @@ export const createReturn = (req, res) => {
                     db.query(sqlGetTotalReturned, [returnData.bill_bill_id, item.part_no], (err, result) => {
                         if (err) return reject({ error: 'Error fetching returned quantity' });
 
+                        //get orginal quantity,total returned,remaining quantity 
                         const totalReturned = result[0].total_returned || 0;
                         const remainingQuantity = originalQuantities[item.part_no] - totalReturned;
 
+                        //checks if the now return quantity exceeds remain qunatity
                         if (item.return_quantity > remainingQuantity) {
                             return reject({ error: `Return quantity for part ${item.part_no} exceeds the remaining quantity. Maximum allowed is ${remainingQuantity}.` });
                         }

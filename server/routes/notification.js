@@ -1,4 +1,4 @@
-// routes/notification.js
+
 import express from 'express';
 import { checkThresholds } from '../controllers/notification.js';
 

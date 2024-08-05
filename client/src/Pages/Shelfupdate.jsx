@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { ShelfValidation } from './Vehiclevalidate'; 
 
 function ShelfUpdate() {
     const { id } = useParams(); // Extract the id parameter from the URL
@@ -8,6 +9,7 @@ function ShelfUpdate() {
     const [shelfName, setShelfName] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -37,9 +39,11 @@ function ShelfUpdate() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Validate if shelf name is not empty
-        if (!shelfName.trim()) {
-            setErrorMessage('Please enter shelf name.');
+        // Validate the shelf name
+        const validationErrors = ShelfValidation({ shelfName });
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            setErrorMessage('Please correct the errors before submitting.');
             return;
         }
 
@@ -51,6 +55,7 @@ function ShelfUpdate() {
             console.log('Shelf Updated', response);
             setSuccessMessage('Shelf updated successfully');
             setErrorMessage(''); // Clear any previous error messages
+            setErrors({});
         })
         .catch(error => {
             console.error('Error updating shelf', error);
@@ -76,6 +81,7 @@ function ShelfUpdate() {
                             className="block w-full py-2 px-3 border rounded mt-1" 
                         />
                     </label>
+                    {errors.shelfName && <p style={{ color: 'red' }}>{errors.shelfName}</p>}
                     <button 
                         type="submit" 
                         className="bg-blue-500 text-white py-2 px-4 rounded mt-2 hover:bg-blue-700">

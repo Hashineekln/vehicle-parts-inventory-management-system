@@ -17,10 +17,12 @@ const Product = () => {
     category: []
   });
 
+  //context variables
   const { cart, setCart, addToCart, updateQuantity } = useContext(State);
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  //here normalized to get unique barnds
   const getUniqueBrands = (data) => {
     const uniqueBrands = data.reduce((acc, item) => {
       const normalizedBrand = item.brand.toLowerCase().trim(); // Normalize brand name
@@ -47,7 +49,9 @@ const Product = () => {
       .then(response => setCategories(response.data))
       .catch(error => console.error(error));
   }, []);
-  
+
+
+  //brand,model,year filter
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters({ ...filters, [name]: value });

@@ -61,7 +61,7 @@ function VehiclePartAdd() {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        // Validate the input data
+        // copy of part data there are no accidental spaces
         const trimmedPartData = {
             ...partData,
             part_no: partData.part_no.trim(),
@@ -141,7 +141,7 @@ function VehiclePartAdd() {
 
                         <div className="flex items-center justify-between w-full mb-2">
                             <label htmlFor="shelf_id" className="block">Shelf:</label>
-                            <Link to='/shelfadd' className='rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-700'>New Shelf</Link>
+                            <Link to='/shelf' className='rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-700'>New Shelf</Link>
                         </div>
                         <select id="shelf_id" name="shelf_id" value={partData.shelf_id} onChange={handleInputChange} className="mb-3 p-2 border rounded-md border-gray-300 w-full">
                          
@@ -157,7 +157,7 @@ function VehiclePartAdd() {
 
                         <div className="flex items-center justify-between w-full mb-2">
                             <label className="block">Vehicle Types:</label>
-                            <Link to='/vehicletypeadd' className='rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-700'>New Model</Link>
+                            <Link to='/vehicletype' className='rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-700'>New Model</Link>
                         </div>
                         {vehicleTypes.map(vehicle_type => (
                             <div key={vehicle_type.vehicle_id}>

@@ -35,6 +35,7 @@ const Notify = ({ onNewNotification }) => {
       });
   }, []);
 
+  //checkedParts state when a part is marked as checked
   const handleChecked = (partId) => {
     setCheckedParts((prevCheckedParts) => [...prevCheckedParts, partId]);
   };

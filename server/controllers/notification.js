@@ -26,7 +26,7 @@ export const checkThresholds = (req, res) => {
     }
 };
 
-// Manually check thresholds every 24 hours
+
 setInterval(() => {
     checkThresholds(null, null);
 }, 24 * 60 * 60 * 1000); // Check every 24 hours
